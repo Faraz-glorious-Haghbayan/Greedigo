@@ -1,0 +1,1730 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+        Greedigo: The Free Wealth Simulator Game
+    </title>
+    <meta
+      name="description"
+      content="Play Greedigo, the Free Wealth Simulator Game. Start broke, build empires, gamble everything, run for office, go to prison — all in your browser. Free, no download."
+    />
+    <meta
+      name="keywords"
+      content="life simulator game, free browser game, wealth building game, business simulator, career simulator, crime game, casino game, startup game, politics game, text-based game, idle game, tycoon game, realistic life game, greedigo game"
+    />
+    <meta name="author" content="Greedigo Studios" />
+    <meta name="robots" content="index, follow" />
+    <link rel="icon" href="logo.png" type="image/png" />
+    <link rel="apple-touch-icon" href="logo.png" />
+    <link rel="canonical" href="https://greedigo.game/landing.html" />
+
+    <!-- Open Graph -->
+    <meta
+      property="og:title"
+      content="Greedigo: The Free Wealth Simulator Game"
+    />
+    <meta
+      property="og:description"
+      content="You are 18 years old with 500$. Can you find a way to retire rich?"
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://greedigo.game" />
+    <meta property="og:image" content="logo.png" />
+    <meta property="og:site_name" content="Greedigo" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Greedigo: The Free Wealth Simulator Game" />
+    <meta
+      name="twitter:description"
+      content="From broke to billionaire. From citizen to senator. From freedom to prison. Play free now."
+    />
+    <meta name="twitter:image" content="logo.png" />
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "VideoGame",
+        "name": "Greedigo: The Free Wealth Simulator Game",
+        "description": "A hyper-realistic browser-based life simulator where you start with nothing, build wealth through careers, businesses, crime, and investments, and risk losing it all.",
+        "genre": ["Simulation", "Strategy", "Idle", "Tycoon"],
+        "gamePlatform": "Web Browser",
+        "applicationCategory": "Game",
+        "operatingSystem": "Any",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "playMode": "SinglePlayer",
+        "numberOfPlayers": {
+          "@type": "QuantitativeValue",
+          "minValue": 1,
+          "maxValue": 1
+        },
+        "url": "https://greedigo.game"
+      }
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <style>
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        --bg: #030712;
+        --surface: #0a0f1e;
+        --card: rgba(15, 23, 42, 0.6);
+        --border: rgba(255, 255, 255, 0.06);
+        --text: #e2e8f0;
+        --text-muted: #94a3b8;
+        --text-dim: #64748b;
+        --blue: #3b82f6;
+        --purple: #8b5cf6;
+        --green: #22c55e;
+        --red: #ef4444;
+        --amber: #f59e0b;
+        --cyan: #06b6d4;
+        --pink: #ec4899;
+        --font: "Inter", -apple-system, sans-serif;
+        --mono: "JetBrains Mono", monospace;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        font-family: var(--font);
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.7;
+        overflow-x: hidden;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      /* ─── ANIMATED BACKGROUND ─── */
+      .bg-grid {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+        background-image:
+          linear-gradient(rgba(59, 130, 246, 0.03) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(59, 130, 246, 0.03) 1px, transparent 1px);
+        background-size: 60px 60px;
+      }
+      .bg-glow {
+        position: fixed;
+        top: -200px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 900px;
+        height: 900px;
+        background: radial-gradient(
+          circle,
+          rgba(59, 130, 246, 0.08) 0%,
+          transparent 70%
+        );
+        z-index: 0;
+        pointer-events: none;
+        animation: glowFloat 12s ease-in-out infinite;
+      }
+      @keyframes glowFloat {
+        0%,
+        100% {
+          transform: translateX(-50%) translateY(0);
+        }
+        50% {
+          transform: translateX(-50%) translateY(40px);
+        }
+      }
+
+      /* ─── UTILITY ─── */
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 24px;
+        position: relative;
+        z-index: 1;
+      }
+      .section {
+        padding: 100px 0;
+      }
+      .section-label {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-family: var(--mono);
+        font-size: 0.72rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        color: var(--blue);
+        background: rgba(59, 130, 246, 0.08);
+        border: 1px solid rgba(59, 130, 246, 0.2);
+        padding: 6px 18px;
+        border-radius: 999px;
+        margin-bottom: 20px;
+      }
+      .section-title {
+        font-size: clamp(2rem, 5vw, 3.2rem);
+        font-weight: 900;
+        line-height: 1.15;
+        letter-spacing: -0.02em;
+        margin-bottom: 16px;
+      }
+      .section-subtitle {
+        font-size: clamp(1rem, 2.5vw, 1.2rem);
+        color: var(--text-muted);
+        max-width: 680px;
+        margin-bottom: 48px;
+        line-height: 1.8;
+      }
+      .gradient-text {
+        background: linear-gradient(135deg, #60a5fa, #a78bfa, #f472b6);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      /* ─── NAV ─── */
+      .lp-nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        padding: 16px 0;
+        background: rgba(3, 7, 18, 0.8);
+        backdrop-filter: blur(20px);
+        border-bottom: 1px solid var(--border);
+        transition: all 0.3s;
+      }
+      .lp-nav .container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .nav-brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-weight: 900;
+        font-size: 1.1rem;
+        color: #fff;
+        text-decoration: none;
+      }
+      .nav-brand i {
+        color: var(--blue);
+        font-size: 1.3rem;
+      }
+      .nav-brand-logo {
+        width: 28px;
+        height: 28px;
+        object-fit: contain;
+      }
+      .footer-logo {
+        width: 22px;
+        height: 22px;
+        object-fit: contain;
+        vertical-align: middle;
+      }
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 32px;
+      }
+      .nav-links a {
+        color: var(--text-muted);
+        font-size: 0.88rem;
+        font-weight: 600;
+        text-decoration: none;
+        transition: color 0.2s;
+      }
+      .nav-links a:hover {
+        color: #fff;
+      }
+      .nav-cta {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 24px;
+        border-radius: 10px;
+        background: linear-gradient(135deg, var(--blue), var(--purple));
+        color: #fff !important;
+        font-weight: 700;
+        font-size: 0.88rem;
+        text-decoration: none;
+        transition: all 0.25s;
+        box-shadow: 0 4px 20px rgba(59, 130, 246, 0.3);
+      }
+      .nav-cta:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 30px rgba(59, 130, 246, 0.4);
+      }
+
+      /* ─── HERO ─── */
+      .hero {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        padding-top: 80px;
+        position: relative;
+        overflow: hidden;
+      }
+      .hero-inner {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 60px;
+        align-items: center;
+      }
+      .hero-content {
+        z-index: 2;
+      }
+      .hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 18px;
+        border-radius: 999px;
+        background: rgba(34, 197, 94, 0.08);
+        border: 1px solid rgba(34, 197, 94, 0.25);
+        color: var(--green);
+        font-family: var(--mono);
+        font-size: 0.72rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 28px;
+        animation: badgePulse 3s ease-in-out infinite;
+      }
+      @keyframes badgePulse {
+        0%,
+        100% {
+          box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.15);
+        }
+        50% {
+          box-shadow: 0 0 0 10px rgba(34, 197, 94, 0);
+        }
+      }
+      .hero h1 {
+        font-size: clamp(2.8rem, 6vw, 4.5rem);
+        font-weight: 900;
+        line-height: 1.05;
+        letter-spacing: -0.03em;
+        margin-bottom: 24px;
+      }
+      .hero-desc {
+        font-size: 1.15rem;
+        color: var(--text-muted);
+        line-height: 1.8;
+        max-width: 520px;
+        margin-bottom: 36px;
+      }
+      .hero-actions {
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+        margin-bottom: 48px;
+      }
+      .btn-hero {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 16px 36px;
+        border-radius: 14px;
+        font-size: 1rem;
+        font-weight: 800;
+        text-decoration: none;
+        transition: all 0.3s;
+        cursor: pointer;
+        border: none;
+      }
+      .btn-primary-hero {
+        background: linear-gradient(135deg, var(--blue), #6366f1);
+        color: #fff;
+        box-shadow:
+          0 8px 30px rgba(59, 130, 246, 0.35),
+          inset 0 1px 0 rgba(255, 255, 255, 0.15);
+      }
+      .btn-primary-hero:hover {
+        transform: translateY(-3px) scale(1.02);
+        box-shadow: 0 12px 40px rgba(59, 130, 246, 0.5);
+      }
+      .btn-outline-hero {
+        background: transparent;
+        border: 2px solid rgba(255, 255, 255, 0.15);
+        color: #fff;
+      }
+      .btn-outline-hero:hover {
+        border-color: rgba(255, 255, 255, 0.3);
+        background: rgba(255, 255, 255, 0.04);
+        transform: translateY(-2px);
+      }
+      .hero-stats {
+        display: flex;
+        gap: 40px;
+      }
+      .hero-stat {
+        text-align: left;
+      }
+      .hero-stat-value {
+        font-size: 1.8rem;
+        font-weight: 900;
+        color: #fff;
+        font-family: var(--mono);
+      }
+      .hero-stat-label {
+        font-size: 0.78rem;
+        color: var(--text-dim);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-weight: 600;
+      }
+
+      /* Hero Visual */
+      .hero-visual {
+        position: relative;
+        z-index: 1;
+      }
+      .hero-mockup {
+        width: 100%;
+        border-radius: 20px;
+        border: 1px solid var(--border);
+        background: var(--card);
+        backdrop-filter: blur(20px);
+        padding: 20px;
+        box-shadow:
+          0 40px 80px rgba(0, 0, 0, 0.5),
+          0 0 0 1px rgba(255, 255, 255, 0.03) inset;
+        transform: perspective(1200px) rotateY(-8deg) rotateX(4deg);
+        transition: transform 0.6s ease;
+      }
+      .hero-mockup:hover {
+        transform: perspective(1200px) rotateY(-2deg) rotateX(1deg);
+      }
+      .mockup-bar {
+        display: flex;
+        gap: 6px;
+        margin-bottom: 16px;
+      }
+      .mockup-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+      }
+      .mockup-dot:nth-child(1) {
+        background: #ef4444;
+      }
+      .mockup-dot:nth-child(2) {
+        background: #f59e0b;
+      }
+      .mockup-dot:nth-child(3) {
+        background: #22c55e;
+      }
+      .mockup-lines {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .mockup-line {
+        height: 12px;
+        border-radius: 6px;
+        background: rgba(255, 255, 255, 0.06);
+      }
+      .mockup-line:nth-child(1) {
+        width: 80%;
+        background: linear-gradient(
+          90deg,
+          rgba(59, 130, 246, 0.2),
+          rgba(139, 92, 246, 0.15)
+        );
+      }
+      .mockup-line:nth-child(2) {
+        width: 65%;
+      }
+      .mockup-line:nth-child(3) {
+        width: 90%;
+        background: linear-gradient(
+          90deg,
+          rgba(34, 197, 94, 0.15),
+          rgba(6, 182, 212, 0.1)
+        );
+      }
+      .mockup-line:nth-child(4) {
+        width: 45%;
+      }
+      .mockup-line:nth-child(5) {
+        width: 70%;
+      }
+      .mockup-stats-row {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        margin-top: 16px;
+      }
+      .mockup-stat {
+        padding: 12px;
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid var(--border);
+        text-align: center;
+      }
+      .mockup-stat-val {
+        font-family: var(--mono);
+        font-size: 1.1rem;
+        font-weight: 800;
+      }
+      .mockup-stat-label {
+        font-size: 0.65rem;
+        color: var(--text-dim);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      /* ─── FEATURES GRID ─── */
+      .features-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+      }
+      .feature-card {
+        padding: 32px 28px;
+        border-radius: 16px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        backdrop-filter: blur(12px);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+      }
+      .feature-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(
+          90deg,
+          var(--fc-color, var(--blue)),
+          transparent
+        );
+        opacity: 0;
+        transition: opacity 0.3s;
+      }
+      .feature-card:hover {
+        transform: translateY(-4px);
+        border-color: rgba(255, 255, 255, 0.1);
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      }
+      .feature-card:hover::before {
+        opacity: 1;
+      }
+      .feature-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        margin-bottom: 20px;
+        background: rgba(59, 130, 246, 0.1);
+        color: var(--blue);
+        border: 1px solid rgba(59, 130, 246, 0.15);
+      }
+      .feature-card h3 {
+        font-size: 1.05rem;
+        font-weight: 800;
+        margin-bottom: 10px;
+        color: #fff;
+      }
+      .feature-card p {
+        font-size: 0.88rem;
+        color: var(--text-muted);
+        line-height: 1.7;
+      }
+      .fc-career {
+        --fc-color: #3b82f6;
+      }
+      .fc-career .feature-icon {
+        background: rgba(59, 130, 246, 0.1);
+        color: #3b82f6;
+        border-color: rgba(59, 130, 246, 0.15);
+      }
+      .fc-wealth {
+        --fc-color: #22c55e;
+      }
+      .fc-wealth .feature-icon {
+        background: rgba(34, 197, 94, 0.1);
+        color: #22c55e;
+        border-color: rgba(34, 197, 94, 0.15);
+      }
+      .fc-crime {
+        --fc-color: #ef4444;
+      }
+      .fc-crime .feature-icon {
+        background: rgba(239, 68, 68, 0.1);
+        color: #ef4444;
+        border-color: rgba(239, 68, 68, 0.15);
+      }
+      .fc-casino {
+        --fc-color: #8b5cf6;
+      }
+      .fc-casino .feature-icon {
+        background: rgba(139, 92, 246, 0.1);
+        color: #8b5cf6;
+        border-color: rgba(139, 92, 246, 0.15);
+      }
+      .fc-market {
+        --fc-color: #06b6d4;
+      }
+      .fc-market .feature-icon {
+        background: rgba(6, 182, 212, 0.1);
+        color: #06b6d4;
+        border-color: rgba(6, 182, 212, 0.15);
+      }
+      .fc-politics {
+        --fc-color: #ec4899;
+      }
+      .fc-politics .feature-icon {
+        background: rgba(236, 72, 153, 0.1);
+        color: #ec4899;
+        border-color: rgba(236, 72, 153, 0.15);
+      }
+      .fc-bank {
+        --fc-color: #f59e0b;
+      }
+      .fc-bank .feature-icon {
+        background: rgba(245, 158, 11, 0.1);
+        color: #f59e0b;
+        border-color: rgba(245, 158, 11, 0.15);
+      }
+      .fc-social {
+        --fc-color: #f472b6;
+      }
+      .fc-social .feature-icon {
+        background: rgba(244, 114, 182, 0.1);
+        color: #f472b6;
+        border-color: rgba(244, 114, 182, 0.15);
+      }
+      .fc-startup {
+        --fc-color: #14b8a6;
+      }
+      .fc-startup .feature-icon {
+        background: rgba(20, 184, 166, 0.1);
+        color: #14b8a6;
+        border-color: rgba(20, 184, 166, 0.15);
+      }
+
+      /* ─── HOW IT WORKS ─── */
+      .steps-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 24px;
+        counter-reset: step;
+      }
+      .step-card {
+        padding: 28px 24px;
+        border-radius: 16px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        text-align: center;
+        position: relative;
+        counter-increment: step;
+      }
+      .step-card::before {
+        content: counter(step);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--blue), var(--purple));
+        color: #fff;
+        font-weight: 900;
+        font-size: 0.95rem;
+        margin: 0 auto 18px;
+        box-shadow: 0 4px 20px rgba(59, 130, 246, 0.3);
+      }
+      .step-card h3 {
+        font-size: 0.95rem;
+        font-weight: 800;
+        margin-bottom: 8px;
+        color: #fff;
+      }
+      .step-card p {
+        font-size: 0.82rem;
+        color: var(--text-muted);
+        line-height: 1.7;
+      }
+
+      /* ─── COMPARISON TABLE ─── */
+      .compare-table {
+        width: 100%;
+        border-collapse: collapse;
+        border-radius: 16px;
+        overflow: hidden;
+        background: var(--card);
+        border: 1px solid var(--border);
+      }
+      .compare-table th,
+      .compare-table td {
+        padding: 16px 24px;
+        text-align: left;
+        border-bottom: 1px solid var(--border);
+      }
+      .compare-table th {
+        background: rgba(59, 130, 246, 0.06);
+        font-size: 0.78rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: var(--text-dim);
+      }
+      .compare-table th:first-child {
+        color: var(--text-muted);
+      }
+      .compare-table td {
+        font-size: 0.88rem;
+        color: var(--text-muted);
+      }
+      .compare-table td:first-child {
+        color: #fff;
+        font-weight: 700;
+      }
+      .compare-table tr:last-child td {
+        border-bottom: none;
+      }
+      .compare-check {
+        color: var(--green);
+        font-weight: 700;
+      }
+      .compare-cross {
+        color: var(--text-dim);
+      }
+      .compare-partial {
+        color: var(--amber);
+      }
+      .compare-highlight td {
+        background: rgba(59, 130, 246, 0.03);
+      }
+
+      /* ─── TESTIMONIALS ─── */
+      .testimonials-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+      }
+      .testimonial-card {
+        padding: 28px;
+        border-radius: 16px;
+        background: var(--card);
+        border: 1px solid var(--border);
+      }
+      .testimonial-stars {
+        color: var(--amber);
+        font-size: 0.85rem;
+        margin-bottom: 14px;
+        letter-spacing: 2px;
+      }
+      .testimonial-text {
+        font-size: 0.92rem;
+        color: var(--text-muted);
+        line-height: 1.8;
+        margin-bottom: 18px;
+        font-style: italic;
+      }
+      .testimonial-author {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .testimonial-avatar {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--blue), var(--purple));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-weight: 800;
+        font-size: 0.85rem;
+      }
+      .testimonial-name {
+        font-weight: 700;
+        font-size: 0.85rem;
+        color: #fff;
+      }
+      .testimonial-handle {
+        font-size: 0.72rem;
+        color: var(--text-dim);
+      }
+
+      /* ─── STATS BANNER ─── */
+      .stats-banner {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 0;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        overflow: hidden;
+      }
+      .stat-block {
+        padding: 40px 24px;
+        text-align: center;
+        border-right: 1px solid var(--border);
+      }
+      .stat-block:last-child {
+        border-right: none;
+      }
+      .stat-block-value {
+        font-size: 2.2rem;
+        font-weight: 900;
+        font-family: var(--mono);
+        background: linear-gradient(135deg, #fff, #94a3b8);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .stat-block-label {
+        font-size: 0.78rem;
+        color: var(--text-dim);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-top: 4px;
+      }
+
+      /* ─── FAQ ─── */
+      .faq-list {
+        max-width: 800px;
+        margin: 0 auto;
+      }
+      .faq-item {
+        border-bottom: 1px solid var(--border);
+        padding: 24px 0;
+      }
+      .faq-q {
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: #fff;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+      }
+      .faq-q i {
+        font-size: 0.8rem;
+        color: var(--text-dim);
+        transition: transform 0.3s;
+      }
+      .faq-item.open .faq-q i {
+        transform: rotate(180deg);
+      }
+      .faq-a {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.35s ease;
+        font-size: 0.92rem;
+        color: var(--text-muted);
+        line-height: 1.8;
+      }
+      .faq-item.open .faq-a {
+        max-height: 300px;
+        padding-top: 14px;
+      }
+
+      /* ─── CTA SECTION ─── */
+      .cta-section {
+        text-align: center;
+        padding: 120px 0;
+        position: relative;
+      }
+      .cta-glow {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 600px;
+        height: 600px;
+        background: radial-gradient(
+          circle,
+          rgba(59, 130, 246, 0.12) 0%,
+          transparent 70%
+        );
+        pointer-events: none;
+      }
+      .cta-section h2 {
+        font-size: clamp(2.2rem, 5vw, 3.5rem);
+        font-weight: 900;
+        margin-bottom: 20px;
+        letter-spacing: -0.02em;
+      }
+      .cta-section p {
+        font-size: 1.1rem;
+        color: var(--text-muted);
+        margin-bottom: 40px;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      .btn-cta {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        padding: 20px 48px;
+        border-radius: 16px;
+        background: linear-gradient(135deg, var(--blue), #6366f1);
+        color: #fff;
+        font-size: 1.15rem;
+        font-weight: 800;
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+        box-shadow:
+          0 8px 40px rgba(59, 130, 246, 0.4),
+          inset 0 1px 0 rgba(255, 255, 255, 0.15);
+        transition: all 0.3s;
+        position: relative;
+        z-index: 2;
+      }
+      .btn-cta:hover {
+        transform: translateY(-3px) scale(1.02);
+        box-shadow: 0 16px 50px rgba(59, 130, 246, 0.5);
+      }
+
+      /* ─── FOOTER ─── */
+      .lp-footer {
+        padding: 48px 0 32px;
+        border-top: 1px solid var(--border);
+        text-align: center;
+      }
+      .footer-brand {
+        font-weight: 900;
+        font-size: 1.1rem;
+        color: #fff;
+        margin-bottom: 8px;
+      }
+      .footer-links {
+        display: flex;
+        justify-content: center;
+        gap: 28px;
+        margin-bottom: 20px;
+      }
+      .footer-links a {
+        color: var(--text-dim);
+        font-size: 0.82rem;
+        text-decoration: none;
+        transition: color 0.2s;
+      }
+      .footer-links a:hover {
+        color: #fff;
+      }
+      .footer-copy {
+        font-size: 0.75rem;
+        color: var(--text-dim);
+      }
+
+      /* ─── RESPONSIVE ─── */
+      @media (max-width: 1024px) {
+        .hero-inner {
+          grid-template-columns: 1fr;
+          text-align: center;
+        }
+        .hero-desc {
+          margin: 0 auto 36px;
+        }
+        .hero-actions {
+          justify-content: center;
+        }
+        .hero-stats {
+          justify-content: center;
+        }
+        .hero-visual {
+          display: none;
+        }
+        .features-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .steps-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .testimonials-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+        .stats-banner {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .stat-block:nth-child(2) {
+          border-right: none;
+        }
+      }
+      /* ── Hamburger ── */
+      .hamburger {
+        display: none;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 6px;
+        flex-direction: column;
+        gap: 5px;
+      }
+      .hamburger span {
+        display: block;
+        width: 22px;
+        height: 2px;
+        background: #fff;
+        border-radius: 2px;
+        transition:
+          transform 0.3s,
+          opacity 0.3s;
+      }
+      .nav-open .hamburger span:nth-child(1) {
+        transform: translateY(7px) rotate(45deg);
+      }
+      .nav-open .hamburger span:nth-child(2) {
+        opacity: 0;
+      }
+      .nav-open .hamburger span:nth-child(3) {
+        transform: translateY(-7px) rotate(-45deg);
+      }
+      @media (max-width: 640px) {
+        .hamburger {
+          display: flex;
+        }
+        .nav-links {
+          display: none;
+          position: fixed;
+          inset: 64px 0 0 0;
+          background: rgba(10, 10, 20, 0.97);
+          backdrop-filter: blur(16px);
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 28px;
+          z-index: 999;
+        }
+        .nav-links a {
+          font-size: 1.1rem;
+        }
+        .nav-open .nav-links {
+          display: flex;
+        }
+        .features-grid {
+          grid-template-columns: 1fr;
+        }
+        .steps-grid {
+          grid-template-columns: 1fr;
+        }
+        .testimonials-grid {
+          grid-template-columns: 1fr;
+        }
+        .stats-banner {
+          grid-template-columns: 1fr;
+        }
+        .stat-block {
+          border-right: none;
+          border-bottom: 1px solid var(--border);
+        }
+        .compare-table {
+          font-size: 0.82rem;
+        }
+        .compare-table th,
+        .compare-table td {
+          padding: 12px 14px;
+        }
+        .hero-stats {
+          flex-direction: column;
+          gap: 16px;
+        }
+        .btn-hero {
+          width: 100%;
+          justify-content: center;
+        }
+        .btn-cta {
+          width: 100%;
+          justify-content: center;
+          padding: 18px 32px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="bg-grid"></div>
+    <div class="bg-glow"></div>
+
+    <!-- ═══ NAV ═══ -->
+    <nav class="lp-nav">
+      <div class="container">
+        <a href="#" class="nav-brand"
+          ><img src="logo.png" alt="Greedigo" class="nav-brand-logo" /> GREEDIGO</a
+        >
+        <button
+          class="hamburger"
+          aria-label="Open menu"
+          onclick="
+            document.querySelector('.lp-nav').classList.toggle('nav-open')
+          "
+        >
+          <span></span><span></span><span></span>
+        </button>
+        <div class="nav-links">
+          <a
+            href="#features"
+            onclick="this.closest('.lp-nav').classList.remove('nav-open')"
+            >Features</a
+          >
+          <a
+            href="#how-it-works"
+            onclick="this.closest('.lp-nav').classList.remove('nav-open')"
+            >How It Works</a
+          >
+          <a
+            href="#compare"
+            onclick="this.closest('.lp-nav').classList.remove('nav-open')"
+            >Compare</a
+          >
+          <a
+            href="#faq"
+            onclick="this.closest('.lp-nav').classList.remove('nav-open')"
+            >FAQ</a
+          >
+          <a href="index.html" class="nav-cta"
+            ><i class="fa-solid fa-play"></i> Play Free</a
+          >
+        </div>
+      </div>
+    </nav>
+
+    <!-- ═══ HERO ═══ -->
+    <section class="hero">
+      <div class="container">
+        <div class="hero-inner">
+          <div class="hero-content">
+            <div class="hero-badge">
+              <i class="fa-solid fa-circle-play"></i> Free — No Download — No
+              Account
+            </div>
+            <h1>
+             Free<br /><span class="gradient-text"
+                >Wealth Simulator</span
+              ><br />Game
+            </h1>
+            <p class="hero-desc">
+              The most complex life simulator ever made — entirely in your
+              browser. Build wealth through 20+ career paths, launch startups,
+              trade global markets, run for senator, or risk everything at the
+              casino. Every decision compounds. Every month matters.
+            </p>
+            <div class="hero-actions">
+              <a href="index.html" class="btn-hero btn-primary-hero">
+                <i class="fa-solid fa-play"></i> Play Now — It's Free
+              </a>
+              <a href="#features" class="btn-hero btn-outline-hero">
+                <i class="fa-solid fa-arrow-down"></i> See Features
+              </a>
+            </div>
+            <div class="hero-stats">
+              <div class="hero-stat">
+                <div class="hero-stat-value">20+</div>
+                <div class="hero-stat-label">Career Paths</div>
+              </div>
+              <div class="hero-stat">
+                <div class="hero-stat-value">30+</div>
+                <div class="hero-stat-label">Life Events</div>
+              </div>
+              <div class="hero-stat">
+                <div class="hero-stat-value">∞</div>
+                <div class="hero-stat-label">Replayability</div>
+              </div>
+            </div>
+          </div>
+          <div class="hero-visual">
+            <div class="hero-mockup">
+              <div class="mockup-bar">
+                <div class="mockup-dot"></div>
+                <div class="mockup-dot"></div>
+                <div class="mockup-dot"></div>
+              </div>
+              <div class="mockup-lines">
+                <div class="mockup-line"></div>
+                <div class="mockup-line"></div>
+                <div class="mockup-line"></div>
+                <div class="mockup-line"></div>
+                <div class="mockup-line"></div>
+              </div>
+              <div class="mockup-stats-row">
+                <div class="mockup-stat">
+                  <div class="mockup-stat-val" style="color: #22c55e">
+                    $4.2M
+                  </div>
+                  <div class="mockup-stat-label">Net Worth</div>
+                </div>
+                <div class="mockup-stat">
+                  <div class="mockup-stat-val" style="color: #f59e0b">
+                    Age 34
+                  </div>
+                  <div class="mockup-stat-label">Timeline</div>
+                </div>
+                <div class="mockup-stat">
+                  <div class="mockup-stat-val" style="color: #ef4444">
+                    82%
+                  </div>
+                  <div class="mockup-stat-label">Death Risk</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ STATS BANNER ═══ -->
+    <section class="section" style="padding-top: 0; padding-bottom: 60px">
+      <div class="container">
+        <div class="stats-banner">
+          <div class="stat-block">
+            <div class="stat-block-value">12</div>
+            <div class="stat-block-label">Game Systems</div>
+          </div>
+          <div class="stat-block">
+            <div class="stat-block-value">Free</div>
+            <div class="stat-block-label">Cost</div>
+          </div>
+          <div class="stat-block">
+            <div class="stat-block-value">v1.0.0</div>
+            <div class="stat-block-label">Latest Version</div>
+          </div>
+          <div class="stat-block">
+            <div class="stat-block-value">100%</div>
+            <div class="stat-block-label">Browser Based</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ FEATURES ═══ -->
+    <section class="section" id="features">
+      <div class="container">
+        <div class="section-label">
+          <i class="fa-solid fa-cubes"></i> Game Systems
+        </div>
+        <h2 class="section-title">
+          9 Interconnected <span class="gradient-text">Life Systems</span>
+        </h2>
+        <p class="section-subtitle">
+          Every system feeds into every other. Your career affects your net
+          worth. Your crime record affects your career. Your health affects
+          everything. Nothing exists in isolation.
+        </p>
+        <div class="features-grid">
+          <div class="feature-card fc-career">
+            <div class="feature-icon">
+              <i class="fa-solid fa-briefcase"></i>
+            </div>
+            <h3>Career & Education</h3>
+            <p>
+              50+ jobs across blue-collar, white-collar, and executive tracks.
+              Earn degrees to unlock higher tiers. Get promoted, get fired, or
+              quit to chase bigger dreams. Your energy and smarts directly
+              determine your trajectory.
+            </p>
+          </div>
+          <div class="feature-card fc-wealth">
+            <div class="feature-icon"><i class="fa-solid fa-landmark"></i></div>
+            <h3>Wealth Engines</h3>
+            <p>
+              Build passive income through real estate, franchises, bonds, and
+              dividend stocks. Create wealth that generates money while you
+              sleep — or watch it evaporate in a market crash.
+            </p>
+          </div>
+          <div class="feature-card fc-crime">
+            <div class="feature-icon"><i class="fa-solid fa-mask"></i></div>
+            <h3>The Underworld</h3>
+            <p>
+              Petty theft, burglaries, crypto scams, and bank heists. Build
+              street rep to unlock bigger scores — but higher heat means longer
+              prison sentences. An interactive prison system awaits if you get
+              caught.
+            </p>
+          </div>
+          <div class="feature-card fc-casino">
+            <div class="feature-icon"><i class="fa-solid fa-dice"></i></div>
+            <h3>High Stakes Casino</h3>
+            <p>
+              Professional bankroll management meets pure gambling chaos. Track
+              win rates, streaks, and lifetime P&L. The house always has an edge
+              — but the rush of a 10x payout hits different when it's your life
+              savings.
+            </p>
+          </div>
+          <div class="feature-card fc-market">
+            <div class="feature-icon">
+              <i class="fa-solid fa-chart-line"></i>
+            </div>
+            <h3>Global Markets</h3>
+            <p>
+              Trade stocks, crypto, commodities, and bonds with real market
+              dynamics. Bull runs, crashes, bubbles — all procedurally generated
+              with realistic economic cycles. Time the market or let it time
+              you.
+            </p>
+          </div>
+          <div class="feature-card fc-politics">
+            <div class="feature-icon">
+              <i class="fa-solid fa-scale-balanced"></i>
+            </div>
+            <h3>Political Career</h3>
+            <p>
+              Run for City Council, work your way up to Governor, and campaign
+              for Senator. Build influence through rallies and donations. Pass
+              laws, give speeches, or embezzle funds at your own risk.
+            </p>
+          </div>
+          <div class="feature-card fc-bank">
+            <div class="feature-icon">
+              <i class="fa-solid fa-building-columns"></i>
+            </div>
+            <h3>Banking & Debt</h3>
+            <p>
+              Open savings accounts, take personal loans, and manage credit
+              cards — with realistic interest rates, credit scores, and debt
+              traps. Leverage is power until it becomes a prison.
+            </p>
+          </div>
+          <div class="feature-card fc-social">
+            <div class="feature-icon"><i class="fa-solid fa-heart"></i></div>
+            <h3>Relationships & Family</h3>
+            <p>
+              Date, marry (with prenuptial agreements), have children, adopt
+              pets. Relationships affect happiness, unlock bonuses, and cost
+              money. Divorce can wipe out half your net worth.
+            </p>
+          </div>
+          <div class="feature-card fc-startup">
+            <div class="feature-icon"><i class="fa-solid fa-rocket"></i></div>
+            <h3>Startups & Business</h3>
+            <p>
+              Launch tech startups with $5K seed capital. Hire employees. Scale
+              or fail. Side hustles, creator channels, and high-ticket contracts
+              provide alternative income streams.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ HOW IT WORKS ═══ -->
+    <section class="section" id="how-it-works">
+      <div class="container">
+        <div class="section-label">
+          <i class="fa-solid fa-route"></i> Getting Started
+        </div>
+        <h2 class="section-title">
+          How <span class="gradient-text"></span> Works
+        </h2>
+        <p class="section-subtitle">
+          No tutorials, no hand-holding. You start at 18 with nothing but time
+          and ambition. Here's the framework.
+        </p>
+        <div class="steps-grid">
+          <div class="step-card">
+            <h3>Start at 18</h3>
+            <p>
+              You begin with $500, no education, and no connections. The clock
+              starts ticking. Every month costs energy, health, and sanity.
+            </p>
+          </div>
+          <div class="step-card">
+            <h3>Build Income</h3>
+            <p>
+              Get a job, start a hustle, launch a business, or turn to crime.
+              Stack multiple income streams. The grind is real — burnout is
+              realer.
+            </p>
+          </div>
+          <div class="step-card">
+            <h3>Invest & Grow</h3>
+            <p>
+              Park cash in assets that generate returns. Real estate, markets,
+              franchises, bonds. Compound growth is the key — if you survive
+              long enough to see it.
+            </p>
+          </div>
+          <div class="step-card">
+            <h3>Survive or Retire</h3>
+            <p>
+              Your death risk increases with age, stress, and health. Retire
+              safely with enough wealth — or push too hard and lose everything
+              in one bad month.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ COMPARISON TABLE ═══ -->
+    <section class="section" id="compare">
+      <div class="container">
+        <div class="section-label">
+          <i class="fa-solid fa-code-compare"></i> Comparison
+        </div>
+        <h2 class="section-title">
+          Why Players Choose <span class="gradient-text"></span>
+        </h2>
+        <p class="section-subtitle">
+          We built the game we always wanted to play. Here's how we compare to
+          the alternatives.
+        </p>
+        <table class="compare-table">
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th></th>
+              <th>BitLife</th>
+              <th>Idle Tycoons</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="compare-highlight">
+              <td>Realistic Economics</td>
+              <td class="compare-check">
+                <i class="fa-solid fa-check"></i> Full simulation
+              </td>
+              <td class="compare-partial">
+                <i class="fa-solid fa-minus"></i> Basic
+              </td>
+              <td class="compare-cross">
+                <i class="fa-solid fa-xmark"></i> None
+              </td>
+            </tr>
+            <tr>
+              <td>Stock Market Trading</td>
+              <td class="compare-check">
+                <i class="fa-solid fa-check"></i> Live charts
+              </td>
+              <td class="compare-cross">
+                <i class="fa-solid fa-xmark"></i> No
+              </td>
+              <td class="compare-partial">
+                <i class="fa-solid fa-minus"></i> Simplified
+              </td>
+            </tr>
+            <tr class="compare-highlight">
+              <td>Crime + Prison System</td>
+              <td class="compare-check">
+                <i class="fa-solid fa-check"></i> Interactive
+              </td>
+              <td class="compare-partial">
+                <i class="fa-solid fa-minus"></i> Basic
+              </td>
+              <td class="compare-cross">
+                <i class="fa-solid fa-xmark"></i> No
+              </td>
+            </tr>
+            <tr>
+              <td>Business / Startups</td>
+              <td class="compare-check">
+                <i class="fa-solid fa-check"></i> Full system
+              </td>
+              <td class="compare-cross">
+                <i class="fa-solid fa-xmark"></i> No
+              </td>
+              <td class="compare-partial">
+                <i class="fa-solid fa-minus"></i> Genre-only
+              </td>
+            </tr>
+            <tr class="compare-highlight">
+              <td>Political Career</td>
+              <td class="compare-check">
+                <i class="fa-solid fa-check"></i> City → Senator
+              </td>
+              <td class="compare-partial">
+                <i class="fa-solid fa-minus"></i> Limited
+              </td>
+              <td class="compare-cross">
+                <i class="fa-solid fa-xmark"></i> No
+              </td>
+            </tr>
+            <tr>
+              <td>100% Free</td>
+              <td class="compare-check">
+                <i class="fa-solid fa-check"></i> Always
+              </td>
+              <td class="compare-cross">
+                <i class="fa-solid fa-xmark"></i> Freemium
+              </td>
+              <td class="compare-cross">
+                <i class="fa-solid fa-xmark"></i> Freemium
+              </td>
+            </tr>
+            <tr class="compare-highlight">
+              <td>No Download Required</td>
+              <td class="compare-check">
+                <i class="fa-solid fa-check"></i> Browser
+              </td>
+              <td class="compare-cross">
+                <i class="fa-solid fa-xmark"></i> App Store
+              </td>
+              <td class="compare-partial">
+                <i class="fa-solid fa-minus"></i> Varies
+              </td>
+            </tr>
+            <tr>
+              <td>Death Risk Engine</td>
+              <td class="compare-check">
+                <i class="fa-solid fa-check"></i> Dynamic
+              </td>
+              <td class="compare-partial">
+                <i class="fa-solid fa-minus"></i> Random
+              </td>
+              <td class="compare-cross">
+                <i class="fa-solid fa-xmark"></i> No
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ═══ TESTIMONIALS ═══ -->
+    <section class="section" id="reviews">
+      <div class="container">
+        <div class="section-label">
+          <i class="fa-solid fa-quote-left"></i> Player Reviews
+        </div>
+        <h2 class="section-title">
+          What Players <span class="gradient-text">Are Saying</span>
+        </h2>
+        <p class="section-subtitle">Real feedback from the community.</p>
+        <div class="testimonials-grid">
+          <div class="testimonial-card">
+            <div class="testimonial-stars">★★★★★</div>
+            <p class="testimonial-text">
+              "I started playing at midnight thinking I'd try it for 10 minutes.
+              It's now 4am and I just lost my third empire to a prison sentence.
+              This game ruins lives (in the best way)."
+            </p>
+            <div class="testimonial-author">
+              <div class="testimonial-avatar">R</div>
+              <div>
+                <div class="testimonial-name">Ryan K.</div>
+                <div class="testimonial-handle">Reddit</div>
+              </div>
+            </div>
+          </div>
+          <div class="testimonial-card">
+            <div class="testimonial-stars">★★★★★</div>
+            <p class="testimonial-text">
+              "The market simulation alone is better than most dedicated trading
+              games. Combined with everything else — career, crime, politics —
+              it's absurdly deep for a browser game."
+            </p>
+            <div class="testimonial-author">
+              <div class="testimonial-avatar">M</div>
+              <div>
+                <div class="testimonial-name">Maria S.</div>
+                <div class="testimonial-handle">Discord</div>
+              </div>
+            </div>
+          </div>
+          <div class="testimonial-card">
+            <div class="testimonial-stars">★★★★★</div>
+            <p class="testimonial-text">
+              "Finally a life sim that doesn't treat money as just a number.
+              Inflation, interest rates, debt traps — it actually teaches you
+              about personal finance while being incredibly fun."
+            </p>
+            <div class="testimonial-author">
+              <div class="testimonial-avatar">J</div>
+              <div>
+                <div class="testimonial-name">James L.</div>
+                <div class="testimonial-handle">Twitter</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ FAQ ═══ -->
+    <section class="section" id="faq">
+      <div class="container">
+        <div class="section-label">
+          <i class="fa-solid fa-circle-question"></i> FAQ
+        </div>
+        <h2 class="section-title">
+          Frequently Asked <span class="gradient-text">Questions</span>
+        </h2>
+        <p class="section-subtitle">
+          Everything you need to know before diving in.
+        </p>
+        <div class="faq-list">
+          <div class="faq-item">
+            <div
+              class="faq-q"
+              onclick="this.parentElement.classList.toggle('open')"
+            >
+              Is  really free?
+              <i class="fa-solid fa-chevron-down"></i>
+            </div>
+            <div class="faq-a">
+              Yes, 100% free. No in-app purchases, no premium currency, no
+              account required. The entire game runs in your browser. We built
+              this because we love games, not because we want your wallet.
+            </div>
+          </div>
+          <div class="faq-item">
+            <div
+              class="faq-q"
+              onclick="this.parentElement.classList.toggle('open')"
+            >
+              Do I need to download anything?
+              <i class="fa-solid fa-chevron-down"></i>
+            </div>
+            <div class="faq-a">
+              No.  runs entirely in your browser — Chrome, Firefox,
+              Safari, Edge, or any modern browser. It works on desktop, tablet,
+              and phone. Just click "Play" and you're in.
+            </div>
+          </div>
+          <div class="faq-item">
+            <div
+              class="faq-q"
+              onclick="this.parentElement.classList.toggle('open')"
+            >
+              Is my progress saved?
+              <i class="fa-solid fa-chevron-down"></i>
+            </div>
+            <div class="faq-a">
+              Yes. You can manually save at any time. As long as you don't clear
+              your browser data, your progress is safe. We recommend saving
+              frequently — life in  is unpredictable.
+            </div>
+          </div>
+          <div class="faq-item">
+            <div
+              class="faq-q"
+              onclick="this.parentElement.classList.toggle('open')"
+            >
+              How long is a typical game?
+              <i class="fa-solid fa-chevron-down"></i>
+            </div>
+            <div class="faq-a">
+              A full life from 18 to death/retirement typically takes 30-90
+              minutes depending on how cautiously you play and how much you use
+              the burst feature. But most players start a "quick session" and
+              end up playing for hours. The game is highly replayable — every
+              run is completely different.
+            </div>
+          </div>
+          <div class="faq-item">
+            <div
+              class="faq-q"
+              onclick="this.parentElement.classList.toggle('open')"
+            >
+              What makes this different from BitLife?
+              <i class="fa-solid fa-chevron-down"></i>
+            </div>
+            <div class="faq-a">
+               focuses on financial realism. We simulate actual
+              economics — inflation, interest rates, market cycles, compound
+              growth, debt spirals. BitLife is a tap-based story generator. Poor
+              Again is a strategy game disguised as a life simulator. Every
+              system interconnects: your career affects your market access, your
+              crime record affects your job options, your health affects your
+              death risk.
+            </div>
+          </div>
+          <div class="faq-item">
+            <div
+              class="faq-q"
+              onclick="this.parentElement.classList.toggle('open')"
+            >
+              Can I play on my phone?
+              <i class="fa-solid fa-chevron-down"></i>
+            </div>
+            <div class="faq-a">
+              Absolutely.  is fully responsive with a dedicated mobile
+              UI — collapsible stats panel, slide-out navigation, touch-friendly
+              controls. The experience is optimized for phones, tablets, and
+              desktops equally.
+            </div>
+          </div>
+          <div class="faq-item">
+            <div
+              class="faq-q"
+              onclick="this.parentElement.classList.toggle('open')"
+            >
+              Is there multiplayer?
+              <i class="fa-solid fa-chevron-down"></i>
+            </div>
+            <div class="faq-a">
+              Not currently.  is a single-player experience focused on
+              deep systems and meaningful choices. We may explore competitive
+              leaderboards or challenge modes in the future.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ FINAL CTA ═══ -->
+    <section class="cta-section">
+      <div class="cta-glow"></div>
+      <div class="container">
+        <h2>Ready to <span class="gradient-text">Risk Everything?</span></h2>
+        <p>No account. No download. No excuses. Your life starts now.</p>
+        <a href="index.html" class="btn-cta">
+          <i class="fa-solid fa-play"></i> Start Playing — It's Free
+        </a>
+      </div>
+    </section>
+
+    <!-- ═══ FOOTER ═══ -->
+    <footer class="lp-footer">
+      <div class="container">
+        <div class="footer-brand">
+          <img src="logo.png" alt="" class="footer-logo" /> 
+        </div>
+        <div class="footer-links">
+          <a href="#features">Features</a>
+          <a href="#how-it-works">How It Works</a>
+          <a href="#compare">Compare</a>
+          <a href="#faq">FAQ</a>
+          <a href="index.html">Play Game</a>
+        </div>
+        <div class="footer-copy">
+          &copy; 2026  Studios. All rights reserved. Built with
+          obsessive attention to detail.
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,836 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Greedigo: The Free Wealth Simulator Game</title>
+    <meta
+      name="description"
+      content="The Free Wealth Simulator Game. Start at 18, build wealth through careers, crime, markets, and startups. Trade stocks, run for senator, gamble at the casino — all free in your browser."
+    />
+    <meta
+      name="keywords"
+      content="life simulator, free browser game, wealth building game, career simulator, crime game, casino game, stock trading game, tycoon game, text game"
+    />
+    <meta name="author" content="The Choice Engine Studios" />
+    <meta name="robots" content="index, follow" />
+    <link rel="icon" href="logo.png" type="image/png" />
+    <link rel="apple-touch-icon" href="logo.png" />
+
+    <!-- Open Graph -->
+    <meta
+      property="og:title"
+      content="Greedigo: The Free Wealth Simulator Game"
+    />
+    <meta
+      property="og:description"
+      content="You are 18 years old with 500$. Can you find a way to retire rich?"
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="logo.png" />
+    <meta property="og:site_name" content="Greedigo" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="Greedigo: The Free Wealth Simulator Game"
+    />
+    <meta
+      name="twitter:description"
+      content="You are 18 years old with 500$. Can you find a way to retire rich?"
+    />
+    <meta name="twitter:image" content="logo.png" />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <noscript>
+      <div
+        style="
+          text-align: center;
+          padding: 60px 20px;
+          color: #e2e8f0;
+          font-family: sans-serif;
+          background: #080c16;
+          min-height: 100vh;
+        "
+      >
+        <h1>Greedigo: The Free Wealth Simulator Game</h1>
+        <p style="margin-top: 16px; color: #94a3b8">
+          This game requires JavaScript to run. Please enable JavaScript in your
+          browser settings.
+        </p>
+      </div>
+    </noscript>
+    <canvas id="bg-canvas"></canvas>
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- ═══════════════ CINEMATIC TITLE SCREEN ═══════════════ -->
+    <div id="title-screen" class="title-screen">
+      <canvas id="title-particles"></canvas>
+      <div class="title-vignette"></div>
+      <div class="title-scanlines"></div>
+
+      <!-- Ambient glow orbs -->
+      <div class="title-orb orb-1"></div>
+      <div class="title-orb orb-2"></div>
+      <div class="title-orb orb-3"></div>
+
+      <div class="title-content">
+        <!-- Logo -->
+        <div class="title-logo-wrap">
+          <div class="title-logo-container">
+            <div class="title-logo-glow"></div>
+            <img src="logo.png" alt="Greedigo" class="title-logo-img" />
+            <div class="title-logo-ring"></div>
+            <div class="title-logo-ring ring-2"></div>
+          </div>
+        </div>
+
+        <!-- Title -->
+        <h1 class="title-main">
+          <span class="title-word title-word-1">Greedigo</span>
+          <span class="title-word title-word-2">Simulator</span>
+        </h1>
+
+        <!-- Tagline -->
+        <div class="title-tagline-wrap">
+          <div class="title-tagline-line"></div>
+          <p class="title-tagline" id="title-tagline"></p>
+          <div class="title-tagline-line"></div>
+        </div>
+
+        <!-- Animated feature showcase -->
+        <div class="title-showcase" id="title-showcase">
+          <div class="showcase-card sc-wealth">
+            <i class="fa-solid fa-landmark"></i>
+            <span>Build Empires</span>
+          </div>
+          <div class="showcase-card sc-crime">
+            <i class="fa-solid fa-skull"></i>
+            <span>Crime Pays</span>
+          </div>
+          <div class="showcase-card sc-casino">
+            <i class="fa-solid fa-dice"></i>
+            <span>High Stakes</span>
+          </div>
+          <div class="showcase-card sc-bank">
+            <i class="fa-solid fa-building-columns"></i>
+            <span>Banking</span>
+          </div>
+          <div class="showcase-card sc-career">
+            <i class="fa-solid fa-briefcase"></i>
+            <span>Careers</span>
+          </div>
+          <div class="showcase-card sc-market">
+            <i class="fa-solid fa-chart-line"></i>
+            <span>Markets</span>
+          </div>
+          <div class="showcase-card sc-politics">
+            <i class="fa-solid fa-scale-balanced"></i>
+            <span>Politics</span>
+          </div>
+          <div class="showcase-card sc-social">
+            <i class="fa-solid fa-heart"></i>
+            <span>Relationships</span>
+          </div>
+        </div>
+
+        <!-- Hook line -->
+        <p class="title-hook" id="title-desc"></p>
+
+        <!-- Menu buttons -->
+        <div class="title-menu" id="title-menu">
+          <button class="btn-title-start" onclick="titleScreen.startNewLife()">
+            <span class="btn-title-bg"></span>
+            <i class="fa-solid fa-play"></i>
+            <span>START NEW LIFE</span>
+          </button>
+          <button
+            class="btn-title-continue"
+            id="btn-continue"
+            onclick="titleScreen.continueGame()"
+            style="display: none"
+          >
+            <i class="fa-solid fa-rotate-right"></i>
+            <span>CONTINUE LIFE</span>
+          </button>
+        </div>
+
+        <!-- Footer -->
+        <div class="title-footer-info">
+          <span class="title-ver"
+            ><i class="fa-solid fa-code-branch"></i> v1.0.0</span
+          >
+          <span class="title-ver"
+            ><i class="fa-solid fa-infinity"></i> Infinite Sandbox</span
+          >
+          <span class="title-ver"
+            ><i class="fa-solid fa-skull"></i> Permadeath</span
+          >
+        </div>
+      </div>
+    </div>
+
+    <div class="app-shell" style="display: none" id="app-shell">
+      <div class="app-container">
+        <aside class="sidebar">
+          <div class="brand">
+            <img src="logo.png" alt="Greedigo" class="brand-logo" />
+            <div>
+              <h1>GREEDIGO</h1>
+              <p>The Free Wealth Simulator Game</p>
+            </div>
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat-row hero">
+              <span class="label">NET WORTH</span>
+              <span class="value">$<span id="stat-networth">0</span></span>
+            </div>
+            <div class="stat-row">
+              <span class="label">LIQUID CASH</span>
+              <span class="mono-strong">$<span id="stat-cash">0</span></span>
+            </div>
+
+            <div class="econ-widget">
+              <div class="stat-row econ-row">
+                <span class="label">INFLATION</span>
+                <span class="value econ-value">2.0%</span>
+              </div>
+              <div class="stat-row econ-row">
+                <span class="label">RATES</span>
+                <span class="value econ-value">5.2%</span>
+              </div>
+            </div>
+
+            <button class="btn btn-outline btn-save" onclick="game.saveGame()">
+              <i class="fa-solid fa-floppy-disk"></i> Save Game
+            </button>
+          </div>
+
+          <div class="stat-bars">
+            <div class="bar-group">
+              <div class="bar-label">
+                <span>Health</span><span id="val-health">100%</span>
+              </div>
+              <div class="progress-bg">
+                <div class="progress-fill fill-health" id="bar-health"></div>
+              </div>
+            </div>
+            <div class="bar-group">
+              <div class="bar-label">
+                <span>Energy</span><span id="val-energy">100%</span>
+              </div>
+              <div class="progress-bg">
+                <div class="progress-fill fill-energy" id="bar-energy"></div>
+              </div>
+            </div>
+            <div class="bar-group">
+              <div class="bar-label">
+                <span>Happiness</span><span id="val-happiness">50%</span>
+              </div>
+              <div class="progress-bg">
+                <div
+                  class="progress-fill fill-happiness"
+                  id="bar-happiness"
+                ></div>
+              </div>
+            </div>
+            <div class="bar-group smarts-highlight">
+              <div class="bar-label">
+                <span><i class="fa-solid fa-brain"></i> Smarts</span
+                ><span id="val-smarts">10</span>
+              </div>
+              <div class="progress-bg">
+                <div class="progress-fill fill-smarts" id="bar-smarts"></div>
+              </div>
+              <div class="smarts-iq" id="smarts-iq">IQ: ~100</div>
+            </div>
+          </div>
+
+          <div class="risk-hud">
+            <div class="hud-title">
+              <i class="fa-solid fa-heart-pulse"></i> Life Status
+            </div>
+            <div class="hud-row metric-major">
+              <span
+                ><i class="fa-solid fa-skull-crossbones"></i> Death Risk</span
+              ><span id="hud-death-risk">0%</span>
+            </div>
+            <div class="hud-row metric-major">
+              <span><i class="fa-solid fa-fire"></i> Burnout</span
+              ><span id="hud-burnout">0%</span>
+            </div>
+            <div class="hud-row">
+              <span><i class="fa-solid fa-gavel"></i> Legal</span
+              ><span id="hud-legal-trend">Clean</span>
+            </div>
+            <div class="hud-row">
+              <span><i class="fa-solid fa-trophy"></i> Legend</span
+              ><span id="hud-legend-score">0</span>
+            </div>
+            <div class="hud-row">
+              <span><i class="fa-solid fa-bolt"></i> Streak</span
+              ><span id="hud-action-streak">0</span>
+            </div>
+            <div class="hud-row">
+              <span><i class="fa-solid fa-medal"></i> Achievements</span
+              ><span id="hud-achievements">0/0</span>
+            </div>
+            <div class="hud-title" style="margin-top: 10px">
+              <i class="fa-solid fa-receipt"></i> Monthly Budget
+            </div>
+            <div class="hud-row">
+              <span><i class="fa-solid fa-sack-dollar"></i> Income</span
+              ><span id="hud-monthly-income">$0</span>
+            </div>
+            <div class="hud-row">
+              <span><i class="fa-solid fa-landmark"></i> Taxes</span
+              ><span id="hud-monthly-tax">$0</span>
+            </div>
+            <div class="hud-row">
+              <span><i class="fa-solid fa-house"></i> Living Costs</span
+              ><span id="hud-monthly-living">$0</span>
+            </div>
+            <div class="hud-row">
+              <span><i class="fa-solid fa-credit-card"></i> Total Expenses</span
+              ><span id="hud-monthly-expenses">$0</span>
+            </div>
+            <div class="hud-row metric-major">
+              <span><i class="fa-solid fa-chart-line"></i> Net Cashflow</span
+              ><span id="hud-monthly-net">$0</span>
+            </div>
+          </div>
+
+          <div class="life-snapshot" id="life-snapshot">
+            <div class="hud-title"><i class="fa-solid fa-users"></i> Life</div>
+            <div class="hud-row">
+              <span><i class="fa-solid fa-heart"></i> Partner</span
+              ><span id="hud-partner">Single</span>
+            </div>
+            <div class="hud-row">
+              <span><i class="fa-solid fa-baby"></i> Kids</span
+              ><span id="hud-kids">0</span>
+            </div>
+            <div class="hud-row">
+              <span><i class="fa-solid fa-paw"></i> Pets</span
+              ><span id="hud-pets">0</span>
+            </div>
+          </div>
+
+          <div class="age-display">Age: <span id="stat-age">18</span></div>
+        </aside>
+
+        <main class="main-area">
+          <!-- ═══ Mobile Top Bar ═══ -->
+          <div class="mobile-top-bar" id="mobile-top-bar">
+            <button class="mtb-btn" onclick="app.toggleMobileNav()">
+              <i class="fa-solid fa-bars" id="mobile-nav-icon"></i>
+            </button>
+            <div class="mtb-info">
+              <span class="mtb-age" id="mtb-age">Age 18</span>
+              <span class="mtb-dot">&middot;</span>
+              <span class="mtb-nw" id="mtb-nw">$0</span>
+            </div>
+            <button
+              class="mtb-btn"
+              id="mtb-stats-btn"
+              onclick="app.toggleMobileStats()"
+            >
+              <i class="fa-solid fa-chart-simple" id="mtb-stats-icon"></i>
+            </button>
+          </div>
+          <!-- ═══ Mobile Stats Panel (collapsible) ═══ -->
+          <div class="mobile-stats-panel" id="mobile-stats-panel">
+            <div class="msp-inner">
+              <div class="msp-bars">
+                <div class="msp-bar-group">
+                  <div class="msp-bar-head">
+                    <span>HP</span><span id="msp-hp">100</span>
+                  </div>
+                  <div class="msp-track">
+                    <div
+                      class="msp-fill msp-hp"
+                      id="msp-bar-hp"
+                      style="width: 100%"
+                    ></div>
+                  </div>
+                </div>
+                <div class="msp-bar-group">
+                  <div class="msp-bar-head">
+                    <span>NRG</span><span id="msp-nrg">100</span>
+                  </div>
+                  <div class="msp-track">
+                    <div
+                      class="msp-fill msp-nrg"
+                      id="msp-bar-nrg"
+                      style="width: 100%"
+                    ></div>
+                  </div>
+                </div>
+                <div class="msp-bar-group">
+                  <div class="msp-bar-head">
+                    <span>JOY</span><span id="msp-joy">50</span>
+                  </div>
+                  <div class="msp-track">
+                    <div
+                      class="msp-fill msp-joy"
+                      id="msp-bar-joy"
+                      style="width: 50%"
+                    ></div>
+                  </div>
+                </div>
+                <div class="msp-bar-group">
+                  <div class="msp-bar-head">
+                    <span>IQ</span><span id="msp-iq">10</span>
+                  </div>
+                  <div class="msp-track">
+                    <div
+                      class="msp-fill msp-iq"
+                      id="msp-bar-iq"
+                      style="width: 10%"
+                    ></div>
+                  </div>
+                </div>
+              </div>
+              <div class="msp-chips">
+                <span class="msp-chip"
+                  ><i class="fa-solid fa-wallet"></i>
+                  <b id="msp-cash">$0</b></span
+                >
+                <span class="msp-chip msp-warn"
+                  ><i class="fa-solid fa-skull-crossbones"></i>
+                  <b id="msp-risk">0%</b></span
+                >
+                <span class="msp-chip"
+                  ><i class="fa-solid fa-fire"></i>
+                  <b id="msp-burn">0%</b></span
+                >
+                <span class="msp-chip"
+                  ><i class="fa-solid fa-heart"></i>
+                  <b id="msp-partner">Single</b></span
+                >
+              </div>
+              <div class="msp-foot">
+                <button class="msp-save" onclick="game.saveGame()">
+                  <i class="fa-solid fa-floppy-disk"></i> Save Game
+                </button>
+              </div>
+            </div>
+          </div>
+          <div
+            class="mobile-nav-overlay"
+            id="mobile-nav-overlay"
+            onclick="app.closeMobileNav()"
+          ></div>
+          <nav class="nav-tabs" id="nav-tabs">
+            <div class="nav-close-btn" onclick="app.closeMobileNav()">
+              <i class="fa-solid fa-xmark"></i>
+            </div>
+            <div class="nav-item active" onclick="app.setView('career')">
+              <i class="fa-solid fa-briefcase"></i> Career
+            </div>
+            <div class="nav-item" onclick="app.setView('hustles')">
+              <i class="fa-solid fa-bolt"></i> Hustles
+            </div>
+            <div class="nav-item" onclick="app.setView('business')">
+              <i class="fa-solid fa-building"></i> Business
+            </div>
+            <div class="nav-item" onclick="app.setView('market')">
+              <i class="fa-solid fa-chart-line"></i> Market
+            </div>
+            <div class="nav-item" onclick="app.setView('wealth')">
+              <i class="fa-solid fa-landmark"></i> Wealth
+            </div>
+            <div class="nav-item" onclick="app.setView('bank')">
+              <i class="fa-solid fa-building-columns"></i> Bank
+            </div>
+            <div class="nav-item" onclick="app.setView('lifestyle')">
+              <i class="fa-solid fa-house-chimney"></i> Lifestyle
+            </div>
+            <div class="nav-item" onclick="app.setView('wellness')">
+              <i class="fa-solid fa-spa"></i> Health
+            </div>
+            <div class="nav-item" onclick="app.setView('crime')">
+              <i class="fa-solid fa-mask"></i> Crime
+            </div>
+            <div class="nav-item" onclick="app.setView('relationships')">
+              <i class="fa-solid fa-heart"></i> Social
+            </div>
+            <div class="nav-item" onclick="app.setView('casino')">
+              <i class="fa-solid fa-dice"></i> Casino
+            </div>
+            <div class="nav-item" onclick="app.setView('politics')">
+              <i class="fa-solid fa-scale-balanced"></i> Politics
+            </div>
+            <div
+              class="nav-item nav-save-item"
+              onclick="
+                game.saveGame();
+                app.closeMobileNav();
+              "
+            >
+              <i class="fa-solid fa-floppy-disk"></i> Save Game
+            </div>
+            <div
+              class="nav-item nav-save-item"
+              onclick="
+                game.exportSave();
+                app.closeMobileNav();
+              "
+            >
+              <i class="fa-solid fa-download"></i> Export Save
+            </div>
+            <div
+              class="nav-item nav-save-item"
+              onclick="
+                game.importSave();
+                app.closeMobileNav();
+              "
+            >
+              <i class="fa-solid fa-upload"></i> Import Save
+            </div>
+          </nav>
+
+          <div id="view-career" class="view-container active">
+            <div class="section-title">
+              <i class="fa-solid fa-user-tie"></i> Career & Education
+            </div>
+
+            <div class="card panel-current-job" id="current-job-panel"></div>
+
+            <div class="grid-cards" id="edu-list"></div>
+
+            <h3 class="section-subtitle">Job Listings</h3>
+            <div class="grid-cards" id="job-list"></div>
+          </div>
+
+          <div id="view-business" class="view-container">
+            <div class="section-title">
+              <i class="fa-solid fa-rocket"></i> Venture Capital
+            </div>
+
+            <div class="card incubator-card">
+              <div class="incubator-head">
+                <div>
+                  <h3>Startup Incubator</h3>
+                  <p>
+                    Launch high-risk tech companies. Hire employees to scale.
+                  </p>
+                </div>
+                <button
+                  class="btn btn-primary incubator-cta"
+                  onclick="game.startStartup()"
+                >
+                  <i class="fa-solid fa-plus"></i> New Startup ($5k)
+                </button>
+              </div>
+            </div>
+
+            <div class="grid-cards" id="startup-list"></div>
+          </div>
+
+          <div id="view-hustles" class="view-container">
+            <div class="section-title">
+              <i class="fa-solid fa-bolt"></i> Side Hustles & Creator Economy
+            </div>
+
+            <h3 class="section-subtitle">Active Side Hustle</h3>
+            <div class="grid-cards" id="hustle-list"></div>
+
+            <h3 class="section-subtitle">High-Ticket Contracts</h3>
+            <div class="grid-cards" id="contract-list"></div>
+
+            <h3 class="section-subtitle">Creator Channels</h3>
+            <div class="grid-cards" id="creator-list"></div>
+          </div>
+
+          <div id="view-market" class="view-container">
+            <div class="section-title">
+              <i class="fa-solid fa-arrow-trend-up"></i> Global Markets
+            </div>
+
+            <div class="chart-box">
+              <canvas id="market-chart"></canvas>
+            </div>
+
+            <div class="grid-cards" id="market-list"></div>
+          </div>
+
+          <div id="view-lifestyle" class="view-container">
+            <div class="section-title">
+              <i class="fa-solid fa-cart-shopping"></i> Inventory & Shop
+            </div>
+            <div class="grid-cards inventory-block" id="inventory-list"></div>
+
+            <h3 class="section-subtitle">Purchase Assets</h3>
+            <div class="grid-cards" id="shop-list"></div>
+          </div>
+
+          <div id="view-wellness" class="view-container">
+            <div class="section-title">
+              <i class="fa-solid fa-spa"></i> Health & Wellness
+            </div>
+
+            <div class="card" id="wellness-overview"></div>
+
+            <h3 class="section-subtitle">Activities</h3>
+            <div class="grid-cards" id="wellness-activities"></div>
+          </div>
+
+          <div id="view-wealth" class="view-container">
+            <div class="section-title">
+              <i class="fa-solid fa-landmark"></i> Wealth Engines
+            </div>
+
+            <div class="card" id="passive-preview"></div>
+
+            <h3 class="section-subtitle">Franchise Portfolio</h3>
+            <div class="grid-cards" id="franchise-list"></div>
+
+            <h3 class="section-subtitle">Real Estate</h3>
+            <div class="grid-cards" id="property-list"></div>
+
+            <h3 class="section-subtitle">Bond Desk</h3>
+            <div class="grid-cards" id="bond-list"></div>
+
+            <h3 class="section-subtitle">Dividend Vault</h3>
+            <div class="grid-cards" id="dividend-list"></div>
+          </div>
+
+          <div id="view-bank" class="view-container">
+            <div class="section-title">
+              <i class="fa-solid fa-building-columns"></i> Banking
+            </div>
+
+            <div class="card" id="bank-overview"></div>
+
+            <h3 class="section-subtitle">Your Accounts</h3>
+            <div class="grid-cards" id="bank-accounts"></div>
+
+            <h3 class="section-subtitle">Credit Card</h3>
+            <div class="grid-cards" id="bank-credit"></div>
+
+            <h3 class="section-subtitle">Loans & Savings</h3>
+            <div class="grid-cards" id="bank-loan-offers"></div>
+
+            <div class="grid-cards" id="bank-active-loans"></div>
+          </div>
+
+          <div id="view-crime" class="view-container">
+            <div class="section-title">
+              <i class="fa-solid fa-skull"></i> The Underworld
+            </div>
+
+            <div class="crime-dashboard">
+              <div class="card crime-stat-card">
+                <div class="crime-stat-title">WANTED LEVEL</div>
+                <div class="progress-bg heat-meter">
+                  <div class="progress-fill" id="meter-heat"></div>
+                </div>
+                <div class="heat-actions">
+                  <span id="heat-label">Low Heat</span>
+                  <button
+                    class="btn btn-outline heat-btn"
+                    onclick="game.launderHeat()"
+                  >
+                    Launder ($1k)
+                  </button>
+                </div>
+              </div>
+              <div class="card crime-stat-card">
+                <div class="crime-stat-title">STREET REP</div>
+                <div class="rep-value" id="stat-rep">0</div>
+                <div class="rep-subtitle">
+                  Level <span id="rep-level">1</span> Thug
+                </div>
+              </div>
+            </div>
+
+            <div class="crime-warning">
+              <i class="fa-solid fa-triangle-exclamation"></i>
+              <strong>Risk Factor:</strong> Higher Rep unlocks better jobs.
+              Higher Heat increases jail time and bust chance.
+            </div>
+
+            <h3 class="section-subtitle tight">Criminal Operations</h3>
+            <div class="grid-cards" id="crime-list"></div>
+          </div>
+
+          <div id="view-casino" class="view-container">
+            <div class="section-title">
+              <i class="fa-solid fa-dice"></i> High Stakes Casino
+            </div>
+            <div class="card casino-hero" id="casino-stat-card">
+              <div class="card-header casino-hero-head">
+                <div>
+                  <h3>VIP Lounge</h3>
+                  <p class="casino-hero-text">
+                    Professional-grade bankroll control. Read volatility before
+                    placing each hand.
+                  </p>
+                </div>
+                <span class="tag safe" id="casino-lifetime-net">+$0</span>
+              </div>
+
+              <div class="casino-kpi-grid">
+                <div class="casino-kpi-card">
+                  <span class="casino-kpi-label">Total Bets</span>
+                  <span class="casino-kpi-value" id="casino-total-bets">0</span>
+                </div>
+                <div class="casino-kpi-card">
+                  <span class="casino-kpi-label">Win Rate</span>
+                  <span class="casino-kpi-value" id="casino-win-rate">0%</span>
+                </div>
+                <div class="casino-kpi-card">
+                  <span class="casino-kpi-label">Current Streak</span>
+                  <span class="casino-kpi-value" id="casino-streak">Cold</span>
+                </div>
+                <div class="casino-kpi-card">
+                  <span class="casino-kpi-label">Best Payout</span>
+                  <span class="casino-kpi-value" id="casino-best-payout"
+                    >$0</span
+                  >
+                </div>
+              </div>
+            </div>
+
+            <div class="casino-meta-grid">
+              <div class="card casino-intel" id="casino-intel-card"></div>
+              <div class="card casino-recent" id="casino-recent-card">
+                <div class="card-header">
+                  <h3>Recent Outcomes</h3>
+                  <span class="tag" id="casino-last-outcome">No hands yet</span>
+                </div>
+                <div class="casino-recent-list" id="casino-recent-list"></div>
+              </div>
+            </div>
+
+            <div class="grid-cards" id="casino-games-list"></div>
+          </div>
+
+          <div id="view-relationships" class="view-container">
+            <div class="section-title">
+              <i class="fa-solid fa-heart"></i> Relationships & Family
+            </div>
+
+            <div class="card" id="relationship-status-card"></div>
+
+            <h3 class="section-subtitle">Dating Pool</h3>
+            <div class="grid-cards" id="dating-pool"></div>
+
+            <div class="card" id="marriage-panel" style="display: none"></div>
+
+            <h3 class="section-subtitle">Children</h3>
+            <div class="grid-cards" id="children-list"></div>
+
+            <h3 class="section-subtitle">
+              <i class="fa-solid fa-paw"></i> Pets
+            </h3>
+            <div class="grid-cards" id="pet-list"></div>
+            <div class="grid-cards" id="pet-shop"></div>
+          </div>
+
+          <div id="view-prison" class="view-container">
+            <div class="section-title">
+              <i class="fa-solid fa-handcuffs"></i> Federal Prison
+            </div>
+
+            <div class="card" id="prison-status-card"></div>
+
+            <h3 class="section-subtitle">Daily Actions</h3>
+            <div class="grid-cards" id="prison-actions"></div>
+          </div>
+
+          <div id="view-politics" class="view-container">
+            <div class="section-title">
+              <i class="fa-solid fa-scale-balanced"></i> Political Career
+            </div>
+            <div
+              class="card"
+              id="politics-dashboard"
+              style="margin-bottom: 20px"
+            ></div>
+            <h3 class="section-subtitle">Campaign Trail</h3>
+            <div class="grid-cards" id="politics-roles-list"></div>
+          </div>
+
+          <div id="view-ending" class="view-container">
+            <div class="section-title">
+              <i class="fa-solid fa-hourglass-end"></i> Timeline Ending
+            </div>
+            <div class="ending-panel" id="ending-panel"></div>
+          </div>
+
+          <div class="control-bar">
+            <div class="control-left">
+              <div class="log-feed">
+                <i class="fa-solid fa-terminal terminal-icon"></i>
+                <span class="log-latest" id="log-latest"
+                  >System Online. Market awaiting data...</span
+                >
+              </div>
+            </div>
+            <div class="control-center">
+              <div class="speed-controls">
+                <button
+                  class="btn btn-outline speed-btn active"
+                  id="speed-1"
+                  onclick="game.setFastForward(1)"
+                >
+                  1m
+                </button>
+                <button
+                  class="btn btn-outline speed-btn"
+                  id="speed-6"
+                  onclick="game.setFastForward(6)"
+                >
+                  6m
+                </button>
+                <button
+                  class="btn btn-outline speed-btn"
+                  id="speed-12"
+                  onclick="game.setFastForward(12)"
+                >
+                  12m
+                </button>
+              </div>
+            </div>
+            <div class="control-right">
+              <button
+                class="next-month-btn"
+                id="main-advance-btn"
+                onclick="game.advanceBySpeed()"
+              >
+                <i class="fa-solid fa-forward"></i>
+                <span id="advance-btn-label">+1 Month</span>
+              </button>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <div id="modal-overlay" class="modal-overlay">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 id="modal-title">Title</h2>
+        </div>
+        <p id="modal-desc" class="modal-desc">Description...</p>
+        <div id="modal-actions"></div>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
