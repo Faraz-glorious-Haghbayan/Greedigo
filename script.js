@@ -43,6 +43,8 @@ const CONFIG = {
     {
       id: "service",
       name: "Hospitality",
+      image:
+        "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400&h=200&fit=crop",
       levels: [
         {
           title: "Dishwasher",
@@ -89,6 +91,8 @@ const CONFIG = {
     {
       id: "tech",
       name: "Technology",
+      image:
+        "https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?w=400&h=200&fit=crop",
       levels: [
         {
           title: "QA Intern",
@@ -135,12 +139,14 @@ const CONFIG = {
     {
       id: "corp",
       name: "Corporate",
+      image:
+        "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=400&h=200&fit=crop",
       levels: [
         {
           title: "Sales Rep",
           salary: 45000,
           reqEdu: null,
-          reqSkill: { sales: 5 },
+          reqSkill: {},
           stress: 50,
           xp: ["sales"],
         },
@@ -181,6 +187,8 @@ const CONFIG = {
     {
       id: "med",
       name: "Medicine",
+      image:
+        "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=200&fit=crop",
       levels: [
         {
           title: "Orderly",
@@ -3806,7 +3814,7 @@ const game = {
     if (this.state.life.burnout > 65)
       report.push("Burnout signals in interview");
     const percentage = Math.max(
-      0.02,
+      levelIdx === 0 ? 0.9 : 0.02, // Entry-level jobs are 90% likely to accept
       Math.min(0.95, score / (maxScore || 1) - opportunityDrag),
     );
     this.modStat("energy", -10);
@@ -6182,9 +6190,6 @@ const game = {
               <button class="btn btn-primary" onclick="game.startNewTimeline()">
                 <i class="fa-solid fa-rotate-right"></i> Start New Timeline
               </button>
-              <button class="btn btn-outline" onclick="game.saveGame(); app.toast('Legacy snapshot saved!','success')">
-                <i class="fa-solid fa-floppy-disk"></i> Save Legacy Snapshot
-              </button>
             </div>
           </div>
         `;
@@ -6218,6 +6223,9 @@ const game = {
 
       jobEl.innerHTML = `
         <div class="panel-header">
+            <div class="panel-image">
+                <img src="${t.image}" alt="${t.name}" />
+            </div>
             <div class="panel-title">
                 <h2>${lvl.title}</h2>
                 <div class="panel-subtitle">${t.name}</div>
@@ -6278,7 +6286,10 @@ const game = {
 
         let html = `<div class="card" style="grid-column: span 2;">
             <div class="card-header" style="border-bottom:1px solid var(--border-dim); padding-bottom:12px; margin-bottom:16px;">
-                <h3 style="margin:0;">${track.name}</h3>
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <img src="${track.image}" alt="${track.name}" style="width: 60px; height: 40px; object-fit: cover; border-radius: 6px;">
+                    <h3 style="margin:0;">${track.name}</h3>
+                </div>
             </div>
             <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:16px;">`;
 

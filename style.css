@@ -763,11 +763,24 @@ body.run-ended .nav-tabs {
 /* â•â• JS DYNAMIC CONTENT HELPERS â•â• */
 .panel-header {
   display: flex;
-  justify-content: space-between;
   align-items: flex-start;
+  gap: 16px;
   margin-bottom: 24px;
   padding-bottom: 16px;
   border-bottom: 1px solid var(--border-dim);
+}
+.panel-image {
+  flex-shrink: 0;
+}
+.panel-image img {
+  width: 80px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid var(--border-dim);
+}
+.panel-title {
+  flex: 1;
 }
 .panel-title h2 {
   font-size: 1.5rem;
@@ -5572,6 +5585,20 @@ body.health-critical .fill-health {
   letter-spacing: 0.5px;
   text-transform: uppercase;
 }
+
+/* Mobile responsiveness for biz overview */
+@media (max-width: 768px) {
+  .biz-overview {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .biz-overview {
+    grid-template-columns: 1fr;
+  }
+}
+
 .biz-launch-section {
   margin-bottom: 32px;
 }
