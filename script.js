@@ -380,20 +380,112 @@ const CONFIG = {
 
   // --- NEW BUSINESS CONFIG ---
   STARTUP_TYPES: [
-    { id: "saas", name: "SaaS Platform", icon: "fa-cloud", cost: 8000, difficulty: 0.8, upside: 1.2, desc: "Recurring revenue cloud software. Steady growth, predictable income.", color: "#60a5fa" },
-    { id: "social", name: "Social App", icon: "fa-users", cost: 5000, difficulty: 1.0, upside: 3.0, desc: "Build the next viral social network. High risk, massive reward.", color: "#f472b6" },
-    { id: "biotech", name: "BioTech", icon: "fa-dna", cost: 50000, difficulty: 1.8, upside: 6.0, desc: "Cutting-edge medicine and research. Expensive but revolutionary.", color: "#34d399" },
-    { id: "ecommerce", name: "E-Commerce", icon: "fa-cart-shopping", cost: 4000, difficulty: 0.6, upside: 1.0, desc: "Online retail store. Easiest to start, quicker revenue.", color: "#fbbf24" },
-    { id: "fintech", name: "FinTech", icon: "fa-coins", cost: 18000, difficulty: 1.2, upside: 2.5, desc: "Financial technology disrupting banking. High regulation, high reward.", color: "#a78bfa" },
-    { id: "gaming", name: "Gaming Studio", icon: "fa-gamepad", cost: 10000, difficulty: 1.0, upside: 2.0, desc: "Video game development. Creative, hit-driven market.", color: "#fb923c" },
-    { id: "edtech", name: "EdTech", icon: "fa-graduation-cap", cost: 5000, difficulty: 0.7, upside: 1.3, desc: "Education technology. Stable demand, social impact.", color: "#38bdf8" },
-    { id: "ai", name: "AI & Machine Learning", icon: "fa-brain", cost: 25000, difficulty: 1.4, upside: 4.0, desc: "Artificial intelligence products. Cutting-edge, talent-hungry.", color: "#c084fc" },
+    {
+      id: "saas",
+      name: "SaaS Platform",
+      icon: "fa-cloud",
+      cost: 8000,
+      difficulty: 0.8,
+      upside: 1.2,
+      desc: "Recurring revenue cloud software. Steady growth, predictable income.",
+      color: "#60a5fa",
+    },
+    {
+      id: "social",
+      name: "Social App",
+      icon: "fa-users",
+      cost: 5000,
+      difficulty: 1.0,
+      upside: 3.0,
+      desc: "Build the next viral social network. High risk, massive reward.",
+      color: "#f472b6",
+    },
+    {
+      id: "biotech",
+      name: "BioTech",
+      icon: "fa-dna",
+      cost: 50000,
+      difficulty: 1.8,
+      upside: 6.0,
+      desc: "Cutting-edge medicine and research. Expensive but revolutionary.",
+      color: "#34d399",
+    },
+    {
+      id: "ecommerce",
+      name: "E-Commerce",
+      icon: "fa-cart-shopping",
+      cost: 4000,
+      difficulty: 0.6,
+      upside: 1.0,
+      desc: "Online retail store. Easiest to start, quicker revenue.",
+      color: "#fbbf24",
+    },
+    {
+      id: "fintech",
+      name: "FinTech",
+      icon: "fa-coins",
+      cost: 18000,
+      difficulty: 1.2,
+      upside: 2.5,
+      desc: "Financial technology disrupting banking. High regulation, high reward.",
+      color: "#a78bfa",
+    },
+    {
+      id: "gaming",
+      name: "Gaming Studio",
+      icon: "fa-gamepad",
+      cost: 10000,
+      difficulty: 1.0,
+      upside: 2.0,
+      desc: "Video game development. Creative, hit-driven market.",
+      color: "#fb923c",
+    },
+    {
+      id: "edtech",
+      name: "EdTech",
+      icon: "fa-graduation-cap",
+      cost: 5000,
+      difficulty: 0.7,
+      upside: 1.3,
+      desc: "Education technology. Stable demand, social impact.",
+      color: "#38bdf8",
+    },
+    {
+      id: "ai",
+      name: "AI & Machine Learning",
+      icon: "fa-brain",
+      cost: 25000,
+      difficulty: 1.4,
+      upside: 4.0,
+      desc: "Artificial intelligence products. Cutting-edge, talent-hungry.",
+      color: "#c084fc",
+    },
   ],
   STARTUP_ROLES: {
-    dev: { salary: 5500, output: 11, desc: "Builds product features & fixes bugs", icon: "fa-code" },
-    sales: { salary: 4200, output: 0.5, desc: "Acquires customers & closes deals", icon: "fa-handshake" },
-    mkt: { salary: 4000, output: 20, desc: "Grows brand awareness & reach", icon: "fa-bullhorn" },
-    exec: { salary: 8000, output: 1.15, desc: "Multiplies everyone's output by 15%", icon: "fa-crown" },
+    dev: {
+      salary: 5500,
+      output: 11,
+      desc: "Builds product features & fixes bugs",
+      icon: "fa-code",
+    },
+    sales: {
+      salary: 4200,
+      output: 0.5,
+      desc: "Acquires customers & closes deals",
+      icon: "fa-handshake",
+    },
+    mkt: {
+      salary: 4000,
+      output: 20,
+      desc: "Grows brand awareness & reach",
+      icon: "fa-bullhorn",
+    },
+    exec: {
+      salary: 8000,
+      output: 1.15,
+      desc: "Multiplies everyone's output by 15%",
+      icon: "fa-crown",
+    },
   },
 
   // --- BUSINESS ADVISOR ---
@@ -443,84 +535,212 @@ const CONFIG = {
   // --- COUNTRY DATA ---
   // [name, ISO code, economy(1-5), stability(1-5), taxBurden(1-5), safety(1-5), opportunity(1-5)]
   COUNTRIES: [
-    ["Afghanistan","AF",1,1,1,1,1],["Albania","AL",2,3,2,3,2],["Algeria","DZ",2,2,2,2,2],
-    ["Andorra","AD",5,5,1,5,3],["Angola","AO",2,2,2,2,2],["Antigua and Barbuda","AG",4,4,2,4,3],
-    ["Argentina","AR",3,3,4,3,3],["Armenia","AM",2,3,2,3,2],["Australia","AU",5,5,4,5,5],
-    ["Austria","AT",5,5,5,5,4],["Azerbaijan","AZ",3,3,2,3,2],["Bahamas","BS",4,4,1,3,3],
-    ["Bahrain","BH",5,4,1,4,4],["Bangladesh","BD",1,2,2,2,2],["Barbados","BB",4,4,3,4,3],
-    ["Belarus","BY",3,2,3,3,2],["Belgium","BE",5,5,5,4,4],["Belize","BZ",2,3,2,3,2],
-    ["Benin","BJ",1,3,2,3,1],["Bhutan","BT",2,4,2,4,2],["Bolivia","BO",2,2,2,2,2],
-    ["Bosnia and Herzegovina","BA",3,3,3,3,2],["Botswana","BW",3,4,3,4,3],["Brazil","BR",3,3,4,2,3],
-    ["Brunei","BN",5,4,1,5,3],["Bulgaria","BG",3,4,3,4,3],["Burkina Faso","BF",1,1,2,1,1],
-    ["Burundi","BI",1,1,2,1,1],["Cabo Verde","CV",2,4,3,4,2],["Cambodia","KH",2,3,2,3,2],
-    ["Cameroon","CM",1,2,2,2,1],["Canada","CA",5,5,4,5,5],["Central African Republic","CF",1,1,1,1,1],
-    ["Chad","TD",1,1,1,1,1],["Chile","CL",4,4,3,4,4],["China","CN",3,3,3,4,4],
-    ["Colombia","CO",3,3,3,2,3],["Comoros","KM",1,2,2,2,1],["Congo (DRC)","CD",1,1,1,1,1],
-    ["Congo (Republic)","CG",2,2,2,2,1],["Costa Rica","CR",3,4,3,4,3],["Croatia","HR",4,4,4,4,3],
-    ["Cuba","CU",2,3,3,3,1],["Cyprus","CY",4,4,3,4,3],["Czech Republic","CZ",4,5,4,5,4],
-    ["Côte d'Ivoire","CI",2,2,2,2,2],["Denmark","DK",5,5,5,5,4],["Djibouti","DJ",2,3,2,3,1],
-    ["Dominica","DM",3,4,2,4,2],["Dominican Republic","DO",3,3,3,3,3],["Ecuador","EC",2,3,3,2,2],
-    ["Egypt","EG",2,3,2,3,2],["El Salvador","SV",2,3,2,2,2],["Equatorial Guinea","GQ",3,2,1,2,2],
-    ["Eritrea","ER",1,1,2,2,1],["Estonia","EE",4,5,3,5,4],["Eswatini","SZ",2,3,2,3,2],
-    ["Ethiopia","ET",1,1,2,2,1],["Fiji","FJ",2,3,3,3,2],["Finland","FI",5,5,5,5,4],
-    ["France","FR",5,5,5,4,4],["Gabon","GA",3,3,2,3,2],["Gambia","GM",1,3,2,3,1],
-    ["Georgia","GE",2,3,2,3,3],["Germany","DE",5,5,5,5,5],["Ghana","GH",2,3,2,3,2],
-    ["Greece","GR",4,4,4,4,3],["Grenada","GD",3,4,2,4,2],["Guatemala","GT",2,3,2,2,2],
-    ["Guinea","GN",1,2,2,2,1],["Guinea-Bissau","GW",1,2,2,2,1],["Guyana","GY",2,3,2,3,2],
-    ["Haiti","HT",1,1,2,1,1],["Honduras","HN",2,2,2,2,2],["Hungary","HU",4,4,3,4,3],
-    ["Iceland","IS",5,5,4,5,4],["India","IN",2,3,3,3,3],["Indonesia","ID",2,3,3,3,3],
-    ["Iran","IR",2,2,3,2,2],["Iraq","IQ",2,1,2,1,1],["Ireland","IE",5,5,3,5,5],
-    ["Israel","IL",5,4,4,3,5],["Italy","IT",5,5,5,4,4],["Jamaica","JM",3,3,3,2,2],
-    ["Japan","JP",5,5,4,5,4],["Jordan","JO",3,4,2,4,2],["Kazakhstan","KZ",3,3,2,3,3],
-    ["Kenya","KE",2,3,2,2,2],["Kiribati","KI",1,4,2,4,1],["Kuwait","KW",5,4,1,4,3],
-    ["Kyrgyzstan","KG",2,3,2,3,2],["Laos","LA",2,3,2,3,2],["Latvia","LV",4,4,3,4,3],
-    ["Lebanon","LB",2,1,2,2,2],["Lesotho","LS",1,3,2,3,1],["Liberia","LR",1,2,2,2,1],
-    ["Libya","LY",2,1,2,1,1],["Liechtenstein","LI",5,5,2,5,4],["Lithuania","LT",4,4,3,5,4],
-    ["Luxembourg","LU",5,5,4,5,4],["Madagascar","MG",1,2,2,2,1],["Malawi","MW",1,3,2,3,1],
-    ["Malaysia","MY",3,4,2,4,4],["Maldives","MV",3,4,2,4,2],["Mali","ML",1,1,2,1,1],
-    ["Malta","MT",4,5,3,5,3],["Marshall Islands","MH",2,4,2,4,1],["Mauritania","MR",1,2,2,2,1],
-    ["Mauritius","MU",3,4,2,4,3],["Mexico","MX",3,3,3,2,3],["Micronesia","FM",2,4,2,4,1],
-    ["Moldova","MD",2,3,3,3,2],["Monaco","MC",5,5,1,5,4],["Mongolia","MN",2,3,2,3,2],
-    ["Montenegro","ME",3,4,3,4,3],["Morocco","MA",2,3,3,3,2],["Mozambique","MZ",1,2,2,2,1],
-    ["Myanmar","MM",1,1,2,1,1],["Namibia","NA",2,4,3,4,2],["Nauru","NR",3,4,2,4,1],
-    ["Nepal","NP",1,3,2,3,1],["Netherlands","NL",5,5,5,5,5],["New Zealand","NZ",5,5,4,5,4],
-    ["Nicaragua","NI",2,2,2,2,2],["Niger","NE",1,2,2,2,1],["Nigeria","NG",2,2,2,2,2],
-    ["North Korea","KP",1,2,1,2,1],["North Macedonia","MK",3,3,3,3,2],["Norway","NO",5,5,5,5,4],
-    ["Oman","OM",4,4,1,4,3],["Pakistan","PK",2,2,2,2,2],["Palau","PW",3,4,2,4,2],
-    ["Panama","PA",4,4,2,3,3],["Papua New Guinea","PG",2,2,2,2,1],["Paraguay","PY",2,3,2,3,2],
-    ["Peru","PE",3,3,3,3,3],["Philippines","PH",2,3,2,3,2],["Poland","PL",4,4,3,4,4],
-    ["Portugal","PT",4,5,4,4,4],["Qatar","QA",5,4,1,5,4],["Romania","RO",3,4,3,4,3],
-    ["Russia","RU",3,2,3,3,2],["Rwanda","RW",1,3,2,3,2],["Saint Kitts and Nevis","KN",4,4,1,4,3],
-    ["Saint Lucia","LC",3,4,2,4,2],["Saint Vincent and the Grenadines","VC",3,4,2,4,2],
-    ["Samoa","WS",2,4,2,4,2],["San Marino","SM",5,5,3,5,3],["São Tomé and Príncipe","ST",1,4,2,4,1],
-    ["Saudi Arabia","SA",5,4,1,4,4],["Senegal","SN",1,3,2,3,2],["Serbia","RS",3,3,3,3,3],
-    ["Seychelles","SC",4,4,2,4,2],["Sierra Leone","SL",1,3,2,3,1],["Singapore","SG",5,5,2,5,5],
-    ["Slovakia","SK",4,4,3,4,3],["Slovenia","SI",4,5,4,5,4],["Solomon Islands","SB",1,3,2,3,1],
-    ["Somalia","SO",1,1,1,1,1],["South Africa","ZA",3,3,3,2,3],["South Korea","KR",5,4,3,4,5],
-    ["South Sudan","SS",1,1,1,1,1],["Spain","ES",4,5,4,4,4],["Sri Lanka","LK",2,3,3,3,2],
-    ["Sudan","SD",1,1,2,1,1],["Suriname","SR",2,3,2,3,2],["Sweden","SE",5,5,5,5,4],
-    ["Switzerland","CH",5,5,4,5,5],["Syria","SY",1,1,1,1,1],["Tajikistan","TJ",1,2,2,2,1],
-    ["Tanzania","TZ",1,3,2,3,2],["Thailand","TH",3,3,2,3,3],["Timor-Leste","TL",1,3,2,3,1],
-    ["Togo","TG",1,3,2,3,1],["Tonga","TO",2,4,2,4,1],["Trinidad and Tobago","TT",4,3,3,3,3],
-    ["Tunisia","TN",2,3,3,3,2],["Turkey","TR",3,3,3,3,3],["Turkmenistan","TM",2,2,2,2,1],
-    ["Tuvalu","TV",2,4,2,4,1],["Uganda","UG",1,2,2,2,1],["Ukraine","UA",2,1,3,1,2],
-    ["United Arab Emirates","AE",5,5,1,5,5],["United Kingdom","GB",5,5,4,5,5],
-    ["United States","US",5,5,3,4,5],["Uruguay","UY",4,4,3,4,3],["Uzbekistan","UZ",2,3,2,3,2],
-    ["Vanuatu","VU",2,4,2,4,1],["Vatican City","VA",5,5,1,5,1],["Venezuela","VE",1,1,2,1,1],
-    ["Vietnam","VN",2,3,2,3,3],["Yemen","YE",1,1,1,1,1],["Zambia","ZM",1,3,2,3,1],
-    ["Zimbabwe","ZW",1,2,2,2,1],
+    ["Afghanistan", "AF", 1, 1, 1, 1, 1],
+    ["Albania", "AL", 2, 3, 2, 3, 2],
+    ["Algeria", "DZ", 2, 2, 2, 2, 2],
+    ["Andorra", "AD", 5, 5, 1, 5, 3],
+    ["Angola", "AO", 2, 2, 2, 2, 2],
+    ["Antigua and Barbuda", "AG", 4, 4, 2, 4, 3],
+    ["Argentina", "AR", 3, 3, 4, 3, 3],
+    ["Armenia", "AM", 2, 3, 2, 3, 2],
+    ["Australia", "AU", 5, 5, 4, 5, 5],
+    ["Austria", "AT", 5, 5, 5, 5, 4],
+    ["Azerbaijan", "AZ", 3, 3, 2, 3, 2],
+    ["Bahamas", "BS", 4, 4, 1, 3, 3],
+    ["Bahrain", "BH", 5, 4, 1, 4, 4],
+    ["Bangladesh", "BD", 1, 2, 2, 2, 2],
+    ["Barbados", "BB", 4, 4, 3, 4, 3],
+    ["Belarus", "BY", 3, 2, 3, 3, 2],
+    ["Belgium", "BE", 5, 5, 5, 4, 4],
+    ["Belize", "BZ", 2, 3, 2, 3, 2],
+    ["Benin", "BJ", 1, 3, 2, 3, 1],
+    ["Bhutan", "BT", 2, 4, 2, 4, 2],
+    ["Bolivia", "BO", 2, 2, 2, 2, 2],
+    ["Bosnia and Herzegovina", "BA", 3, 3, 3, 3, 2],
+    ["Botswana", "BW", 3, 4, 3, 4, 3],
+    ["Brazil", "BR", 3, 3, 4, 2, 3],
+    ["Brunei", "BN", 5, 4, 1, 5, 3],
+    ["Bulgaria", "BG", 3, 4, 3, 4, 3],
+    ["Burkina Faso", "BF", 1, 1, 2, 1, 1],
+    ["Burundi", "BI", 1, 1, 2, 1, 1],
+    ["Cabo Verde", "CV", 2, 4, 3, 4, 2],
+    ["Cambodia", "KH", 2, 3, 2, 3, 2],
+    ["Cameroon", "CM", 1, 2, 2, 2, 1],
+    ["Canada", "CA", 5, 5, 4, 5, 5],
+    ["Central African Republic", "CF", 1, 1, 1, 1, 1],
+    ["Chad", "TD", 1, 1, 1, 1, 1],
+    ["Chile", "CL", 4, 4, 3, 4, 4],
+    ["China", "CN", 3, 3, 3, 4, 4],
+    ["Colombia", "CO", 3, 3, 3, 2, 3],
+    ["Comoros", "KM", 1, 2, 2, 2, 1],
+    ["Congo (DRC)", "CD", 1, 1, 1, 1, 1],
+    ["Congo (Republic)", "CG", 2, 2, 2, 2, 1],
+    ["Costa Rica", "CR", 3, 4, 3, 4, 3],
+    ["Croatia", "HR", 4, 4, 4, 4, 3],
+    ["Cuba", "CU", 2, 3, 3, 3, 1],
+    ["Cyprus", "CY", 4, 4, 3, 4, 3],
+    ["Czech Republic", "CZ", 4, 5, 4, 5, 4],
+    ["Côte d'Ivoire", "CI", 2, 2, 2, 2, 2],
+    ["Denmark", "DK", 5, 5, 5, 5, 4],
+    ["Djibouti", "DJ", 2, 3, 2, 3, 1],
+    ["Dominica", "DM", 3, 4, 2, 4, 2],
+    ["Dominican Republic", "DO", 3, 3, 3, 3, 3],
+    ["Ecuador", "EC", 2, 3, 3, 2, 2],
+    ["Egypt", "EG", 2, 3, 2, 3, 2],
+    ["El Salvador", "SV", 2, 3, 2, 2, 2],
+    ["Equatorial Guinea", "GQ", 3, 2, 1, 2, 2],
+    ["Eritrea", "ER", 1, 1, 2, 2, 1],
+    ["Estonia", "EE", 4, 5, 3, 5, 4],
+    ["Eswatini", "SZ", 2, 3, 2, 3, 2],
+    ["Ethiopia", "ET", 1, 1, 2, 2, 1],
+    ["Fiji", "FJ", 2, 3, 3, 3, 2],
+    ["Finland", "FI", 5, 5, 5, 5, 4],
+    ["France", "FR", 5, 5, 5, 4, 4],
+    ["Gabon", "GA", 3, 3, 2, 3, 2],
+    ["Gambia", "GM", 1, 3, 2, 3, 1],
+    ["Georgia", "GE", 2, 3, 2, 3, 3],
+    ["Germany", "DE", 5, 5, 5, 5, 5],
+    ["Ghana", "GH", 2, 3, 2, 3, 2],
+    ["Greece", "GR", 4, 4, 4, 4, 3],
+    ["Grenada", "GD", 3, 4, 2, 4, 2],
+    ["Guatemala", "GT", 2, 3, 2, 2, 2],
+    ["Guinea", "GN", 1, 2, 2, 2, 1],
+    ["Guinea-Bissau", "GW", 1, 2, 2, 2, 1],
+    ["Guyana", "GY", 2, 3, 2, 3, 2],
+    ["Haiti", "HT", 1, 1, 2, 1, 1],
+    ["Honduras", "HN", 2, 2, 2, 2, 2],
+    ["Hungary", "HU", 4, 4, 3, 4, 3],
+    ["Iceland", "IS", 5, 5, 4, 5, 4],
+    ["India", "IN", 2, 3, 3, 3, 3],
+    ["Indonesia", "ID", 2, 3, 3, 3, 3],
+    ["Iran", "IR", 2, 2, 3, 2, 2],
+    ["Iraq", "IQ", 2, 1, 2, 1, 1],
+    ["Ireland", "IE", 5, 5, 3, 5, 5],
+    ["Israel", "IL", 5, 4, 4, 3, 5],
+    ["Italy", "IT", 5, 5, 5, 4, 4],
+    ["Jamaica", "JM", 3, 3, 3, 2, 2],
+    ["Japan", "JP", 5, 5, 4, 5, 4],
+    ["Jordan", "JO", 3, 4, 2, 4, 2],
+    ["Kazakhstan", "KZ", 3, 3, 2, 3, 3],
+    ["Kenya", "KE", 2, 3, 2, 2, 2],
+    ["Kiribati", "KI", 1, 4, 2, 4, 1],
+    ["Kuwait", "KW", 5, 4, 1, 4, 3],
+    ["Kyrgyzstan", "KG", 2, 3, 2, 3, 2],
+    ["Laos", "LA", 2, 3, 2, 3, 2],
+    ["Latvia", "LV", 4, 4, 3, 4, 3],
+    ["Lebanon", "LB", 2, 1, 2, 2, 2],
+    ["Lesotho", "LS", 1, 3, 2, 3, 1],
+    ["Liberia", "LR", 1, 2, 2, 2, 1],
+    ["Libya", "LY", 2, 1, 2, 1, 1],
+    ["Liechtenstein", "LI", 5, 5, 2, 5, 4],
+    ["Lithuania", "LT", 4, 4, 3, 5, 4],
+    ["Luxembourg", "LU", 5, 5, 4, 5, 4],
+    ["Madagascar", "MG", 1, 2, 2, 2, 1],
+    ["Malawi", "MW", 1, 3, 2, 3, 1],
+    ["Malaysia", "MY", 3, 4, 2, 4, 4],
+    ["Maldives", "MV", 3, 4, 2, 4, 2],
+    ["Mali", "ML", 1, 1, 2, 1, 1],
+    ["Malta", "MT", 4, 5, 3, 5, 3],
+    ["Marshall Islands", "MH", 2, 4, 2, 4, 1],
+    ["Mauritania", "MR", 1, 2, 2, 2, 1],
+    ["Mauritius", "MU", 3, 4, 2, 4, 3],
+    ["Mexico", "MX", 3, 3, 3, 2, 3],
+    ["Micronesia", "FM", 2, 4, 2, 4, 1],
+    ["Moldova", "MD", 2, 3, 3, 3, 2],
+    ["Monaco", "MC", 5, 5, 1, 5, 4],
+    ["Mongolia", "MN", 2, 3, 2, 3, 2],
+    ["Montenegro", "ME", 3, 4, 3, 4, 3],
+    ["Morocco", "MA", 2, 3, 3, 3, 2],
+    ["Mozambique", "MZ", 1, 2, 2, 2, 1],
+    ["Myanmar", "MM", 1, 1, 2, 1, 1],
+    ["Namibia", "NA", 2, 4, 3, 4, 2],
+    ["Nauru", "NR", 3, 4, 2, 4, 1],
+    ["Nepal", "NP", 1, 3, 2, 3, 1],
+    ["Netherlands", "NL", 5, 5, 5, 5, 5],
+    ["New Zealand", "NZ", 5, 5, 4, 5, 4],
+    ["Nicaragua", "NI", 2, 2, 2, 2, 2],
+    ["Niger", "NE", 1, 2, 2, 2, 1],
+    ["Nigeria", "NG", 2, 2, 2, 2, 2],
+    ["North Korea", "KP", 1, 2, 1, 2, 1],
+    ["North Macedonia", "MK", 3, 3, 3, 3, 2],
+    ["Norway", "NO", 5, 5, 5, 5, 4],
+    ["Oman", "OM", 4, 4, 1, 4, 3],
+    ["Pakistan", "PK", 2, 2, 2, 2, 2],
+    ["Palau", "PW", 3, 4, 2, 4, 2],
+    ["Panama", "PA", 4, 4, 2, 3, 3],
+    ["Papua New Guinea", "PG", 2, 2, 2, 2, 1],
+    ["Paraguay", "PY", 2, 3, 2, 3, 2],
+    ["Peru", "PE", 3, 3, 3, 3, 3],
+    ["Philippines", "PH", 2, 3, 2, 3, 2],
+    ["Poland", "PL", 4, 4, 3, 4, 4],
+    ["Portugal", "PT", 4, 5, 4, 4, 4],
+    ["Qatar", "QA", 5, 4, 1, 5, 4],
+    ["Romania", "RO", 3, 4, 3, 4, 3],
+    ["Russia", "RU", 3, 2, 3, 3, 2],
+    ["Rwanda", "RW", 1, 3, 2, 3, 2],
+    ["Saint Kitts and Nevis", "KN", 4, 4, 1, 4, 3],
+    ["Saint Lucia", "LC", 3, 4, 2, 4, 2],
+    ["Saint Vincent and the Grenadines", "VC", 3, 4, 2, 4, 2],
+    ["Samoa", "WS", 2, 4, 2, 4, 2],
+    ["San Marino", "SM", 5, 5, 3, 5, 3],
+    ["São Tomé and Príncipe", "ST", 1, 4, 2, 4, 1],
+    ["Saudi Arabia", "SA", 5, 4, 1, 4, 4],
+    ["Senegal", "SN", 1, 3, 2, 3, 2],
+    ["Serbia", "RS", 3, 3, 3, 3, 3],
+    ["Seychelles", "SC", 4, 4, 2, 4, 2],
+    ["Sierra Leone", "SL", 1, 3, 2, 3, 1],
+    ["Singapore", "SG", 5, 5, 2, 5, 5],
+    ["Slovakia", "SK", 4, 4, 3, 4, 3],
+    ["Slovenia", "SI", 4, 5, 4, 5, 4],
+    ["Solomon Islands", "SB", 1, 3, 2, 3, 1],
+    ["Somalia", "SO", 1, 1, 1, 1, 1],
+    ["South Africa", "ZA", 3, 3, 3, 2, 3],
+    ["South Korea", "KR", 5, 4, 3, 4, 5],
+    ["South Sudan", "SS", 1, 1, 1, 1, 1],
+    ["Spain", "ES", 4, 5, 4, 4, 4],
+    ["Sri Lanka", "LK", 2, 3, 3, 3, 2],
+    ["Sudan", "SD", 1, 1, 2, 1, 1],
+    ["Suriname", "SR", 2, 3, 2, 3, 2],
+    ["Sweden", "SE", 5, 5, 5, 5, 4],
+    ["Switzerland", "CH", 5, 5, 4, 5, 5],
+    ["Syria", "SY", 1, 1, 1, 1, 1],
+    ["Tajikistan", "TJ", 1, 2, 2, 2, 1],
+    ["Tanzania", "TZ", 1, 3, 2, 3, 2],
+    ["Thailand", "TH", 3, 3, 2, 3, 3],
+    ["Timor-Leste", "TL", 1, 3, 2, 3, 1],
+    ["Togo", "TG", 1, 3, 2, 3, 1],
+    ["Tonga", "TO", 2, 4, 2, 4, 1],
+    ["Trinidad and Tobago", "TT", 4, 3, 3, 3, 3],
+    ["Tunisia", "TN", 2, 3, 3, 3, 2],
+    ["Turkey", "TR", 3, 3, 3, 3, 3],
+    ["Turkmenistan", "TM", 2, 2, 2, 2, 1],
+    ["Tuvalu", "TV", 2, 4, 2, 4, 1],
+    ["Uganda", "UG", 1, 2, 2, 2, 1],
+    ["Ukraine", "UA", 2, 1, 3, 1, 2],
+    ["United Arab Emirates", "AE", 5, 5, 1, 5, 5],
+    ["United Kingdom", "GB", 5, 5, 4, 5, 5],
+    ["United States", "US", 5, 5, 3, 4, 5],
+    ["Uruguay", "UY", 4, 4, 3, 4, 3],
+    ["Uzbekistan", "UZ", 2, 3, 2, 3, 2],
+    ["Vanuatu", "VU", 2, 4, 2, 4, 1],
+    ["Vatican City", "VA", 5, 5, 1, 5, 1],
+    ["Venezuela", "VE", 1, 1, 2, 1, 1],
+    ["Vietnam", "VN", 2, 3, 2, 3, 3],
+    ["Yemen", "YE", 1, 1, 1, 1, 1],
+    ["Zambia", "ZM", 1, 3, 2, 3, 1],
+    ["Zimbabwe", "ZW", 1, 2, 2, 2, 1],
   ],
 
   getCountryByCode(code) {
-    const c = this.COUNTRIES.find(c => c[1] === code);
+    const c = this.COUNTRIES.find((c) => c[1] === code);
     if (!c) return null;
     return { name: c[0], code: c[1], profile: [c[2], c[3], c[4], c[5], c[6]] };
   },
 
   getCountryModifiers(profile) {
     const [econ, stab, tax, safe, opp] = profile;
-    const taxRates = [0, 0.04, 0.10, 0.18, 0.28, 0.38];
-    const livingMults = [0, 0.35, 0.55, 0.80, 1.0, 1.25];
+    const taxRates = [0, 0.04, 0.1, 0.18, 0.28, 0.38];
+    const livingMults = [0, 0.35, 0.55, 0.8, 1.0, 1.25];
     const deathSafe = [0, 2.2, 1.6, 1.0, 0.7, 0.45];
     const deathStab = [0, 1.8, 1.35, 1.0, 0.8, 0.6];
     const startupMults = [0, 1.7, 1.35, 1.0, 0.85, 0.7];
@@ -538,7 +758,8 @@ const CONFIG = {
 
   getCountryTraits(profile) {
     const [econ, stab, tax, safe, opp] = profile;
-    const pros = [], cons = [];
+    const pros = [],
+      cons = [];
     if (econ >= 4) pros.push("Strong economy");
     if (econ === 5) pros.push("High starting capital");
     if (econ <= 2) cons.push("Weak economy");
@@ -550,13 +771,19 @@ const CONFIG = {
     if (tax >= 4) cons.push(tax === 5 ? "Very high taxes" : "High taxes");
     if (safe >= 4) pros.push(safe === 5 ? "Exceptionally safe" : "Very safe");
     if (safe <= 2) cons.push(safe === 1 ? "Extremely dangerous" : "High crime");
-    if (opp >= 4) pros.push(opp === 5 ? "World-class opportunities" : "Great opportunities");
-    if (opp <= 2) cons.push(opp === 1 ? "Very limited opportunities" : "Few opportunities");
+    if (opp >= 4)
+      pros.push(
+        opp === 5 ? "World-class opportunities" : "Great opportunities",
+      );
+    if (opp <= 2)
+      cons.push(opp === 1 ? "Very limited opportunities" : "Few opportunities");
     return { pros, cons };
   },
 
   getCountryFlag(code) {
-    return String.fromCodePoint(...[...code.toUpperCase()].map(c => 0x1F1E6 + c.charCodeAt(0) - 65));
+    return String.fromCodePoint(
+      ...[...code.toUpperCase()].map((c) => 0x1f1e6 + c.charCodeAt(0) - 65),
+    );
   },
 
   SIDE_HUSTLES: [
@@ -1296,6 +1523,7 @@ const game = {
       divorces: 0,
       children: [], // { name, age (months), adopted: bool }
       childExpenses: 0,
+      lastBirthMonth: 0,
     },
     // Pets
     pets: [], // { id, name, type, ageMonths, maxAge, happiness }
@@ -1554,9 +1782,23 @@ const game = {
           this.state.life.lastDeathRiskPct ?? 0;
         // Character migration
         if (!this.state.playerName) this.state.playerName = "Player";
-        if (!this.state.country) { this.state.country = null; this.state.countryProfile = null; }
+        if (!this.state.country) {
+          this.state.country = null;
+          this.state.countryProfile = null;
+        }
         // Travel migration
-        if (!this.state.travel) this.state.travel = { migrating: false, targetCountry: null, method: null, monthsLeft: 0, totalMonths: 0, visaDenied: 0, timesTraveled: 0, caughtIllegally: 0, countryWarningShown: 0 };
+        if (!this.state.travel)
+          this.state.travel = {
+            migrating: false,
+            targetCountry: null,
+            method: null,
+            monthsLeft: 0,
+            totalMonths: 0,
+            visaDenied: 0,
+            timesTraveled: 0,
+            caughtIllegally: 0,
+            countryWarningShown: 0,
+          };
         // Advisor uses tracking
         if (!this.state.advisorUses) this.state.advisorUses = {};
         if (!this.state.runStats) {
@@ -1709,7 +1951,16 @@ const game = {
             divorces: 0,
             children: [],
             childExpenses: 0,
+            lastBirthMonth: 0,
           };
+        }
+        // Migration: ensure lastBirthMonth exists
+        if (this.state.relationship.lastBirthMonth === undefined) {
+          this.state.relationship.lastBirthMonth = 0;
+        }
+        // Migration: ensure sideRelationships exists
+        if (!this.state.relationship.sideRelationships) {
+          this.state.relationship.sideRelationships = [];
         }
         if (!this.state.pets) this.state.pets = [];
         if (!this.state.prison) {
@@ -1810,6 +2061,7 @@ const game = {
         divorces: 0,
         children: [],
         childExpenses: 0,
+        lastBirthMonth: 0,
       },
       pets: [],
       prison: {
@@ -2297,7 +2549,9 @@ const game = {
       primaryPath: path,
       playerName: this.state.playerName || "Unknown",
       country: this.state.country || "Unknown",
-      deathReason: this.state.life.deathReason || (outcome === "retired" ? "Retired" : "Unknown"),
+      deathReason:
+        this.state.life.deathReason ||
+        (outcome === "retired" ? "Retired" : "Unknown"),
       at: Date.now(),
     };
 
@@ -2317,14 +2571,16 @@ const game = {
       lives.push(record);
       if (lives.length > 50) lives.shift();
       localStorage.setItem("GreedigoPastLives", JSON.stringify(lives));
-    } catch(e) {}
+    } catch (e) {}
   },
 
   getPastLives() {
     try {
       const raw = localStorage.getItem("GreedigoPastLives");
       return raw ? JSON.parse(raw) : [];
-    } catch(e) { return []; }
+    } catch (e) {
+      return [];
+    }
   },
 
   maybeStartOnboarding() {
@@ -2573,14 +2829,17 @@ const game = {
 
     const ageDecay = Math.max(0, (ageYears - 45) * 0.03);
     const overRisk = this.getRiskExposure();
-    const countryHealthMult = this.state.countryProfile ? CONFIG.getCountryModifiers(this.state.countryProfile).healthDecayMult : 1.0;
+    const countryHealthMult = this.state.countryProfile
+      ? CONFIG.getCountryModifiers(this.state.countryProfile).healthDecayMult
+      : 1.0;
     const healthDecay =
       (0.2 +
-      ageDecay +
-      life.chronicStress / 95 +
-      life.riskDebt / 180 +
-      overRisk * 0.35 +
-      (this.state.stats.happiness < 30 ? 0.45 : 0)) * countryHealthMult;
+        ageDecay +
+        life.chronicStress / 95 +
+        life.riskDebt / 180 +
+        overRisk * 0.35 +
+        (this.state.stats.happiness < 30 ? 0.45 : 0)) *
+      countryHealthMult;
 
     this.modStat("health", -healthDecay);
 
@@ -2718,6 +2977,20 @@ const game = {
       step: 0,
       seenSteps: [],
     };
+
+    // Reset advance button to original state
+    const nextBtn = document.getElementById("main-advance-btn");
+    if (nextBtn) {
+      nextBtn.disabled = false;
+      nextBtn.innerHTML = `<i class="fa-solid fa-forward"></i> <span id="advance-btn-label">+1 Month</span>`;
+    }
+    const cashoutBtn = document.getElementById("cashout-btn");
+    if (cashoutBtn) cashoutBtn.disabled = false;
+    document
+      .querySelectorAll(".speed-btn")
+      .forEach((btn) => (btn.disabled = false));
+    document.body.classList.remove("run-ended");
+
     app.closeModal();
     charCreation.show();
   },
@@ -2797,7 +3070,9 @@ const game = {
         "Shot during a protest that turned deadly.",
         "Caught in a terrorist attack while commuting.",
       ];
-      this.die(violenceDeaths[Math.floor(Math.random() * violenceDeaths.length)]);
+      this.die(
+        violenceDeaths[Math.floor(Math.random() * violenceDeaths.length)],
+      );
       return;
     }
     if (safe <= 2 && stab <= 2 && Math.random() < 0.002) {
@@ -2812,21 +3087,31 @@ const game = {
     }
 
     // --- Depression/suicide from extreme unhappiness + debt ---
-    const totalDebt = (this.state.bank?.creditCard?.balance || 0) +
-      (this.state.bank?.loans || []).reduce((s, l) => s + (l.principal || 0), 0) +
+    const totalDebt =
+      (this.state.bank?.creditCard?.balance || 0) +
+      (this.state.bank?.loans || []).reduce(
+        (s, l) => s + (l.principal || 0),
+        0,
+      ) +
       (this.state.edu?.loans || 0);
     if (happiness <= 5 && totalDebt > 50000 && Math.random() < 0.008) {
-      this.die("Died from severe depression brought on by crushing debt and despair.");
+      this.die(
+        "Died from severe depression brought on by crushing debt and despair.",
+      );
       return;
     }
     if (happiness <= 3 && life.chronicStress > 80 && Math.random() < 0.006) {
-      this.die("Took their own life after years of unbearable stress and hopelessness.");
+      this.die(
+        "Took their own life after years of unbearable stress and hopelessness.",
+      );
       return;
     }
 
     // --- Heart attack from low health + age ---
     if (health < 25 && ageYears > 40 && Math.random() < 0.006) {
-      this.die("Suffered a fatal heart attack. Years of poor health caught up.");
+      this.die(
+        "Suffered a fatal heart attack. Years of poor health caught up.",
+      );
       return;
     }
     if (health < 15 && Math.random() < 0.008) {
@@ -2862,7 +3147,8 @@ const game = {
           "Heart gave out under crushing chronic stress.",
           "Died in your sleep from stress cardiomyopathy — broken heart syndrome.",
         ];
-        reason = stressReasons[Math.floor(Math.random() * stressReasons.length)];
+        reason =
+          stressReasons[Math.floor(Math.random() * stressReasons.length)];
       } else if (ageYears > 70) {
         const oldReasons = [
           "Passed away peacefully in old age.",
@@ -2877,7 +3163,8 @@ const game = {
           "Organ failure after neglecting your health for too long.",
           "Collapsed on the street. Your body had been failing for months.",
         ];
-        reason = healthReasons[Math.floor(Math.random() * healthReasons.length)];
+        reason =
+          healthReasons[Math.floor(Math.random() * healthReasons.length)];
       } else if (totalDebt > 100000) {
         const debtReasons = [
           "The stress of insurmountable debt triggered a fatal cardiac episode.",
@@ -2891,7 +3178,8 @@ const game = {
           "Complications from an undiagnosed condition.",
           "A rare but fatal illness took you without warning.",
         ];
-        reason = genericReasons[Math.floor(Math.random() * genericReasons.length)];
+        reason =
+          genericReasons[Math.floor(Math.random() * genericReasons.length)];
       }
       this.die(reason);
     }
@@ -3006,7 +3294,9 @@ const game = {
     }
 
     const inflationMult = 1 + Math.max(-0.01, this.state.economy.inflation);
-    const countryLivingMult = this.state.countryProfile ? CONFIG.getCountryModifiers(this.state.countryProfile).livingCostMult : 1.0;
+    const countryLivingMult = this.state.countryProfile
+      ? CONFIG.getCountryModifiers(this.state.countryProfile).livingCostMult
+      : 1.0;
     const housingCost = 700 * inflationMult * countryLivingMult;
     const foodCost = 280 * inflationMult * countryLivingMult;
     const utilitiesCost = 220 * inflationMult * countryLivingMult;
@@ -3318,7 +3608,9 @@ const game = {
       );
 
       // 3. Growth (easier to get clients)
-      const countryStartupMult = this.state.countryProfile ? CONFIG.getCountryModifiers(this.state.countryProfile).startupDiffMult : 1.0;
+      const countryStartupMult = this.state.countryProfile
+        ? CONFIG.getCountryModifiers(this.state.countryProfile).startupDiffMult
+        : 1.0;
       const adjustedDifficulty = s.info.difficulty * countryStartupMult;
       const pmf = Math.min(
         1.0,
@@ -3350,10 +3642,18 @@ const game = {
 
       // 4. Revenue (higher ARPU)
       const arpuBase =
-        s.info.type === "biotech" ? 28 : s.info.type === "saas" ? 18 : s.info.type === "fintech" ? 20 : s.info.type === "ai" ? 22 : 13;
+        s.info.type === "biotech"
+          ? 28
+          : s.info.type === "saas"
+            ? 18
+            : s.info.type === "fintech"
+              ? 20
+              : s.info.type === "ai"
+                ? 22
+                : 13;
       const arpu = arpuBase * (1 - this.state.economy.inflation * 0.3);
       const rev = s.market.users * arpu;
-      const tax = Math.max(0, rev - burn) * 0.10;
+      const tax = Math.max(0, rev - burn) * 0.1;
       s.financials.rev = rev - tax;
       s.financials.cash += rev - tax;
 
@@ -3369,7 +3669,10 @@ const game = {
       const moraleDrift = (70 - s.staff.morale) * 0.03;
       s.staff.morale = Math.max(
         5,
-        Math.min(100, s.staff.morale + moraleDrift + (Math.random() - 0.45) * 3),
+        Math.min(
+          100,
+          s.staff.morale + moraleDrift + (Math.random() - 0.45) * 3,
+        ),
       );
       if (s.financials.cash < 0) s.financials.months_runway--;
       else s.financials.months_runway = s.financials.cash / (burn - rev + 1);
@@ -3991,7 +4294,8 @@ const game = {
     if (!this.canAct()) return;
     const s = this.state.startups[idx];
     if (!s) return;
-    if (this.state.cash < 1000) return app.toast("Need $1,000 for advisor consultation", "error");
+    if (this.state.cash < 1000)
+      return app.toast("Need $1,000 for advisor consultation", "error");
 
     this.modCash(-1000);
     if (!this.state.advisorUses) this.state.advisorUses = {};
@@ -4021,9 +4325,11 @@ const game = {
     const tipIdx = (uses - 1) % tips.length;
     const tip = tips[tipIdx];
 
-    app.modal("💼 Business Advisor", `"${tip}"\n\n— Your advisor (consultation #${uses}, cost: $1,000)`, [
-      { text: "Thanks!", cb: () => app.closeModal() },
-    ]);
+    app.modal(
+      "💼 Business Advisor",
+      `"${tip}"\n\n— Your advisor (consultation #${uses}, cost: $1,000)`,
+      [{ text: "Thanks!", cb: () => app.closeModal() }],
+    );
     this.renderAll();
   },
 
@@ -4033,7 +4339,11 @@ const game = {
     const s = this.state.startups[idx];
     if (!s) return;
     const cost = Math.max(2000, Math.round(s.market.users * 0.5 + 1000));
-    if (s.financials.cash < cost) return app.toast(`Need $${cost.toLocaleString()} in startup funds`, "error");
+    if (s.financials.cash < cost)
+      return app.toast(
+        `Need $${cost.toLocaleString()} in startup funds`,
+        "error",
+      );
 
     s.financials.cash -= cost;
     const boost = (15 + Math.random() * 25) * (1 + s.market.pmf);
@@ -4053,23 +4363,37 @@ const game = {
     const s = this.state.startups[idx];
     if (!s) return;
 
-    const options = [1000, 5000, 10000, 25000].filter(amt => this.state.cash >= amt);
-    if (options.length === 0) return app.toast("You don't have enough personal cash to invest", "error");
+    const options = [1000, 5000, 10000, 25000].filter(
+      (amt) => this.state.cash >= amt,
+    );
+    if (options.length === 0)
+      return app.toast(
+        "You don't have enough personal cash to invest",
+        "error",
+      );
 
-    const buttons = options.map(amt => ({
+    const buttons = options.map((amt) => ({
       text: `Invest $${amt.toLocaleString()}`,
       cb: () => {
         this.state.cash -= amt;
         s.financials.cash += amt;
-        s.financials.months_runway = s.financials.cash / Math.max(1, s.financials.burn);
-        app.toast(`Invested $${amt.toLocaleString()} into ${s.name}!`, "success");
+        s.financials.months_runway =
+          s.financials.cash / Math.max(1, s.financials.burn);
+        app.toast(
+          `Invested $${amt.toLocaleString()} into ${s.name}!`,
+          "success",
+        );
         app.closeModal();
         this.renderAll();
-      }
+      },
     }));
     buttons.push({ text: "Cancel", cb: () => app.closeModal() });
 
-    app.modal("\uD83D\uDCB0 Invest Personal Cash", `Transfer money from your personal account into ${s.name}.\n\nCurrent startup cash: $${Math.round(s.financials.cash).toLocaleString()}\nYour cash: $${Math.round(this.state.cash).toLocaleString()}`, buttons);
+    app.modal(
+      "\uD83D\uDCB0 Invest Personal Cash",
+      `Transfer money from your personal account into ${s.name}.\n\nCurrent startup cash: $${Math.round(s.financials.cash).toLocaleString()}\nYour cash: $${Math.round(this.state.cash).toLocaleString()}`,
+      buttons,
+    );
   },
 
   // --- BOOST MORALE ---
@@ -4078,12 +4402,19 @@ const game = {
     const s = this.state.startups[idx];
     if (!s) return;
     const cost = 500;
-    if (s.financials.cash < cost) return app.toast(`Need $${cost} in startup funds for a team event`, "error");
+    if (s.financials.cash < cost)
+      return app.toast(
+        `Need $${cost} in startup funds for a team event`,
+        "error",
+      );
 
     s.financials.cash -= cost;
     const boost = 12 + Math.round(Math.random() * 10);
     s.staff.morale = Math.min(100, s.staff.morale + boost);
-    app.toast(`Team event! Morale +${boost}% (now ${Math.round(s.staff.morale)}%)`, "success");
+    app.toast(
+      `Team event! Morale +${boost}% (now ${Math.round(s.staff.morale)}%)`,
+      "success",
+    );
     this.registerAction(2);
     this.renderAll();
   },
@@ -4093,25 +4424,37 @@ const game = {
     if (!this.canAct()) return;
     const s = this.state.startups[idx];
     if (!s) return;
-    if (s.market.pmf < 0.15) return app.toast("Investors want PMF > 15% before investing", "error");
+    if (s.market.pmf < 0.15)
+      return app.toast("Investors want PMF > 15% before investing", "error");
 
     const valuation = s.financials.val;
-    if (valuation < 10000) return app.toast("Valuation too low to attract investors", "error");
+    if (valuation < 10000)
+      return app.toast("Valuation too low to attract investors", "error");
 
     const fundingAmount = Math.round(valuation * (0.15 + Math.random() * 0.1));
-    const dilution = Math.round((fundingAmount / (valuation + fundingAmount)) * 100);
+    const dilution = Math.round(
+      (fundingAmount / (valuation + fundingAmount)) * 100,
+    );
 
-    app.modal("🤝 Funding Offer", `An investor is interested!\n\nFunding: $${fundingAmount.toLocaleString()}\nValuation: $${valuation.toLocaleString()}\nDilution: ${dilution}% equity\n\nThis cash goes into your startup's account.`, [
-      { text: `Accept Funding`, cb: () => {
-        s.financials.cash += fundingAmount;
-        s.financials.months_runway = s.financials.cash / Math.max(1, s.financials.burn);
-        app.toast(`Raised $${fundingAmount.toLocaleString()}!`, "success");
-        FX.confetti();
-        app.closeModal();
-        game.renderAll();
-      }},
-      { text: "Decline", cb: () => app.closeModal() },
-    ]);
+    app.modal(
+      "🤝 Funding Offer",
+      `An investor is interested!\n\nFunding: $${fundingAmount.toLocaleString()}\nValuation: $${valuation.toLocaleString()}\nDilution: ${dilution}% equity\n\nThis cash goes into your startup's account.`,
+      [
+        {
+          text: `Accept Funding`,
+          cb: () => {
+            s.financials.cash += fundingAmount;
+            s.financials.months_runway =
+              s.financials.cash / Math.max(1, s.financials.burn);
+            app.toast(`Raised $${fundingAmount.toLocaleString()}!`, "success");
+            FX.confetti();
+            app.closeModal();
+            game.renderAll();
+          },
+        },
+        { text: "Decline", cb: () => app.closeModal() },
+      ],
+    );
   },
 
   // --- PIVOT STARTUP ---
@@ -4120,8 +4463,8 @@ const game = {
     const s = this.state.startups[idx];
     if (!s) return;
 
-    const available = CONFIG.STARTUP_TYPES.filter(t => t.id !== s.info.type);
-    const opts = available.map(t => ({
+    const available = CONFIG.STARTUP_TYPES.filter((t) => t.id !== s.info.type);
+    const opts = available.map((t) => ({
       text: `${t.name} (${t.difficulty}x difficulty)`,
       cb: () => {
         const pivotCost = Math.round(t.cost * 0.3);
@@ -4141,9 +4484,13 @@ const game = {
         app.toast(`Pivoted to ${t.name}! Some progress was lost.`, "text-loss");
         app.closeModal();
         game.renderAll();
-      }
+      },
     }));
-    app.modal("🔄 Pivot Company", "Pivoting changes your industry. You'll keep your team but lose some product progress and PMF.", opts);
+    app.modal(
+      "🔄 Pivot Company",
+      "Pivoting changes your industry. You'll keep your team but lose some product progress and PMF.",
+      opts,
+    );
   },
 
   // --- EXIT STARTUP (IPO / ACQUISITION) ---
@@ -4160,31 +4507,50 @@ const game = {
     const acquireMultiplier = 0.4 + Math.random() * 0.5;
     const acquireValue = Math.round(val * acquireMultiplier);
 
-    app.modal("🚀 Exit Strategy", `${s.name}\nCurrent Valuation: $${val.toLocaleString()}\n\nChoose your exit:`, [
-      { text: `IPO — $${ipoValue.toLocaleString()} (risky)`, cb: () => {
-        if (Math.random() < 0.3) {
-          const actual = Math.round(ipoValue * (0.3 + Math.random() * 0.4));
-          app.toast(`IPO flopped! Only got $${actual.toLocaleString()}`, "text-loss");
-          game.modCash(actual);
-        } else {
-          game.modCash(ipoValue);
-          FX.confetti();
-          FX.milestoneOverlay("📈 IPO Success!", `$${ipoValue.toLocaleString()}`);
-          FX.screenFlash("epic");
-        }
-        game.state.startups.splice(idx, 1);
-        app.closeModal();
-        game.renderAll();
-      }},
-      { text: `Sell — $${acquireValue.toLocaleString()} (safe)`, cb: () => {
-        game.modCash(acquireValue);
-        app.toast(`Company acquired for $${acquireValue.toLocaleString()}!`, "success");
-        game.state.startups.splice(idx, 1);
-        app.closeModal();
-        game.renderAll();
-      }},
-      { text: "Keep Building", cb: () => app.closeModal() },
-    ]);
+    app.modal(
+      "🚀 Exit Strategy",
+      `${s.name}\nCurrent Valuation: $${val.toLocaleString()}\n\nChoose your exit:`,
+      [
+        {
+          text: `IPO — $${ipoValue.toLocaleString()} (risky)`,
+          cb: () => {
+            if (Math.random() < 0.3) {
+              const actual = Math.round(ipoValue * (0.3 + Math.random() * 0.4));
+              app.toast(
+                `IPO flopped! Only got $${actual.toLocaleString()}`,
+                "text-loss",
+              );
+              game.modCash(actual);
+            } else {
+              game.modCash(ipoValue);
+              FX.confetti();
+              FX.milestoneOverlay(
+                "📈 IPO Success!",
+                `$${ipoValue.toLocaleString()}`,
+              );
+              FX.screenFlash("epic");
+            }
+            game.state.startups.splice(idx, 1);
+            app.closeModal();
+            game.renderAll();
+          },
+        },
+        {
+          text: `Sell — $${acquireValue.toLocaleString()} (safe)`,
+          cb: () => {
+            game.modCash(acquireValue);
+            app.toast(
+              `Company acquired for $${acquireValue.toLocaleString()}!`,
+              "success",
+            );
+            game.state.startups.splice(idx, 1);
+            app.closeModal();
+            game.renderAll();
+          },
+        },
+        { text: "Keep Building", cb: () => app.closeModal() },
+      ],
+    );
   },
 
   // ═══════════════════════════════════════════════════════
@@ -4231,14 +4597,14 @@ const game = {
     const [toEcon, toStab, toTax, toSafe] = toProfile;
     let chance = 0.05;
     if (fromEcon <= 2) chance += 0.25;
-    if (fromStab <= 2) chance += 0.20;
+    if (fromStab <= 2) chance += 0.2;
     if (toSafe >= 4) chance += 0.15;
     if (toEcon >= 4 && fromEcon <= 2) chance += 0.15;
     // Education helps
     if (this.state.edu.degrees.length > 0) chance -= 0.15;
     // Money helps
-    if (this.state.cash > 50000) chance -= 0.10;
-    if (this.state.cash > 200000) chance -= 0.10;
+    if (this.state.cash > 50000) chance -= 0.1;
+    if (this.state.cash > 200000) chance -= 0.1;
     return Math.max(0.02, Math.min(0.85, chance));
   },
 
@@ -4247,7 +4613,7 @@ const game = {
     let chance = 0.15;
     if (toSafe >= 4) chance += 0.25;
     if (toSafe >= 5) chance += 0.15;
-    if (toStab >= 4) chance += 0.10;
+    if (toStab >= 4) chance += 0.1;
     return Math.max(0.05, Math.min(0.75, chance));
   },
 
@@ -4260,20 +4626,26 @@ const game = {
   startTravel(targetCode, method) {
     if (!this.canAct()) return;
     if (this.state.life.dead || this.state.life.retired) return;
-    if (this.state.travel.migrating) return app.toast("Already migrating!", "error");
-    if (this.state.jail > 0) return app.toast("Can't travel from jail", "error");
-    if (targetCode === this.state.country) return app.toast("You already live here", "error");
+    if (this.state.travel.migrating)
+      return app.toast("Already migrating!", "error");
+    if (this.state.jail > 0)
+      return app.toast("Can't travel from jail", "error");
+    if (targetCode === this.state.country)
+      return app.toast("You already live here", "error");
 
     const target = CONFIG.getCountryByCode(targetCode);
     if (!target) return;
 
-    const fromProfile = this.state.countryProfile || [3,3,3,3,3];
+    const fromProfile = this.state.countryProfile || [3, 3, 3, 3, 3];
     const toProfile = target.profile;
     const cost = this.getTravelCost(fromProfile, toProfile, method);
     const time = this.getTravelTime(fromProfile, toProfile, method);
 
     if (this.state.cash < cost) {
-      return app.toast(`Need $${cost.toLocaleString()} for ${method} travel`, "error");
+      return app.toast(
+        `Need $${cost.toLocaleString()} for ${method} travel`,
+        "error",
+      );
     }
 
     const flag = CONFIG.getCountryFlag(targetCode);
@@ -4282,40 +4654,55 @@ const game = {
       const denyChance = this.getVisaDenialChance(fromProfile, toProfile);
       const denialPct = Math.round(denyChance * 100);
 
-      app.modal("🛂 Legal Migration", 
-        `Travel to ${flag} ${target.name}\n\nCost: $${cost.toLocaleString()}\nProcessing Time: ${time} months\nVisa Denial Risk: ${denialPct}%\n\nYou'll continue life while your visa processes.`, [
-        { text: `Apply ($${cost.toLocaleString()})`, cb: () => {
-          game.modCash(-cost);
-          game.state.travel.migrating = true;
-          game.state.travel.targetCountry = targetCode;
-          game.state.travel.method = "legal";
-          game.state.travel.monthsLeft = time;
-          game.state.travel.totalMonths = time;
-          app.toast(`Visa application submitted to ${target.name}`, "success");
-          app.closeModal();
-          game.renderAll();
-        }},
-        { text: "Cancel", cb: () => app.closeModal() },
-      ]);
+      app.modal(
+        "🛂 Legal Migration",
+        `Travel to ${flag} ${target.name}\n\nCost: $${cost.toLocaleString()}\nProcessing Time: ${time} months\nVisa Denial Risk: ${denialPct}%\n\nYou'll continue life while your visa processes.`,
+        [
+          {
+            text: `Apply ($${cost.toLocaleString()})`,
+            cb: () => {
+              game.modCash(-cost);
+              game.state.travel.migrating = true;
+              game.state.travel.targetCountry = targetCode;
+              game.state.travel.method = "legal";
+              game.state.travel.monthsLeft = time;
+              game.state.travel.totalMonths = time;
+              app.toast(
+                `Visa application submitted to ${target.name}`,
+                "success",
+              );
+              app.closeModal();
+              game.renderAll();
+            },
+          },
+          { text: "Cancel", cb: () => app.closeModal() },
+        ],
+      );
     } else {
       const caughtChance = this.getCaughtChance(fromProfile, toProfile);
       const caughtPct = Math.round(caughtChance * 100);
 
-      app.modal("⚠️ Illegal Border Crossing", 
-        `Smuggle yourself to ${flag} ${target.name}\n\nCost: $${cost.toLocaleString()}\nJourney Time: ${time} month(s)\nCapture Risk: ${caughtPct}%\n\n⚠️ If caught: HARSH prison sentence, criminal record, deportation.\nThe journey itself is dangerous.`, [
-        { text: `Risk It ($${cost.toLocaleString()})`, cb: () => {
-          game.modCash(-cost);
-          game.state.travel.migrating = true;
-          game.state.travel.targetCountry = targetCode;
-          game.state.travel.method = "illegal";
-          game.state.travel.monthsLeft = time;
-          game.state.travel.totalMonths = time;
-          app.toast(`You've begun the dangerous journey...`, "text-loss");
-          app.closeModal();
-          game.renderAll();
-        }},
-        { text: "Too Risky", cb: () => app.closeModal() },
-      ]);
+      app.modal(
+        "⚠️ Illegal Border Crossing",
+        `Smuggle yourself to ${flag} ${target.name}\n\nCost: $${cost.toLocaleString()}\nJourney Time: ${time} month(s)\nCapture Risk: ${caughtPct}%\n\n⚠️ If caught: HARSH prison sentence, criminal record, deportation.\nThe journey itself is dangerous.`,
+        [
+          {
+            text: `Risk It ($${cost.toLocaleString()})`,
+            cb: () => {
+              game.modCash(-cost);
+              game.state.travel.migrating = true;
+              game.state.travel.targetCountry = targetCode;
+              game.state.travel.method = "illegal";
+              game.state.travel.monthsLeft = time;
+              game.state.travel.totalMonths = time;
+              app.toast(`You've begun the dangerous journey...`, "text-loss");
+              app.closeModal();
+              game.renderAll();
+            },
+          },
+          { text: "Too Risky", cb: () => app.closeModal() },
+        ],
+      );
     }
   },
 
@@ -4333,15 +4720,20 @@ const game = {
       }
       if (Math.random() < 0.05) {
         this.modStat("happiness", -10);
-        this.addNews("You witnessed terrible things on the journey. Your spirit is breaking.");
+        this.addNews(
+          "You witnessed terrible things on the journey. Your spirit is breaking.",
+        );
       }
     }
 
     if (t.monthsLeft <= 0) {
       const target = CONFIG.getCountryByCode(t.targetCountry);
-      if (!target) { t.migrating = false; return; }
+      if (!target) {
+        t.migrating = false;
+        return;
+      }
       const toProfile = target.profile;
-      const fromProfile = this.state.countryProfile || [3,3,3,3,3];
+      const fromProfile = this.state.countryProfile || [3, 3, 3, 3, 3];
 
       if (t.method === "legal") {
         // Check visa denial
@@ -4349,9 +4741,11 @@ const game = {
         if (Math.random() < denyChance) {
           t.migrating = false;
           t.visaDenied++;
-          app.modal("🚫 Visa Denied", `Your visa application to ${target.name} was rejected.\n\nYour money was not refunded. You can try again later.\n\nTip: Higher education, more savings, and better countries of origin improve your chances.`, [
-            { text: "Damn...", cb: () => app.closeModal() },
-          ]);
+          app.modal(
+            "🚫 Visa Denied",
+            `Your visa application to ${target.name} was rejected.\n\nYour money was not refunded. You can try again later.\n\nTip: Higher education, more savings, and better countries of origin improve your chances.`,
+            [{ text: "Damn...", cb: () => app.closeModal() }],
+          );
           this.modStat("happiness", -8);
           return;
         }
@@ -4369,13 +4763,20 @@ const game = {
           this.state.crime.heat = Math.min(100, this.state.crime.heat + 30);
           this.state.jail = sentence;
 
-          app.modal("🚨 CAUGHT!", `Border patrol captured you trying to enter ${target.name} illegally!\n\nYou've been sentenced to ${sentence} months in detention.\nCriminal record added. You will be deported after serving.`, [
-            { text: "Face Justice", cb: () => {
-              app.closeModal();
-              app.activateView("prison");
-              game.renderAll();
-            }},
-          ]);
+          app.modal(
+            "🚨 CAUGHT!",
+            `Border patrol captured you trying to enter ${target.name} illegally!\n\nYou've been sentenced to ${sentence} months in detention.\nCriminal record added. You will be deported after serving.`,
+            [
+              {
+                text: "Face Justice",
+                cb: () => {
+                  app.closeModal();
+                  app.activateView("prison");
+                  game.renderAll();
+                },
+              },
+            ],
+          );
           this.modStat("happiness", -20);
           this.modStat("health", -5);
           return;
@@ -4390,7 +4791,9 @@ const game = {
     const c = CONFIG.getCountryByCode(code);
     if (!c) return;
     const flag = CONFIG.getCountryFlag(code);
-    const oldCountry = this.state.country ? CONFIG.getCountryByCode(this.state.country) : null;
+    const oldCountry = this.state.country
+      ? CONFIG.getCountryByCode(this.state.country)
+      : null;
     const oldName = oldCountry ? oldCountry.name : "Unknown";
 
     this.state.country = code;
@@ -4408,10 +4811,11 @@ const game = {
 
     FX.confetti();
     FX.milestoneOverlay(`${flag} New Home!`, c.name);
-    app.modal("🌍 Migration Complete!", 
-      `You've successfully moved from ${oldName} to ${flag} ${c.name}!\n\nYour taxes, living costs, safety, and opportunities now reflect your new country.\n\nYou'll need to find a new job here.`, [
-      { text: "Start Fresh", cb: () => app.closeModal() },
-    ]);
+    app.modal(
+      "🌍 Migration Complete!",
+      `You've successfully moved from ${oldName} to ${flag} ${c.name}!\n\nYour taxes, living costs, safety, and opportunities now reflect your new country.\n\nYou'll need to find a new job here.`,
+      [{ text: "Start Fresh", cb: () => app.closeModal() }],
+    );
     this.modStat("happiness", 10);
     this.renderAll();
   },
@@ -4450,7 +4854,13 @@ const game = {
 
     t.countryWarningShown = monthsPlayed;
     app.modal("🌍 Country Alert", msg, [
-      { text: "Open Travel Tab", cb: () => { app.closeModal(); app.activateView("travel"); }},
+      {
+        text: "Open Travel Tab",
+        cb: () => {
+          app.closeModal();
+          app.activateView("travel");
+        },
+      },
       { text: "I'll Stay", cb: () => app.closeModal() },
     ]);
   },
@@ -4461,29 +4871,43 @@ const game = {
     const searchVal = document.getElementById("travel-search")?.value || "";
     const cp = this.state.countryProfile || [3, 3, 3, 3, 3];
     const t = this.state.travel || {};
-    const filtered = CONFIG.COUNTRIES.filter(c =>
-      c[0].toLowerCase().includes(searchVal.toLowerCase()) && c[1] !== this.state.country
+    const filtered = CONFIG.COUNTRIES.filter(
+      (c) =>
+        c[0].toLowerCase().includes(searchVal.toLowerCase()) &&
+        c[1] !== this.state.country,
     ).slice(0, 30);
 
-    container.innerHTML = filtered.map(c => {
-      const flag = CONFIG.getCountryFlag(c[1]);
-      const [e, st, tx, sa, op] = [c[2], c[3], c[4], c[5], c[6]];
-      const rating = ((e + st + sa + op) / 4).toFixed(1);
-      const tierColor = rating >= 4 ? "#34d399" : rating >= 3 ? "#60a5fa" : rating >= 2 ? "#fbbf24" : "#ef4444";
-      const fromP = cp;
-      const toP = [e, st, tx, sa, op];
-      const legalCost = this.getTravelCost(fromP, toP, "legal");
-      const illegalCost = this.getTravelCost(fromP, toP, "illegal");
-      const legalTime = this.getTravelTime(fromP, toP, "legal");
-      const illegalTime = this.getTravelTime(fromP, toP, "illegal");
-      const denialPct = Math.round(this.getVisaDenialChance(fromP, toP) * 100);
-      const caughtPct = Math.round(this.getCaughtChance(fromP, toP) * 100);
+    container.innerHTML = filtered
+      .map((c) => {
+        const flag = CONFIG.getCountryFlag(c[1]);
+        const [e, st, tx, sa, op] = [c[2], c[3], c[4], c[5], c[6]];
+        const rating = ((e + st + sa + op) / 4).toFixed(1);
+        const tierColor =
+          rating >= 4
+            ? "#34d399"
+            : rating >= 3
+              ? "#60a5fa"
+              : rating >= 2
+                ? "#fbbf24"
+                : "#ef4444";
+        const fromP = cp;
+        const toP = [e, st, tx, sa, op];
+        const legalCost = this.getTravelCost(fromP, toP, "legal");
+        const illegalCost = this.getTravelCost(fromP, toP, "illegal");
+        const legalTime = this.getTravelTime(fromP, toP, "legal");
+        const illegalTime = this.getTravelTime(fromP, toP, "illegal");
+        const denialPct = Math.round(
+          this.getVisaDenialChance(fromP, toP) * 100,
+        );
+        const caughtPct = Math.round(this.getCaughtChance(fromP, toP) * 100);
 
-      let safetyTag = "";
-      if (sa <= 1) safetyTag = `<span class="travel-tag travel-tag-danger">Dangerous</span>`;
-      else if (sa >= 4) safetyTag = `<span class="travel-tag travel-tag-safe">Safe</span>`;
+        let safetyTag = "";
+        if (sa <= 1)
+          safetyTag = `<span class="travel-tag travel-tag-danger">Dangerous</span>`;
+        else if (sa >= 4)
+          safetyTag = `<span class="travel-tag travel-tag-safe">Safe</span>`;
 
-      return `<div class="travel-country-card">
+        return `<div class="travel-country-card">
         <div class="travel-cc-header">
           <span class="travel-cc-flag">${flag}</span>
           <div class="travel-cc-info">
@@ -4498,18 +4922,19 @@ const game = {
             <div class="travel-opt-detail">Cost: $${legalCost.toLocaleString()}</div>
             <div class="travel-opt-detail">Time: ${legalTime}mo</div>
             <div class="travel-opt-detail">Denial: ${denialPct}%</div>
-            <button class="btn btn-sm btn-primary" onclick="game.startTravel('${c[1]}','legal')" ${t.migrating ? 'disabled' : ''}>Apply</button>
+            <button class="btn btn-sm btn-primary" onclick="game.startTravel('${c[1]}','legal')" ${t.migrating ? "disabled" : ""}>Apply</button>
           </div>
           <div class="travel-option travel-option-illegal">
             <div class="travel-opt-head"><i class="fa-solid fa-person-running"></i> Illegal</div>
             <div class="travel-opt-detail">Cost: $${illegalCost.toLocaleString()}</div>
             <div class="travel-opt-detail">Time: ${illegalTime}mo</div>
             <div class="travel-opt-detail">Caught: ${caughtPct}%</div>
-            <button class="btn btn-sm btn-danger" onclick="game.startTravel('${c[1]}','illegal')" ${t.migrating ? 'disabled' : ''}>Risk It</button>
+            <button class="btn btn-sm btn-danger" onclick="game.startTravel('${c[1]}','illegal')" ${t.migrating ? "disabled" : ""}>Risk It</button>
           </div>
         </div>
       </div>`;
-    }).join("");
+      })
+      .join("");
   },
 
   doHustle(id) {
@@ -5675,9 +6100,8 @@ const game = {
         nextBtn.innerHTML = this.state.life.dead
           ? "<i class='fa-solid fa-heart-crack'></i> Timeline Ended"
           : "<i class='fa-solid fa-flag-checkered'></i> Retired";
-      } else if (label) {
-        label.innerText =
-          speedMonths > 1 ? `+${speedMonths} Months` : "+1 Month";
+      } else {
+        nextBtn.innerHTML = `<i class="fa-solid fa-forward"></i> <span id="advance-btn-label">${speedMonths > 1 ? `+${speedMonths} Months` : "+1 Month"}</span>`;
       }
     }
 
@@ -6004,16 +6428,30 @@ const game = {
     // Business dashboard
     const bizDashboard = document.getElementById("biz-dashboard");
     if (bizDashboard) {
-      const totalVal = this.state.startups.reduce((s, x) => s + x.financials.val, 0);
-      const totalEmp = this.state.startups.reduce((s, x) => s + x.staff.dev + x.staff.sales + x.staff.mkt + x.staff.exec, 0);
-      const totalNet = this.state.startups.reduce((s, x) => s + (x.financials.rev - x.financials.burn), 0);
-      document.getElementById("biz-count").innerText = this.state.startups.length;
-      document.getElementById("biz-total-val").innerText = totalVal >= 1e6 ? `$${(totalVal/1e6).toFixed(1)}M` : `$${(totalVal/1000).toFixed(0)}K`;
+      const totalVal = this.state.startups.reduce(
+        (s, x) => s + x.financials.val,
+        0,
+      );
+      const totalEmp = this.state.startups.reduce(
+        (s, x) => s + x.staff.dev + x.staff.sales + x.staff.mkt + x.staff.exec,
+        0,
+      );
+      const totalNet = this.state.startups.reduce(
+        (s, x) => s + (x.financials.rev - x.financials.burn),
+        0,
+      );
+      document.getElementById("biz-count").innerText =
+        this.state.startups.length;
+      document.getElementById("biz-total-val").innerText =
+        totalVal >= 1e6
+          ? `$${(totalVal / 1e6).toFixed(1)}M`
+          : `$${(totalVal / 1000).toFixed(0)}K`;
       document.getElementById("biz-employees").innerText = totalEmp;
       const bizNetEl = document.getElementById("biz-net");
       if (bizNetEl) {
         bizNetEl.innerText = `${totalNet >= 0 ? "+" : ""}$${Math.round(totalNet).toLocaleString()}`;
-        bizNetEl.style.color = totalNet >= 0 ? "var(--accent-green)" : "var(--accent-red)";
+        bizNetEl.style.color =
+          totalNet >= 0 ? "var(--accent-green)" : "var(--accent-red)";
       }
 
       // Auto-guide: show contextual help based on current state
@@ -6034,28 +6472,62 @@ const game = {
         // Show specific tips for each startup
         const tips = [];
         this.state.startups.forEach((s, i) => {
-          const teamSize = s.staff.dev + s.staff.sales + s.staff.mkt + s.staff.exec;
+          const teamSize =
+            s.staff.dev + s.staff.sales + s.staff.mkt + s.staff.exec;
           const pmf = s.market.pmf;
           const profit = s.financials.rev - s.financials.burn;
           const runway = s.financials.months_runway;
           const morale = s.staff.morale;
 
-          if (teamSize === 0) tips.push(`<b>${s.name}</b>: Hire Developers! You need a team to build anything.`);
-          else if (s.staff.dev === 0) tips.push(`<b>${s.name}</b>: No developers! Hire devs — they build your product.`);
-          else if (morale < 40) tips.push(`<b>${s.name}</b>: ⚠️ Morale is only ${morale.toFixed(0)}%! Use <b>Boost Morale</b> or your team will underperform.`);
-          else if (runway < 4 && profit < 0) tips.push(`<b>${s.name}</b>: ⚠️ Low runway (${runway.toFixed(0)}mo)! Use <b>Invest</b> to add your personal cash, or seek <b>Funding</b>.`);
-          else if (s.product.features < 5 && s.staff.sales > 0) tips.push(`<b>${s.name}</b>: Too early for sales. Focus on devs to build features first.`);
-          else if (pmf < 0.25 && s.staff.mkt > 0 && s.product.features < 10) tips.push(`<b>${s.name}</b>: Marketing is wasted at low PMF. Build more features first.`);
-          else if (pmf > 0.25 && s.staff.sales === 0) tips.push(`<b>${s.name}</b>: PMF is ${(pmf*100).toFixed(0)}%! Hire Sales to start getting paying users.`);
-          else if (pmf > 0.4 && s.staff.mkt === 0) tips.push(`<b>${s.name}</b>: Good PMF! Add Marketing to accelerate user growth.`);
-          else if (profit > 3000 && teamSize < 6) tips.push(`<b>${s.name}</b>: You're profitable! Consider scaling your team for faster growth.`);
-          else if (s.financials.val > 100000) tips.push(`<b>${s.name}</b>: Valuation $${(s.financials.val/1000).toFixed(0)}K! Consider an Exit (IPO or Sale).`);
-          else if (profit > 0) tips.push(`<b>${s.name}</b>: ✅ Profitable! Keep growing or Exit when you're ready.`);
+          if (teamSize === 0)
+            tips.push(
+              `<b>${s.name}</b>: Hire Developers! You need a team to build anything.`,
+            );
+          else if (s.staff.dev === 0)
+            tips.push(
+              `<b>${s.name}</b>: No developers! Hire devs — they build your product.`,
+            );
+          else if (morale < 40)
+            tips.push(
+              `<b>${s.name}</b>: ⚠️ Morale is only ${morale.toFixed(0)}%! Use <b>Boost Morale</b> or your team will underperform.`,
+            );
+          else if (runway < 4 && profit < 0)
+            tips.push(
+              `<b>${s.name}</b>: ⚠️ Low runway (${runway.toFixed(0)}mo)! Use <b>Invest</b> to add your personal cash, or seek <b>Funding</b>.`,
+            );
+          else if (s.product.features < 5 && s.staff.sales > 0)
+            tips.push(
+              `<b>${s.name}</b>: Too early for sales. Focus on devs to build features first.`,
+            );
+          else if (pmf < 0.25 && s.staff.mkt > 0 && s.product.features < 10)
+            tips.push(
+              `<b>${s.name}</b>: Marketing is wasted at low PMF. Build more features first.`,
+            );
+          else if (pmf > 0.25 && s.staff.sales === 0)
+            tips.push(
+              `<b>${s.name}</b>: PMF is ${(pmf * 100).toFixed(0)}%! Hire Sales to start getting paying users.`,
+            );
+          else if (pmf > 0.4 && s.staff.mkt === 0)
+            tips.push(
+              `<b>${s.name}</b>: Good PMF! Add Marketing to accelerate user growth.`,
+            );
+          else if (profit > 3000 && teamSize < 6)
+            tips.push(
+              `<b>${s.name}</b>: You're profitable! Consider scaling your team for faster growth.`,
+            );
+          else if (s.financials.val > 100000)
+            tips.push(
+              `<b>${s.name}</b>: Valuation $${(s.financials.val / 1000).toFixed(0)}K! Consider an Exit (IPO or Sale).`,
+            );
+          else if (profit > 0)
+            tips.push(
+              `<b>${s.name}</b>: ✅ Profitable! Keep growing or Exit when you're ready.`,
+            );
         });
         if (tips.length > 0) {
           guideHtml = `<div class="biz-guide biz-guide-tips">
             <div class="biz-guide-title"><i class="fa-solid fa-compass"></i> What To Do Next</div>
-            <div class="biz-guide-tip-list">${tips.map(t => `<div class="biz-guide-tip">${t}</div>`).join("")}</div>
+            <div class="biz-guide-tip-list">${tips.map((t) => `<div class="biz-guide-tip">${t}</div>`).join("")}</div>
           </div>`;
         }
       }
@@ -6065,16 +6537,16 @@ const game = {
     // Startup type grid
     const typeGrid = document.getElementById("startup-type-grid");
     if (typeGrid) {
-      typeGrid.innerHTML = CONFIG.STARTUP_TYPES.map(t => {
+      typeGrid.innerHTML = CONFIG.STARTUP_TYPES.map((t) => {
         const canAfford = this.state.cash >= t.cost;
-        return `<div class="biz-type-card ${canAfford ? '' : 'biz-type-locked'}" onclick="${canAfford ? `game._createStartup('${t.id}')` : ''}">
+        return `<div class="biz-type-card ${canAfford ? "" : "biz-type-locked"}" onclick="${canAfford ? `game._createStartup('${t.id}')` : ""}">
           <div class="biz-type-icon" style="color:${t.color};background:${t.color}22"><i class="fa-solid ${t.icon}"></i></div>
           <div class="biz-type-info">
             <span class="biz-type-name">${t.name}</span>
             <span class="biz-type-cost">${canAfford ? `$${t.cost.toLocaleString()}` : `Need $${t.cost.toLocaleString()}`}</span>
           </div>
           <div class="biz-type-meta">
-            <span title="Difficulty">${'●'.repeat(Math.ceil(t.difficulty))}${'○'.repeat(3-Math.ceil(t.difficulty))}</span>
+            <span title="Difficulty">${"●".repeat(Math.ceil(t.difficulty))}${"○".repeat(3 - Math.ceil(t.difficulty))}</span>
             <span title="Upside">${t.upside}x</span>
           </div>
         </div>`;
@@ -6083,7 +6555,8 @@ const game = {
 
     // Active startups title
     const activeTitle = document.getElementById("active-startups-title");
-    if (activeTitle) activeTitle.style.display = this.state.startups.length ? "" : "none";
+    if (activeTitle)
+      activeTitle.style.display = this.state.startups.length ? "" : "none";
 
     document.getElementById("startup-list").innerHTML = this.state.startups
       .map((s, i) => {
@@ -6096,12 +6569,27 @@ const game = {
         const rev = s.financials.rev;
         const runway = Math.max(0, s.financials.months_runway).toFixed(1);
         const profit = rev - burn;
-        const profitColor = profit >= 0 ? "var(--accent-green)" : "var(--accent-red)";
-        const cashColor = s.financials.cash < burn * 3 ? "var(--accent-red)" : "var(--accent-green)";
-        const typeInfo = CONFIG.STARTUP_TYPES.find(t => t.id === s.info.type) || {};
+        const profitColor =
+          profit >= 0 ? "var(--accent-green)" : "var(--accent-red)";
+        const cashColor =
+          s.financials.cash < burn * 3
+            ? "var(--accent-red)"
+            : "var(--accent-green)";
+        const typeInfo =
+          CONFIG.STARTUP_TYPES.find((t) => t.id === s.info.type) || {};
         const typeColor = typeInfo.color || "#a78bfa";
-        const moraleFill = s.staff.morale > 60 ? "#34d399" : s.staff.morale > 30 ? "#fbbf24" : "#ef4444";
-        const runwayColor = parseFloat(runway) > 6 ? "#34d399" : parseFloat(runway) > 3 ? "#fbbf24" : "#ef4444";
+        const moraleFill =
+          s.staff.morale > 60
+            ? "#34d399"
+            : s.staff.morale > 30
+              ? "#fbbf24"
+              : "#ef4444";
+        const runwayColor =
+          parseFloat(runway) > 6
+            ? "#34d399"
+            : parseFloat(runway) > 3
+              ? "#fbbf24"
+              : "#ef4444";
 
         // Render Roles
         const roleHtml = Object.keys(CONFIG.STARTUP_ROLES)
@@ -6129,7 +6617,7 @@ const game = {
           <!-- Header -->
           <div class="biz-card-header">
             <div class="biz-card-title">
-              <div class="biz-card-icon" style="background:${typeColor}22;color:${typeColor}"><i class="fa-solid ${typeInfo.icon || 'fa-building'}"></i></div>
+              <div class="biz-card-icon" style="background:${typeColor}22;color:${typeColor}"><i class="fa-solid ${typeInfo.icon || "fa-building"}"></i></div>
               <div>
                 <h3>${s.name}</h3>
                 <span class="tag" style="background:${typeColor}22;color:${typeColor};border-color:${typeColor}44">${(typeInfo.name || s.info.type).toUpperCase()}</span>
@@ -6145,11 +6633,11 @@ const game = {
           <div class="biz-metrics-row">
             <div class="biz-metric">
               <span class="biz-metric-label">VALUATION</span>
-              <span class="biz-metric-value">$${s.financials.val >= 1e6 ? (s.financials.val/1e6).toFixed(1)+'M' : (s.financials.val/1000).toFixed(0)+'K'}</span>
+              <span class="biz-metric-value">$${s.financials.val >= 1e6 ? (s.financials.val / 1e6).toFixed(1) + "M" : (s.financials.val / 1000).toFixed(0) + "K"}</span>
             </div>
             <div class="biz-metric">
               <span class="biz-metric-label">CASH</span>
-              <span class="biz-metric-value" style="color:${cashColor}">$${(s.financials.cash/1000).toFixed(1)}K</span>
+              <span class="biz-metric-value" style="color:${cashColor}">$${(s.financials.cash / 1000).toFixed(1)}K</span>
             </div>
             <div class="biz-metric">
               <span class="biz-metric-label">RUNWAY</span>
@@ -6166,8 +6654,8 @@ const game = {
             <div class="biz-section">
               <h4 class="biz-section-title"><i class="fa-solid fa-code-branch"></i> Product</h4>
               <div class="biz-pmf-bar">
-                <div class="biz-pmf-label"><span>Product-Market Fit</span><span style="color:${pmfPct >= 50 ? '#34d399' : pmfPct >= 25 ? '#fbbf24' : '#ef4444'}">${pmfPct}%</span></div>
-                <div class="progress-bg" style="height:8px;border-radius:4px"><div class="progress-fill" style="width:${pmfPct}%;background:${pmfPct >= 50 ? '#34d399' : pmfPct >= 25 ? '#fbbf24' : '#ef4444'};border-radius:4px;transition:width 0.5s"></div></div>
+                <div class="biz-pmf-label"><span>Product-Market Fit</span><span style="color:${pmfPct >= 50 ? "#34d399" : pmfPct >= 25 ? "#fbbf24" : "#ef4444"}">${pmfPct}%</span></div>
+                <div class="progress-bg" style="height:8px;border-radius:4px"><div class="progress-fill" style="width:${pmfPct}%;background:${pmfPct >= 50 ? "#34d399" : pmfPct >= 25 ? "#fbbf24" : "#ef4444"};border-radius:4px;transition:width 0.5s"></div></div>
               </div>
               <div class="biz-product-stats">
                 <div class="biz-pstat"><i class="fa-solid fa-puzzle-piece"></i><span>${s.product.features.toFixed(0)}</span><small>Features</small></div>
@@ -6779,30 +7267,60 @@ const game = {
     const travelPanel = document.getElementById("travel-panel");
     if (travelPanel) {
       const t = this.state.travel;
-      const cp = this.state.countryProfile || [3,3,3,3,3];
-      const curCountry = this.state.country ? CONFIG.getCountryByCode(this.state.country) : null;
+      const cp = this.state.countryProfile || [3, 3, 3, 3, 3];
+      const curCountry = this.state.country
+        ? CONFIG.getCountryByCode(this.state.country)
+        : null;
       const curName = curCountry ? curCountry.name : "Unknown";
-      const curFlag = this.state.country ? CONFIG.getCountryFlag(this.state.country) : "🌍";
+      const curFlag = this.state.country
+        ? CONFIG.getCountryFlag(this.state.country)
+        : "🌍";
       const [curEcon, curStab, curTax, curSafe, curOpp] = cp;
 
       // Country danger indicator
       let dangerLevel = "Safe";
       let dangerColor = "#34d399";
       let dangerDesc = "Your country is relatively safe.";
-      if (curSafe <= 1 && curStab <= 1) { dangerLevel = "WAR ZONE"; dangerColor = "#ef4444"; dangerDesc = "Active conflict. Bombings, shootings, violence. Leave immediately if you can."; }
-      else if (curSafe <= 1) { dangerLevel = "EXTREME DANGER"; dangerColor = "#ef4444"; dangerDesc = "Extreme violence and lawlessness. Your life is at constant risk."; }
-      else if (curStab <= 1) { dangerLevel = "CRISIS ZONE"; dangerColor = "#f97316"; dangerDesc = "Political collapse, civil unrest. Very dangerous."; }
-      else if (curSafe <= 2 || curStab <= 2) { dangerLevel = "Dangerous"; dangerColor = "#f59e0b"; dangerDesc = "High crime rates and instability. Consider migrating."; }
-      else if (curSafe >= 4 && curStab >= 4) { dangerLevel = "Very Safe"; dangerColor = "#34d399"; dangerDesc = "Excellent safety and stability."; }
-      else { dangerLevel = "Moderate"; dangerColor = "#60a5fa"; dangerDesc = "Average safety. Could be better."; }
+      if (curSafe <= 1 && curStab <= 1) {
+        dangerLevel = "WAR ZONE";
+        dangerColor = "#ef4444";
+        dangerDesc =
+          "Active conflict. Bombings, shootings, violence. Leave immediately if you can.";
+      } else if (curSafe <= 1) {
+        dangerLevel = "EXTREME DANGER";
+        dangerColor = "#ef4444";
+        dangerDesc =
+          "Extreme violence and lawlessness. Your life is at constant risk.";
+      } else if (curStab <= 1) {
+        dangerLevel = "CRISIS ZONE";
+        dangerColor = "#f97316";
+        dangerDesc = "Political collapse, civil unrest. Very dangerous.";
+      } else if (curSafe <= 2 || curStab <= 2) {
+        dangerLevel = "Dangerous";
+        dangerColor = "#f59e0b";
+        dangerDesc = "High crime rates and instability. Consider migrating.";
+      } else if (curSafe >= 4 && curStab >= 4) {
+        dangerLevel = "Very Safe";
+        dangerColor = "#34d399";
+        dangerDesc = "Excellent safety and stability.";
+      } else {
+        dangerLevel = "Moderate";
+        dangerColor = "#60a5fa";
+        dangerDesc = "Average safety. Could be better.";
+      }
 
       // Migration status
       let migrationHtml = "";
       if (t.migrating) {
         const targetC = CONFIG.getCountryByCode(t.targetCountry);
         const tFlag = CONFIG.getCountryFlag(t.targetCountry);
-        const progress = Math.round(((t.totalMonths - t.monthsLeft) / t.totalMonths) * 100);
-        const methodLabel = t.method === "legal" ? "🛂 Legal Visa Process" : "⚠️ Illegal Border Crossing";
+        const progress = Math.round(
+          ((t.totalMonths - t.monthsLeft) / t.totalMonths) * 100,
+        );
+        const methodLabel =
+          t.method === "legal"
+            ? "🛂 Legal Visa Process"
+            : "⚠️ Illegal Border Crossing";
         migrationHtml = `<div class="travel-migration-active">
           <div class="travel-mig-header">
             <i class="fa-solid fa-plane-departure"></i>
@@ -6820,29 +7338,43 @@ const game = {
 
       // Country list for migration
       const searchVal = document.getElementById("travel-search")?.value || "";
-      const filtered = CONFIG.COUNTRIES.filter(c => 
-        c[0].toLowerCase().includes(searchVal.toLowerCase()) && c[1] !== this.state.country
+      const filtered = CONFIG.COUNTRIES.filter(
+        (c) =>
+          c[0].toLowerCase().includes(searchVal.toLowerCase()) &&
+          c[1] !== this.state.country,
       ).slice(0, 30);
 
-      const countryListHtml = filtered.map(c => {
-        const flag = CONFIG.getCountryFlag(c[1]);
-        const [e, st, tx, sa, op] = [c[2], c[3], c[4], c[5], c[6]];
-        const rating = ((e + st + sa + op) / 4).toFixed(1);
-        const tierColor = rating >= 4 ? "#34d399" : rating >= 3 ? "#60a5fa" : rating >= 2 ? "#fbbf24" : "#ef4444";
-        const fromP = cp;
-        const toP = [e, st, tx, sa, op];
-        const legalCost = this.getTravelCost(fromP, toP, "legal");
-        const illegalCost = this.getTravelCost(fromP, toP, "illegal");
-        const legalTime = this.getTravelTime(fromP, toP, "legal");
-        const illegalTime = this.getTravelTime(fromP, toP, "illegal");
-        const denialPct = Math.round(this.getVisaDenialChance(fromP, toP) * 100);
-        const caughtPct = Math.round(this.getCaughtChance(fromP, toP) * 100);
+      const countryListHtml = filtered
+        .map((c) => {
+          const flag = CONFIG.getCountryFlag(c[1]);
+          const [e, st, tx, sa, op] = [c[2], c[3], c[4], c[5], c[6]];
+          const rating = ((e + st + sa + op) / 4).toFixed(1);
+          const tierColor =
+            rating >= 4
+              ? "#34d399"
+              : rating >= 3
+                ? "#60a5fa"
+                : rating >= 2
+                  ? "#fbbf24"
+                  : "#ef4444";
+          const fromP = cp;
+          const toP = [e, st, tx, sa, op];
+          const legalCost = this.getTravelCost(fromP, toP, "legal");
+          const illegalCost = this.getTravelCost(fromP, toP, "illegal");
+          const legalTime = this.getTravelTime(fromP, toP, "legal");
+          const illegalTime = this.getTravelTime(fromP, toP, "illegal");
+          const denialPct = Math.round(
+            this.getVisaDenialChance(fromP, toP) * 100,
+          );
+          const caughtPct = Math.round(this.getCaughtChance(fromP, toP) * 100);
 
-        let safetyTag = "";
-        if (sa <= 1) safetyTag = `<span class="travel-tag travel-tag-danger">Dangerous</span>`;
-        else if (sa >= 4) safetyTag = `<span class="travel-tag travel-tag-safe">Safe</span>`;
+          let safetyTag = "";
+          if (sa <= 1)
+            safetyTag = `<span class="travel-tag travel-tag-danger">Dangerous</span>`;
+          else if (sa >= 4)
+            safetyTag = `<span class="travel-tag travel-tag-safe">Safe</span>`;
 
-        return `<div class="travel-country-card">
+          return `<div class="travel-country-card">
           <div class="travel-cc-header">
             <span class="travel-cc-flag">${flag}</span>
             <div class="travel-cc-info">
@@ -6857,18 +7389,19 @@ const game = {
               <div class="travel-opt-detail">Cost: $${legalCost.toLocaleString()}</div>
               <div class="travel-opt-detail">Time: ${legalTime}mo</div>
               <div class="travel-opt-detail">Denial: ${denialPct}%</div>
-              <button class="btn btn-sm btn-primary" onclick="game.startTravel('${c[1]}','legal')" ${t.migrating ? 'disabled' : ''}>Apply</button>
+              <button class="btn btn-sm btn-primary" onclick="game.startTravel('${c[1]}','legal')" ${t.migrating ? "disabled" : ""}>Apply</button>
             </div>
             <div class="travel-option travel-option-illegal">
               <div class="travel-opt-head"><i class="fa-solid fa-person-running"></i> Illegal</div>
               <div class="travel-opt-detail">Cost: $${illegalCost.toLocaleString()}</div>
               <div class="travel-opt-detail">Time: ${illegalTime}mo</div>
               <div class="travel-opt-detail">Caught: ${caughtPct}%</div>
-              <button class="btn btn-sm btn-danger" onclick="game.startTravel('${c[1]}','illegal')" ${t.migrating ? 'disabled' : ''}>Risk It</button>
+              <button class="btn btn-sm btn-danger" onclick="game.startTravel('${c[1]}','illegal')" ${t.migrating ? "disabled" : ""}>Risk It</button>
             </div>
           </div>
         </div>`;
-      }).join("");
+        })
+        .join("");
 
       travelPanel.innerHTML = `
         <div class="travel-current">
@@ -6881,10 +7414,10 @@ const game = {
           </div>
           <p class="travel-danger-desc">${dangerDesc}</p>
           <div class="travel-stats-row">
-            <span>Economy: ${'★'.repeat(curEcon)}${'☆'.repeat(5-curEcon)}</span>
-            <span>Safety: ${'★'.repeat(curSafe)}${'☆'.repeat(5-curSafe)}</span>
-            <span>Stability: ${'★'.repeat(curStab)}${'☆'.repeat(5-curStab)}</span>
-            <span>Opportunity: ${'★'.repeat(curOpp)}${'☆'.repeat(5-curOpp)}</span>
+            <span>Economy: ${"★".repeat(curEcon)}${"☆".repeat(5 - curEcon)}</span>
+            <span>Safety: ${"★".repeat(curSafe)}${"☆".repeat(5 - curSafe)}</span>
+            <span>Stability: ${"★".repeat(curStab)}${"☆".repeat(5 - curStab)}</span>
+            <span>Opportunity: ${"★".repeat(curOpp)}${"☆".repeat(5 - curOpp)}</span>
           </div>
         </div>
         ${migrationHtml}
@@ -6909,15 +7442,20 @@ const game = {
           <p style="margin:0">No past lives yet. Live a life first!</p>
         </div>`;
       } else {
-        pastLivesEl.innerHTML = lives.slice().reverse().map((l, i) => {
-          const isDead = l.outcome === "dead";
-          const icon = isDead ? "fa-skull-crossbones" : "fa-crown";
-          const borderColor = isDead ? "rgba(239,68,68,0.3)" : "rgba(52,211,153,0.3)";
-          const statusColor = isDead ? "#ef4444" : "#34d399";
-          const statusText = isDead ? "DIED" : "RETIRED";
-          const date = l.at ? new Date(l.at).toLocaleDateString() : "Unknown";
-          const nwColor = l.netWorth >= 0 ? "#34d399" : "#ef4444";
-          return `<div class="card past-life-card" style="border-color:${borderColor};margin-bottom:10px">
+        pastLivesEl.innerHTML = lives
+          .slice()
+          .reverse()
+          .map((l, i) => {
+            const isDead = l.outcome === "dead";
+            const icon = isDead ? "fa-skull-crossbones" : "fa-crown";
+            const borderColor = isDead
+              ? "rgba(239,68,68,0.3)"
+              : "rgba(52,211,153,0.3)";
+            const statusColor = isDead ? "#ef4444" : "#34d399";
+            const statusText = isDead ? "DIED" : "RETIRED";
+            const date = l.at ? new Date(l.at).toLocaleDateString() : "Unknown";
+            const nwColor = l.netWorth >= 0 ? "#34d399" : "#ef4444";
+            return `<div class="card past-life-card" style="border-color:${borderColor};margin-bottom:10px">
             <div class="past-life-header">
               <div class="past-life-icon" style="color:${statusColor}"><i class="fa-solid ${icon}"></i></div>
               <div class="past-life-info">
@@ -6933,7 +7471,8 @@ const game = {
               <div class="past-life-detail"><span>${isDead ? "Cause of Death" : "Outcome"}</span><strong>${l.deathReason || "Unknown"}</strong></div>
             </div>
           </div>`;
-        }).join("");
+          })
+          .join("");
       }
     }
 
@@ -7327,7 +7866,8 @@ const app = {
 
     // Mobile stats: player name + country
     const mspPlayerName = document.getElementById("msp-player-name");
-    if (mspPlayerName) mspPlayerName.innerText = game.state.playerName || "Player";
+    if (mspPlayerName)
+      mspPlayerName.innerText = game.state.playerName || "Player";
     const mspPlayerCountry = document.getElementById("msp-player-country");
     if (mspPlayerCountry) {
       if (game.state.country) {
@@ -7339,7 +7879,8 @@ const app = {
       } else {
         mspPlayerCountry.innerText = "";
       }
-    }    const life = game.state.life;
+    }
+    const life = game.state.life;
     const deathRiskPct = game.estimateDeathRiskPct();
     const prevRiskPct = life.lastDeathRiskPct || 0;
     life.lastDeathRiskPct = deathRiskPct;
@@ -7668,7 +8209,8 @@ const app = {
 
     // Player name & country
     const hudPlayerName = document.getElementById("hud-player-name");
-    if (hudPlayerName) hudPlayerName.innerText = game.state.playerName || "Player";
+    if (hudPlayerName)
+      hudPlayerName.innerText = game.state.playerName || "Player";
     const hudPlayerCountry = document.getElementById("hud-player-country");
     if (hudPlayerCountry) {
       if (game.state.country) {
@@ -7684,8 +8226,12 @@ const app = {
     const hudCountryTraits = document.getElementById("hud-country-traits");
     if (hudCountryTraits && game.state.countryProfile) {
       const traits = CONFIG.getCountryTraits(game.state.countryProfile);
-      const prosHtml = traits.pros.map(p => `<span class="trait-pro">✓ ${p}</span>`).join("");
-      const consHtml = traits.cons.map(c => `<span class="trait-con">✗ ${c}</span>`).join("");
+      const prosHtml = traits.pros
+        .map((p) => `<span class="trait-pro">✓ ${p}</span>`)
+        .join("");
+      const consHtml = traits.cons
+        .map((c) => `<span class="trait-con">✗ ${c}</span>`)
+        .join("");
       hudCountryTraits.innerHTML = prosHtml + consHtml;
     } else if (hudCountryTraits) {
       hudCountryTraits.innerHTML = "";
@@ -8093,7 +8639,10 @@ const charCreation = {
     screen.style.display = "flex";
     this.renderCountryList("");
     const nameInput = document.getElementById("char-name");
-    if (nameInput) { nameInput.value = ""; setTimeout(() => nameInput.focus(), 400); }
+    if (nameInput) {
+      nameInput.value = "";
+      setTimeout(() => nameInput.focus(), 400);
+    }
     document.getElementById("btn-begin").disabled = true;
     this.selectedCountry = null;
     const details = document.getElementById("country-details");
@@ -8118,19 +8667,31 @@ const charCreation = {
   renderCountryList(query) {
     const list = document.getElementById("country-list");
     if (!list) return;
-    const filtered = CONFIG.COUNTRIES.filter(c => c[0].toLowerCase().includes(query));
-    list.innerHTML = filtered.map(c => {
-      const flag = CONFIG.getCountryFlag(c[1]);
-      const [econ, stab, tax, safe, opp] = [c[2], c[3], c[4], c[5], c[6]];
-      const rating = ((econ + stab + safe + opp) / 4).toFixed(1);
-      const tierColor = rating >= 4 ? "#34d399" : rating >= 3 ? "#60a5fa" : rating >= 2 ? "#fbbf24" : "#ef4444";
-      const sel = this.selectedCountry === c[1] ? " country-item-selected" : "";
-      return `<div class="country-item${sel}" onclick="charCreation.selectCountry('${c[1]}')">
+    const filtered = CONFIG.COUNTRIES.filter((c) =>
+      c[0].toLowerCase().includes(query),
+    );
+    list.innerHTML = filtered
+      .map((c) => {
+        const flag = CONFIG.getCountryFlag(c[1]);
+        const [econ, stab, tax, safe, opp] = [c[2], c[3], c[4], c[5], c[6]];
+        const rating = ((econ + stab + safe + opp) / 4).toFixed(1);
+        const tierColor =
+          rating >= 4
+            ? "#34d399"
+            : rating >= 3
+              ? "#60a5fa"
+              : rating >= 2
+                ? "#fbbf24"
+                : "#ef4444";
+        const sel =
+          this.selectedCountry === c[1] ? " country-item-selected" : "";
+        return `<div class="country-item${sel}" onclick="charCreation.selectCountry('${c[1]}')">
         <span class="country-flag">${flag}</span>
         <span class="country-name">${c[0]}</span>
         <span class="country-rating" style="color:${tierColor}">${"★".repeat(Math.round(parseFloat(rating)))}</span>
       </div>`;
-    }).join("");
+      })
+      .join("");
   },
 
   selectCountry(code) {
@@ -8149,23 +8710,23 @@ const charCreation = {
           <div>
             <h3>${c.name}</h3>
             <div class="cd-bars">
-              <div class="cd-bar"><span>Economy</span><div class="cd-bar-track"><div class="cd-bar-fill" style="width:${c.profile[0]*20}%;background:#34d399"></div></div></div>
-              <div class="cd-bar"><span>Stability</span><div class="cd-bar-track"><div class="cd-bar-fill" style="width:${c.profile[1]*20}%;background:#60a5fa"></div></div></div>
-              <div class="cd-bar"><span>Safety</span><div class="cd-bar-track"><div class="cd-bar-fill" style="width:${c.profile[3]*20}%;background:#a78bfa"></div></div></div>
-              <div class="cd-bar"><span>Opportunity</span><div class="cd-bar-track"><div class="cd-bar-fill" style="width:${c.profile[4]*20}%;background:#fbbf24"></div></div></div>
+              <div class="cd-bar"><span>Economy</span><div class="cd-bar-track"><div class="cd-bar-fill" style="width:${c.profile[0] * 20}%;background:#34d399"></div></div></div>
+              <div class="cd-bar"><span>Stability</span><div class="cd-bar-track"><div class="cd-bar-fill" style="width:${c.profile[1] * 20}%;background:#60a5fa"></div></div></div>
+              <div class="cd-bar"><span>Safety</span><div class="cd-bar-track"><div class="cd-bar-fill" style="width:${c.profile[3] * 20}%;background:#a78bfa"></div></div></div>
+              <div class="cd-bar"><span>Opportunity</span><div class="cd-bar-track"><div class="cd-bar-fill" style="width:${c.profile[4] * 20}%;background:#fbbf24"></div></div></div>
             </div>
           </div>
         </div>
         <div class="cd-traits">
-          ${traits.pros.length ? `<div class="cd-pros">${traits.pros.map(p => `<span class="cd-pro"><i class="fa-solid fa-check"></i> ${p}</span>`).join("")}</div>` : ""}
-          ${traits.cons.length ? `<div class="cd-cons">${traits.cons.map(c => `<span class="cd-con"><i class="fa-solid fa-xmark"></i> ${c}</span>`).join("")}</div>` : ""}
+          ${traits.pros.length ? `<div class="cd-pros">${traits.pros.map((p) => `<span class="cd-pro"><i class="fa-solid fa-check"></i> ${p}</span>`).join("")}</div>` : ""}
+          ${traits.cons.length ? `<div class="cd-cons">${traits.cons.map((c) => `<span class="cd-con"><i class="fa-solid fa-xmark"></i> ${c}</span>`).join("")}</div>` : ""}
         </div>
         <div class="cd-effects">
-          <div class="cd-eff"><span>Tax Modifier</span><span style="color:${mods.taxMod > 0.2 ? '#ef4444' : '#34d399'}">${mods.taxMod > 0 ? '+' : ''}${(mods.taxMod*100).toFixed(0)}%</span></div>
+          <div class="cd-eff"><span>Tax Modifier</span><span style="color:${mods.taxMod > 0.2 ? "#ef4444" : "#34d399"}">${mods.taxMod > 0 ? "+" : ""}${(mods.taxMod * 100).toFixed(0)}%</span></div>
           <div class="cd-eff"><span>Living Cost</span><span>${mods.livingCostMult.toFixed(2)}x</span></div>
-          <div class="cd-eff"><span>Death Risk</span><span style="color:${mods.deathRiskMult > 1 ? '#ef4444' : '#34d399'}">${mods.deathRiskMult.toFixed(2)}x</span></div>
+          <div class="cd-eff"><span>Death Risk</span><span style="color:${mods.deathRiskMult > 1 ? "#ef4444" : "#34d399"}">${mods.deathRiskMult.toFixed(2)}x</span></div>
           <div class="cd-eff"><span>Startup Difficulty</span><span>${mods.startupDiffMult.toFixed(2)}x</span></div>
-          <div class="cd-eff"><span>Starting Cash</span><span style="color:${mods.startingCashMult >= 1 ? '#34d399' : '#ef4444'}">${mods.startingCashMult.toFixed(2)}x</span></div>
+          <div class="cd-eff"><span>Starting Cash</span><span style="color:${mods.startingCashMult >= 1 ? "#34d399" : "#ef4444"}">${mods.startingCashMult.toFixed(2)}x</span></div>
         </div>`;
     }
     // Re-render list to show selection
@@ -8750,12 +9311,14 @@ const FX = {
   },
   milestoneOverlay(title, sub) {
     // Remove any existing milestone overlay to prevent stacking
-    document.querySelectorAll(".milestone-overlay").forEach(e => e.remove());
+    document.querySelectorAll(".milestone-overlay").forEach((e) => e.remove());
     const el = document.createElement("div");
     el.className = "milestone-overlay";
     el.innerHTML = `<div class="milestone-badge">${title}</div><div class="milestone-sub">${sub}</div>`;
     document.body.appendChild(el);
-    setTimeout(() => { if (el.parentNode) el.remove(); }, 3000);
+    setTimeout(() => {
+      if (el.parentNode) el.remove();
+    }, 3000);
   },
   updateStreakFire() {
     const chip = document.querySelector(".legend-chip");
@@ -9596,19 +10159,30 @@ game._finalizeMarriage = function (weddingType, prenupType) {
 game.tryForBaby = function () {
   if (this.state.relationship.status !== "married")
     return app.toast("Must be married.", "error");
+  // 10-month cooldown between births
+  const r = this.state.relationship;
+  const monthsSinceBirth = this.state.age - (r.lastBirthMonth || 0);
+  if (r.lastBirthMonth > 0 && monthsSinceBirth < 10) {
+    const remaining = 10 - monthsSinceBirth;
+    return app.toast(
+      `Must wait ${remaining} more month${remaining > 1 ? "s" : ""} before trying again.`,
+      "error",
+    );
+  }
   if (this.state.stats.energy < 20) return app.toast("Too tired.", "error");
   this.modStat("energy", -20);
   const chance = 0.25 + this.state.stats.health / 500;
   if (Math.random() < chance) {
     const name = randomName();
-    this.state.relationship.children.push({
+    r.children.push({
       name,
       ageMonths: 0,
       adopted: false,
     });
+    r.lastBirthMonth = this.state.age;
     this.modStat("happiness", 30);
     app.toast(
-      `\u{1F389} ${this.state.relationship.partnerName} is having a baby! Meet ${name}!`,
+      `\u{1F389} ${r.partnerName} is having a baby! Meet ${name}!`,
       "epic",
     );
     FX.confetti();
