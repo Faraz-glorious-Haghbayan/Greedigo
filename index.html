@@ -226,6 +226,15 @@
                 autocomplete="off"
                 oninput="charCreation.filterCountries(this.value)"
               />
+              <button
+                class="btn btn-outline btn-sm"
+                id="btn-random-country"
+                style="color: red; padding: 15px 8px !important;"
+                onclick="charCreation.randomizeCountry()"
+                title="Pick a random country"
+              >
+                <i class="fa-solid fa-dice"></i>
+              </button>
             </div>
             <div class="country-list-container">
               <div class="country-list" id="country-list"></div>
@@ -281,6 +290,11 @@
             <div class="stat-row">
               <span class="label">LIQUID CASH</span>
               <span class="mono-strong">$<span id="stat-cash">0</span></span>
+            </div>
+
+            <div class="stat-row">
+              <span class="label">PLAYER</span>
+              <span class="value" id="stat-player-name">Player</span>
             </div>
 
             <div class="econ-widget">
@@ -363,10 +377,6 @@
             <div class="hud-row">
               <span><i class="fa-solid fa-bolt"></i> Streak</span
               ><span id="hud-action-streak">0</span>
-            </div>
-            <div class="hud-row">
-              <span><i class="fa-solid fa-medal"></i> Achievements</span
-              ><span id="hud-achievements">0/0</span>
             </div>
             <div class="hud-title" style="margin-top: 10px">
               <i class="fa-solid fa-receipt"></i> Monthly Budget
@@ -985,8 +995,6 @@
       </div>
     </div>
 
-    <script src="script.js">
-      
-    </script>
+    <script src="script.js"></script>
   </body>
 </html>

@@ -1486,6 +1486,48 @@ const CONFIG = {
   ],
 };
 
+// Compact number formatter: returns a short string (no $ sign)
+function shortNumber(n, digits = 1) {
+  if (n === null || n === undefined) return "0";
+  const negative = n < 0;
+  let x = Math.abs(Number(n) || 0);
+  if (!isFinite(x)) return (negative ? "-" : "") + "Infinity";
+
+  if (x < 1000) {
+    // show integer for small numbers, avoid decimals
+    return (negative ? "-" : "") + Math.floor(x).toLocaleString();
+  }
+
+  const units = ["k", "m", "b", "t", "q", "Q", "s", "S", "o", "n"];
+  const exponent = Math.floor(Math.log10(x));
+  const idx = Math.floor(exponent / 3) - 1; // 0 -> k
+  if (idx < units.length) {
+    const scale = Math.pow(10, (idx + 1) * 3);
+    const value = x / scale;
+    return (
+      (negative ? "-" : "") +
+      value.toFixed(digits).replace(/\.0+$|(?<=\.[0-9]*)0+$/g, "") +
+      units[idx]
+    );
+  }
+
+  // For very large numbers beyond our unit list, use scientific notation compactly
+  const exp = Math.floor(Math.log10(x));
+  const mant = x / Math.pow(10, exp);
+  return (
+    (negative ? "-" : "") +
+    mant.toFixed(digits).replace(/\.0+$|(?<=\.[0-9]*)0+$/g, "") +
+    "e" +
+    exp
+  );
+}
+
+function displayMoney(n) {
+  const v = Number(n) || 0;
+  if (Math.abs(v) >= 1000) return "$" + shortNumber(v, 1);
+  return "$" + v.toFixed(2);
+}
+
 const game = {
   state: {
     playerName: "Player",
@@ -2021,7 +2063,7 @@ const game = {
           this.state.life.dead
             ? "Timeline Ended: Death"
             : "Timeline Ended: Retirement",
-          `Age ${end.age} | Net worth $${Math.floor(end.netWorth).toLocaleString()}\n${end.reason}`,
+          `Age ${end.age} | Net worth $${shortNumber(Math.floor(end.netWorth))}\n${end.reason}`,
           [{ text: "Close", cb: () => app.closeModal() }],
         );
       }
@@ -2268,6 +2310,7 @@ const game = {
     const months = this.state.gameplay?.fastForwardMonths || 1;
     if (months <= 1) {
       this.nextMonth();
+      this.renderAll();
       return;
     }
     let advanced = 0;
@@ -2277,6 +2320,7 @@ const game = {
       this.nextMonth();
       advanced++;
     }
+    this.renderAll();
     if (advanced > 1) app.toast(`Advanced ${advanced} months`, "success");
   },
 
@@ -2434,7 +2478,7 @@ const game = {
       FX.confetti();
       FX.milestoneOverlay(
         achievement.title,
-        `Legend +${achievement.points}${achievement.reward ? " | Cash +$" + achievement.reward.toLocaleString() : ""}`,
+        `Legend +${achievement.points}${achievement.reward ? " | Cash +$" + shortNumber(achievement.reward) : ""}`,
       );
       FX.screenShake("lg");
       app.toast("Achievement: " + achievement.title, "epic");
@@ -2885,7 +2929,7 @@ const game = {
     this.state.life.retirementOfferedAtAge = ageYears;
     app.modal(
       "Retirement Decision",
-      `You are ${ageYears} with net worth $${Math.floor(netWorth).toLocaleString()}. Retire now and lock your legacy, or keep pushing with rising health risk?`,
+      `You are ${ageYears} with net worth $${shortNumber(Math.floor(netWorth))}. Retire now and lock your legacy, or keep pushing with rising health risk?`,
       [
         {
           text: "Retire Now",
@@ -2904,11 +2948,11 @@ const game = {
     const position =
       gap <= 0
         ? "You are above the safe retirement line."
-        : `You are $${Math.ceil(gap).toLocaleString()} below the suggested safe retirement line.`;
+        : `You are $${shortNumber(Math.ceil(gap))} below the suggested safe retirement line.`;
 
     app.modal(
       "Cash Out Temptation",
-      `Age ${ageYears}. Net worth $${Math.floor(netWorth).toLocaleString()}.\n${position}\n\nDo you cash out now, or keep risking everything?`,
+      `Age ${ageYears}. Net worth $${shortNumber(Math.floor(netWorth))}.\n${position}\n\nDo you cash out now, or keep risking everything?`,
       [
         {
           text: "Cash Out Now",
@@ -2937,7 +2981,7 @@ const game = {
     this.saveGame();
     app.modal(
       "Legacy Secured",
-      `Retired at age ${this.state.life.endingSummary.age} with $${Math.floor(this.state.life.endingSummary.netWorth).toLocaleString()} net worth.\nGreed Index: ${Math.floor(this.state.life.greed)} | Opportunities Lost: ${this.state.life.opportunitiesLost}`,
+      `Retired at age ${this.state.life.endingSummary.age} with $${shortNumber(Math.floor(this.state.life.endingSummary.netWorth))} net worth.\nGreed Index: ${Math.floor(this.state.life.greed)} | Opportunities Lost: ${this.state.life.opportunitiesLost}`,
       [{ text: "Close", cb: () => app.closeModal() }],
     );
     this.renderAll();
@@ -2961,7 +3005,7 @@ const game = {
     this.saveGame();
 
     const rel = this.state.relationship;
-    let deathDesc = `You died at age ${ageYrs}.\n\nCause: ${reason}\nNet worth left behind: $${Math.floor(nw).toLocaleString()}`;
+    let deathDesc = `You died at age ${ageYrs}.\n\nCause: ${reason}\nNet worth left behind: $${shortNumber(Math.floor(nw))}`;
     if (rel.status === "married")
       deathDesc += `\n\n${rel.partnerName} mourns your loss.`;
     if (rel.children.length > 0)
@@ -3046,11 +3090,11 @@ const game = {
 
     // --- Build death risk ---
     let deathRisk = 0;
-    if (health < 30) deathRisk += (30 - health) * 0.004;
-    if (ageYears > 58) deathRisk += (ageYears - 58) * 0.002;
-    deathRisk += life.chronicStress * 0.0009;
-    deathRisk += life.riskDebt * 0.0008;
-    deathRisk += riskExposure * 0.012;
+    if (health < 30) deathRisk += (30 - health) * 0.002;
+    if (ageYears > 58) deathRisk += (ageYears - 58) * 0.001;
+    deathRisk += life.chronicStress * 0.0004;
+    deathRisk += life.riskDebt * 0.0003;
+    deathRisk += riskExposure * 0.005;
 
     // Country safety/stability modifier
     if (cp) {
@@ -3059,7 +3103,7 @@ const game = {
     }
 
     // --- Conflict zone random events (safety 1-2, stability 1-2) ---
-    if (safe <= 2 && stab <= 1 && Math.random() < 0.004) {
+    if (safe <= 2 && stab <= 1 && Math.random() < 0.002) {
       const warDeaths = [
         "Killed by a bomb strike while walking through your neighborhood.",
         "Caught in crossfire between armed militias. You didn't make it.",
@@ -3071,7 +3115,7 @@ const game = {
       this.die(warDeaths[Math.floor(Math.random() * warDeaths.length)]);
       return;
     }
-    if (safe <= 1 && Math.random() < 0.003) {
+    if (safe <= 1 && Math.random() < 0.0015) {
       const violenceDeaths = [
         "Murdered in a random act of violence. Your country offered no safety.",
         "Killed by armed robbers who raided your home.",
@@ -3083,7 +3127,7 @@ const game = {
       );
       return;
     }
-    if (safe <= 2 && stab <= 2 && Math.random() < 0.002) {
+    if (safe <= 2 && stab <= 2 && Math.random() < 0.001) {
       const unsafeDeaths = [
         "Died from an untreated infection — healthcare was unavailable.",
         "Killed in a gang-related shooting near your neighborhood.",
@@ -3102,13 +3146,13 @@ const game = {
         0,
       ) +
       (this.state.edu?.loans || 0);
-    if (happiness <= 5 && totalDebt > 50000 && Math.random() < 0.008) {
+    if (happiness <= 5 && totalDebt > 50000 && Math.random() < 0.004) {
       this.die(
         "Died from severe depression brought on by crushing debt and despair.",
       );
       return;
     }
-    if (happiness <= 3 && life.chronicStress > 80 && Math.random() < 0.006) {
+    if (happiness <= 3 && life.chronicStress > 80 && Math.random() < 0.003) {
       this.die(
         "Took their own life after years of unbearable stress and hopelessness.",
       );
@@ -3116,19 +3160,19 @@ const game = {
     }
 
     // --- Heart attack from low health + age ---
-    if (health < 25 && ageYears > 40 && Math.random() < 0.006) {
+    if (health < 25 && ageYears > 40 && Math.random() < 0.003) {
       this.die(
         "Suffered a fatal heart attack. Years of poor health caught up.",
       );
       return;
     }
-    if (health < 15 && Math.random() < 0.008) {
+    if (health < 15 && Math.random() < 0.004) {
       this.die("Massive stroke. Your body couldn't take it anymore.");
       return;
     }
 
     // --- Drug/alcohol related (high stress + low happiness) ---
-    if (life.chronicStress > 85 && happiness < 20 && Math.random() < 0.004) {
+    if (life.chronicStress > 85 && happiness < 20 && Math.random() < 0.002) {
       const substance = [
         "Died from an accidental overdose while self-medicating chronic pain.",
         "Alcohol poisoning after years of heavy drinking to cope with stress.",
@@ -3336,10 +3380,11 @@ const game = {
       let stressHit = level.stress / 10;
       if (this.state.job.performance < 30) stressHit *= 2;
       this.modStat("happiness", -stressHit);
-      this.state.job.stress = Math.min(
-        100,
-        Math.max(0, (this.state.job.stress || 0) + level.stress * 0.06 - 1.5),
-      );
+      this.state.job.stress =
+        Math.min(
+          100,
+          Math.max(0, (this.state.job.stress || 0) + level.stress * 0.06 - 1.5),
+        ).toFixed(1) * 1;
 
       if (this.state.job.performance < 10) {
         app.modal(
@@ -3432,7 +3477,6 @@ const game = {
 
     this.tickMarkets();
     this.checkAchievements();
-    this.renderAll();
     this.maybeAdvanceOnboarding();
     this.maybeOfferRetirement();
     if (this.state.age % 6 === 0) this.saveGame(false);
@@ -3825,8 +3869,8 @@ const game = {
       const baseSalary = level.salary;
       const signOn = Math.random() < 0.3 ? baseSalary * 0.1 : 0;
 
-      let msg = `HR: "We were impressed."\nSalary: $${baseSalary.toLocaleString()}`;
-      if (signOn > 0) msg += `\nSign-on Bonus: $${signOn.toLocaleString()}`;
+      let msg = `HR: "We were impressed."\nSalary: $${shortNumber(baseSalary)}`;
+      if (signOn > 0) msg += `\nSign-on Bonus: $${shortNumber(signOn)}`;
 
       app.modal("Job Offer", msg, [
         {
@@ -3879,7 +3923,7 @@ const game = {
     if (roll < persuasion * 5 + 30) {
       // Base 30% chance + skills
       const newSalary = baseSalary * 1.1;
-      app.modal("Success!", `They agreed to $${newSalary.toLocaleString()}`, [
+      app.modal("Success!", `They agreed to $${shortNumber(newSalary)}`, [
         {
           text: "Take It",
           cb: () => {
@@ -3918,7 +3962,8 @@ const game = {
     if (type === "hard") {
       this.state.job.performance += 5;
       this.state.stats.happiness -= 2;
-      this.state.job.stress += 5;
+      this.state.job.stress =
+        Math.min(100, (this.state.job.stress || 0) + 5).toFixed(1) * 1;
       this.state.life.burnout = Math.min(100, this.state.life.burnout + 1.1);
       this.state.life.chronicStress = Math.min(
         220,
@@ -3943,7 +3988,8 @@ const game = {
       app.toast("Schmoozed Boss (+Politics)", "info");
       this.registerAction(2);
     } else if (type === "slack") {
-      this.state.job.stress = Math.max(0, this.state.job.stress - 10);
+      this.state.job.stress =
+        Math.max(0, (this.state.job.stress || 0) - 10).toFixed(1) * 1;
       this.state.stats.happiness += 2;
       this.state.job.performance -= 2;
       app.toast("Slacked off (-Stress)", "success");
@@ -4193,40 +4239,99 @@ const game = {
       this.addNews("Economy booming \u2014 markets rally!");
     if (this.state.assets["btc"].trend > 0.1) this.addNews("Crypto bull run.");
   },
-  trade(id, buy) {
+  trade(id, buy, qty = 1) {
     if (!this.canAct()) return;
+    qty = Math.max(1, Math.floor(Number(qty) || 1));
     this.state.runStats.marketTrades += 1;
     let asset = this.state.assets[id];
     const def = CONFIG.ASSETS.find((a) => a.id === id);
     let price = asset.price;
+
+    // fee and slippage scale with volatility/position; keep per-share base and multiply by qty
     let feeRate = 0.004 + (def.vol || 0.02) * 0.04;
-    let slippage = Math.min(0.03, (asset.owned / 120) * (def.vol || 0.02));
-    let effectivePrice = buy ? price * (1 + slippage) : price * (1 - slippage);
-    let fee = effectivePrice * feeRate;
+    let baseSlippage = Math.min(0.03, (asset.owned / 120) * (def.vol || 0.02));
+    // small extra slippage for larger orders (keeps UX predictable)
+    let slippage = Math.min(0.06, baseSlippage + Math.min(0.02, qty * 0.0005));
+
+    let effectivePricePerShare = buy
+      ? price * (1 + slippage)
+      : price * (1 - slippage);
+    let totalPrice = effectivePricePerShare * qty;
+    let fee = totalPrice * feeRate;
 
     if (buy) {
-      if (this.state.cash >= effectivePrice + fee) {
-        this.modCash(-(effectivePrice + fee));
-        asset.owned++;
+      if (this.state.cash >= totalPrice + fee) {
+        this.modCash(-(totalPrice + fee));
+        asset.owned += qty;
         if (def.vol >= 0.1)
-          this.recordGreed(1.2, `Speculative ${id.toUpperCase()} buys`);
-        app.toast(`Bought 1 ${id.toUpperCase()}`, "success");
-        this.registerAction(1);
+          this.recordGreed(1.2 * qty, `Speculative ${id.toUpperCase()} buys`);
+        app.toast(
+          `Bought ${qty} ${id.toUpperCase()} for ${displayMoney(totalPrice + fee)}`,
+          "success",
+        );
+        this.registerAction(Math.min(5, qty));
       } else app.toast("Insufficient Funds", "error");
     } else {
-      if (asset.owned > 0) {
-        this.modCash(effectivePrice - fee);
-        asset.owned--;
-        app.toast(`Sold 1 ${id.toUpperCase()}`, "success");
-        this.registerAction(1);
+      if (asset.owned >= qty) {
+        this.modCash(totalPrice - fee);
+        asset.owned -= qty;
+        app.toast(
+          `Sold ${qty} ${id.toUpperCase()} for ${displayMoney(totalPrice - fee)}`,
+          "success",
+        );
+        this.registerAction(Math.min(5, qty));
+      } else {
+        app.toast("You don't own that many shares", "error");
       }
     }
 
     if (fee > 0 && Math.random() < 0.35) {
-      app.log(`Trading costs paid: $${fee.toFixed(2)}.`);
+      app.log(`Trading costs paid: ${displayMoney(fee)}.`);
     }
 
     this.renderAll();
+  },
+
+  buyMax(id) {
+    if (!this.canAct()) return;
+    const asset = this.state.assets[id];
+    const def = CONFIG.ASSETS.find((a) => a.id === id);
+    const price = asset.price;
+    const cash = this.state.cash;
+    if (!price || price <= 0) return app.toast("Invalid asset price", "error");
+
+    // helper to compute total cost for q shares (including slippage and fee)
+    const computeTotal = (q) => {
+      q = Math.max(0, Math.floor(q));
+      let feeRate = 0.004 + (def.vol || 0.02) * 0.04;
+      let baseSlippage = Math.min(
+        0.03,
+        (asset.owned / 120) * (def.vol || 0.02),
+      );
+      let slippage = Math.min(0.06, baseSlippage + Math.min(0.02, q * 0.0005));
+      let effPrice = price * (1 + slippage);
+      let totalPrice = effPrice * q;
+      let fee = totalPrice * feeRate;
+      return totalPrice + fee;
+    };
+
+    // quick upper bound
+    let hi = Math.floor(cash / Math.max(0.000001, price));
+    if (hi <= 0) return app.toast("Insufficient funds", "error");
+    let lo = 0;
+
+    // Binary search maximum q such that computeTotal(q) <= cash
+    while (lo < hi) {
+      const mid = Math.ceil((lo + hi) / 2);
+      if (computeTotal(mid) <= cash) lo = mid;
+      else hi = mid - 1;
+    }
+
+    const qty = lo;
+    if (qty <= 0)
+      return app.toast("Insufficient funds to buy any shares", "error");
+    // Place trade for qty shares
+    this.trade(id, true, qty);
   },
 
   // --- BUSINESS ---
@@ -4348,10 +4453,7 @@ const game = {
     if (!s) return;
     const cost = Math.max(2000, Math.round(s.market.users * 0.5 + 1000));
     if (s.financials.cash < cost)
-      return app.toast(
-        `Need $${cost.toLocaleString()} in startup funds`,
-        "error",
-      );
+      return app.toast(`Need $${shortNumber(cost)} in startup funds`, "error");
 
     s.financials.cash -= cost;
     const boost = (15 + Math.random() * 25) * (1 + s.market.pmf);
@@ -4381,16 +4483,13 @@ const game = {
       );
 
     const buttons = options.map((amt) => ({
-      text: `Invest $${amt.toLocaleString()}`,
+      text: `Invest $${shortNumber(amt)}`,
       cb: () => {
         this.state.cash -= amt;
         s.financials.cash += amt;
         s.financials.months_runway =
           s.financials.cash / Math.max(1, s.financials.burn);
-        app.toast(
-          `Invested $${amt.toLocaleString()} into ${s.name}!`,
-          "success",
-        );
+        app.toast(`Invested $${shortNumber(amt)} into ${s.name}!`, "success");
         app.closeModal();
         this.renderAll();
       },
@@ -4399,7 +4498,7 @@ const game = {
 
     app.modal(
       "\uD83D\uDCB0 Invest Personal Cash",
-      `Transfer money from your personal account into ${s.name}.\n\nCurrent startup cash: $${Math.round(s.financials.cash).toLocaleString()}\nYour cash: $${Math.round(this.state.cash).toLocaleString()}`,
+      `Transfer money from your personal account into ${s.name}.\n\nCurrent startup cash: $${shortNumber(Math.round(s.financials.cash))}\nYour cash: $${shortNumber(Math.round(this.state.cash))}`,
       buttons,
     );
   },
@@ -4446,7 +4545,7 @@ const game = {
 
     app.modal(
       "🤝 Funding Offer",
-      `An investor is interested!\n\nFunding: $${fundingAmount.toLocaleString()}\nValuation: $${valuation.toLocaleString()}\nDilution: ${dilution}% equity\n\nThis cash goes into your startup's account.`,
+      `An investor is interested!\n\nFunding: $${shortNumber(fundingAmount)}\nValuation: $${shortNumber(valuation)}\nDilution: ${dilution}% equity\n\nThis cash goes into your startup's account.`,
       [
         {
           text: `Accept Funding`,
@@ -4454,7 +4553,7 @@ const game = {
             s.financials.cash += fundingAmount;
             s.financials.months_runway =
               s.financials.cash / Math.max(1, s.financials.burn);
-            app.toast(`Raised $${fundingAmount.toLocaleString()}!`, "success");
+            app.toast(`Raised $${shortNumber(fundingAmount)}!`, "success");
             FX.confetti();
             app.closeModal();
             game.renderAll();
@@ -4477,7 +4576,7 @@ const game = {
       cb: () => {
         const pivotCost = Math.round(t.cost * 0.3);
         if (s.financials.cash < pivotCost) {
-          app.toast(`Need $${pivotCost.toLocaleString()} to pivot`, "error");
+          app.toast(`Need $${shortNumber(pivotCost)} to pivot`, "error");
           app.closeModal();
           return;
         }
@@ -4517,15 +4616,15 @@ const game = {
 
     app.modal(
       "🚀 Exit Strategy",
-      `${s.name}\nCurrent Valuation: $${val.toLocaleString()}\n\nChoose your exit:`,
+      `${s.name}\nCurrent Valuation: $${shortNumber(val)}\n\nChoose your exit:`,
       [
         {
-          text: `IPO — $${ipoValue.toLocaleString()} (risky)`,
+          text: `IPO — $${shortNumber(ipoValue)} (risky)`,
           cb: () => {
             if (Math.random() < 0.3) {
               const actual = Math.round(ipoValue * (0.3 + Math.random() * 0.4));
               app.toast(
-                `IPO flopped! Only got $${actual.toLocaleString()}`,
+                `IPO flopped! Only got $${shortNumber(actual)}`,
                 "text-loss",
               );
               game.modCash(actual);
@@ -4534,7 +4633,7 @@ const game = {
               FX.confetti();
               FX.milestoneOverlay(
                 "📈 IPO Success!",
-                `$${ipoValue.toLocaleString()}`,
+                `$${shortNumber(ipoValue)}`,
               );
               FX.screenFlash("epic");
             }
@@ -4544,11 +4643,11 @@ const game = {
           },
         },
         {
-          text: `Sell — $${acquireValue.toLocaleString()} (safe)`,
+          text: `Sell — $${shortNumber(acquireValue)} (safe)`,
           cb: () => {
             game.modCash(acquireValue);
             app.toast(
-              `Company acquired for $${acquireValue.toLocaleString()}!`,
+              `Company acquired for $${shortNumber(acquireValue)}!`,
               "success",
             );
             game.state.startups.splice(idx, 1);
@@ -4651,7 +4750,7 @@ const game = {
 
     if (this.state.cash < cost) {
       return app.toast(
-        `Need $${cost.toLocaleString()} for ${method} travel`,
+        `Need $${shortNumber(cost)} for ${method} travel`,
         "error",
       );
     }
@@ -4664,10 +4763,10 @@ const game = {
 
       app.modal(
         "🛂 Legal Migration",
-        `Travel to ${flag} ${target.name}\n\nCost: $${cost.toLocaleString()}\nProcessing Time: ${time} months\nVisa Denial Risk: ${denialPct}%\n\nYou'll continue life while your visa processes.`,
+        `Travel to ${flag} ${target.name}\n\nCost: $${shortNumber(cost)}\nProcessing Time: ${time} months\nVisa Denial Risk: ${denialPct}%\n\nYou'll continue life while your visa processes.`,
         [
           {
-            text: `Apply ($${cost.toLocaleString()})`,
+            text: `Apply ($${shortNumber(cost)})`,
             cb: () => {
               game.modCash(-cost);
               game.state.travel.migrating = true;
@@ -4692,10 +4791,10 @@ const game = {
 
       app.modal(
         "⚠️ Illegal Border Crossing",
-        `Smuggle yourself to ${flag} ${target.name}\n\nCost: $${cost.toLocaleString()}\nJourney Time: ${time} month(s)\nCapture Risk: ${caughtPct}%\n\n⚠️ If caught: HARSH prison sentence, criminal record, deportation.\nThe journey itself is dangerous.`,
+        `Smuggle yourself to ${flag} ${target.name}\n\nCost: $${shortNumber(cost)}\nJourney Time: ${time} month(s)\nCapture Risk: ${caughtPct}%\n\n⚠️ If caught: HARSH prison sentence, criminal record, deportation.\nThe journey itself is dangerous.`,
         [
           {
-            text: `Risk It ($${cost.toLocaleString()})`,
+            text: `Risk It ($${shortNumber(cost)})`,
             cb: () => {
               game.modCash(-cost);
               game.state.travel.migrating = true;
@@ -4927,14 +5026,14 @@ const game = {
         <div class="travel-cc-options">
           <div class="travel-option travel-option-legal">
             <div class="travel-opt-head"><i class="fa-solid fa-passport"></i> Legal</div>
-            <div class="travel-opt-detail">Cost: $${legalCost.toLocaleString()}</div>
+            <div class="travel-opt-detail">Cost: $${shortNumber(legalCost)}</div>
             <div class="travel-opt-detail">Time: ${legalTime}mo</div>
             <div class="travel-opt-detail">Denial: ${denialPct}%</div>
             <button class="btn btn-sm btn-primary" onclick="game.startTravel('${c[1]}','legal')" ${t.migrating ? "disabled" : ""}>Apply</button>
           </div>
           <div class="travel-option travel-option-illegal">
             <div class="travel-opt-head"><i class="fa-solid fa-person-running"></i> Illegal</div>
-            <div class="travel-opt-detail">Cost: $${illegalCost.toLocaleString()}</div>
+            <div class="travel-opt-detail">Cost: $${shortNumber(illegalCost)}</div>
             <div class="travel-opt-detail">Time: ${illegalTime}mo</div>
             <div class="travel-opt-detail">Caught: ${caughtPct}%</div>
             <button class="btn btn-sm btn-danger" onclick="game.startTravel('${c[1]}','illegal')" ${t.migrating ? "disabled" : ""}>Risk It</button>
@@ -5375,7 +5474,7 @@ const game = {
     if (!offer) return;
     if (this.state.bank.savings < offer.minDeposit) {
       return app.toast(
-        `Need $${offer.minDeposit.toLocaleString()} in savings`,
+        `Need $${shortNumber(offer.minDeposit)} in savings`,
         "error",
       );
     }
@@ -5675,7 +5774,7 @@ const game = {
 
     app.modal(
       "Tuition Payment",
-      `${deg.name} tuition is $${deg.cost.toLocaleString()}.`,
+      `${deg.name} tuition is $${shortNumber(deg.cost)}.`,
       [
         {
           text: "Pay Cash",
@@ -5813,7 +5912,7 @@ const game = {
         FX.confetti();
         FX.screenShake("lg");
         FX.screenFlash("epic");
-        FX.milestoneOverlay("JACKPOT!", `+$${win.toLocaleString()}`);
+        FX.milestoneOverlay("JACKPOT!", `+$${shortNumber(win)}`);
       }
     } else {
       this.state.casino.losses++;
@@ -5946,7 +6045,7 @@ const game = {
         const reward = rewards[Math.min(p.lawsPassed - 1, rewards.length - 1)];
         this.modCash(reward);
         app.toast(
-          `Law passed! (+5 Inf, +$${reward.toLocaleString()}) — Total: ${p.lawsPassed}`,
+          `Law passed! (+5 Inf, +$${shortNumber(reward)}) — Total: ${p.lawsPassed}`,
           "success",
         );
       } else {
@@ -6166,7 +6265,7 @@ const game = {
             <div class="ending-kicker">${this.state.life.dead ? "\u{2620}\u{FE0F}  LIFE OVER" : "\u{1F3C6}  LEGACY SECURED"}</div>
             <h2>${deathEmoji} ${outcomeTitle}</h2>
             <p>${heroSubtext}</p>
-            <div class="ending-networth">$${netWorth.toLocaleString()}</div>
+            <div class="ending-networth">$${shortNumber(netWorth)}</div>
             <div class="ending-networth-label">Final Net Worth</div>
           </div>
 
@@ -6231,7 +6330,7 @@ const game = {
                 <div class="panel-subtitle">${t.name}</div>
             </div>
             <div style="text-align:right;">
-                <span class="tag safe">$${(this.state.job.salary / 1000).toLocaleString()}k/yr</span>
+                <span class="tag safe">$${shortNumber(this.state.job.salary)}/yr</span>
             </div>
         </div>
 
@@ -6244,7 +6343,7 @@ const game = {
                 <div class="progress-bg"><div class="progress-fill" style="width:${this.state.job.politics || 0}%; background:var(--accent-purple, #8b5cf6);"></div></div>
             </div>
             <div>
-                <div class="stat-meta-row"><span>Stress</span><span>${this.state.job.stress || 0}%</span></div>
+                <div class="stat-meta-row"><span>Stress</span><span>${(this.state.job.stress || 0).toFixed(1)}%</span></div>
                 <div class="progress-bg"><div class="progress-fill" style="width:${this.state.job.stress || 0}%; background:var(--accent-red);"></div></div>
                 <div class="stat-note">Gain skills over time to promote.</div>
             </div>
@@ -6460,7 +6559,7 @@ const game = {
       document.getElementById("biz-employees").innerText = totalEmp;
       const bizNetEl = document.getElementById("biz-net");
       if (bizNetEl) {
-        bizNetEl.innerText = `${totalNet >= 0 ? "+" : ""}$${Math.round(totalNet).toLocaleString()}`;
+        bizNetEl.innerText = `${totalNet >= 0 ? "+" : ""}$${shortNumber(Math.round(totalNet))}`;
         bizNetEl.style.color =
           totalNet >= 0 ? "var(--accent-green)" : "var(--accent-red)";
       }
@@ -6554,7 +6653,7 @@ const game = {
           <div class="biz-type-icon" style="color:${t.color};background:${t.color}22"><i class="fa-solid ${t.icon}"></i></div>
           <div class="biz-type-info">
             <span class="biz-type-name">${t.name}</span>
-            <span class="biz-type-cost">${canAfford ? `$${t.cost.toLocaleString()}` : `Need $${t.cost.toLocaleString()}`}</span>
+            <span class="biz-type-cost">${canAfford ? `$${shortNumber(t.cost)}` : `Need $${shortNumber(t.cost)}`}</span>
           </div>
           <div class="biz-type-meta">
             <span title="Difficulty">${"●".repeat(Math.ceil(t.difficulty))}${"○".repeat(3 - Math.ceil(t.difficulty))}</span>
@@ -6635,7 +6734,7 @@ const game = {
               </div>
             </div>
             <div class="biz-card-profit">
-              <span style="color:${profitColor};font-size:1.2rem;font-weight:800">${profit >= 0 ? "+" : ""}$${Math.round(profit).toLocaleString()}<small>/mo</small></span>
+              <span style="color:${profitColor};font-size:1.2rem;font-weight:800">${profit >= 0 ? "+" : ""}$${shortNumber(Math.round(profit))}<small>/mo</small></span>
               <span class="biz-card-users"><i class="fa-solid fa-users"></i> ${users} users</span>
             </div>
           </div>
@@ -6656,7 +6755,7 @@ const game = {
             </div>
             <div class="biz-metric">
               <span class="biz-metric-label">BURN</span>
-              <span class="biz-metric-value" style="color:var(--accent-red)">$${Math.round(burn).toLocaleString()}</span>
+              <span class="biz-metric-value" style="color:var(--accent-red)">$${shortNumber(Math.round(burn))}</span>
             </div>
           </div>
 
@@ -6754,7 +6853,7 @@ const game = {
         return `<div class="card">
           <div class="card-header">
             <h3>${t.name}</h3>
-            <span class="tag">$${t.cost.toLocaleString()}</span>
+            <span class="tag">$${shortNumber(t.cost)}</span>
           </div>
           <div style="font-size:0.8rem; color:var(--text-muted); margin-bottom:14px;">
             Smarts ${t.reqSmarts}+ • RPM ${t.rpm.toFixed(1)} • Vol ${(t.volatility * 100).toFixed(0)}%
@@ -6779,15 +6878,15 @@ const game = {
                 <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; font-size:0.8rem; margin-bottom:12px;">
                   <div style="background:rgba(255,255,255,0.03); padding:8px; border-radius:4px;">
                     <div style="color:var(--text-muted);">Audience</div>
-                    <div style="font-family:var(--font-mono); color:#fff;">${Math.floor(c.audience).toLocaleString()}</div>
+                    <div style="font-family:var(--font-mono); color:#fff;">${shortNumber(Math.floor(c.audience))}</div>
                   </div>
                   <div style="background:rgba(255,255,255,0.03); padding:8px; border-radius:4px;">
                     <div style="color:var(--text-muted);">Last Month</div>
-                    <div style="font-family:var(--font-mono); color:var(--accent-green);">$${Math.floor(c.monthly).toLocaleString()}</div>
+                    <div style="font-family:var(--font-mono); color:var(--accent-green);">$${shortNumber(Math.floor(c.monthly))}</div>
                   </div>
                 </div>
                 <button class="btn btn-primary" onclick="game.growChannel(${idx})">
-                  Promote Content ($${growthCost.toLocaleString()})
+                  Promote Content ($${shortNumber(growthCost)})
                 </button>
               </div>`;
             })
@@ -6805,16 +6904,16 @@ const game = {
       passivePreview.innerHTML = `
         <div class="card-header">
           <h3>Passive Cashflow</h3>
-          <span class="tag" style="color:${netColor}; border-color:${netColor};">${net >= 0 ? "+" : ""}$${Math.floor(net).toLocaleString()}</span>
+          <span class="tag" style="color:${netColor}; border-color:${netColor};">${net >= 0 ? "+" : ""}$${shortNumber(Math.floor(net))}</span>
         </div>
         <div class="data-grid-3">
           <div class="data-box highlight-green">
             <div class="data-label">Income</div>
-            <div class="data-value green">$${Math.floor(flow.income).toLocaleString()}</div>
+            <div class="data-value green">$${shortNumber(Math.floor(flow.income))}</div>
           </div>
           <div class="data-box highlight-red">
             <div class="data-label">Expenses</div>
-            <div class="data-value red">$${Math.floor(flow.expenses).toLocaleString()}</div>
+            <div class="data-value red">$${shortNumber(Math.floor(flow.expenses))}</div>
           </div>
           <div class="data-box">
             <div class="data-label">Bond Units</div>
@@ -6834,8 +6933,8 @@ const game = {
             <span class="tag">Owned: ${owned}</span>
           </div>
           <div class="stat-meta-row" style="margin-bottom:12px;">
-            <span>Cost $${f.cost.toLocaleString()}</span>
-            <span>Rev $${f.revenue.toLocaleString()}/mo</span>
+            <span>Cost $${shortNumber(f.cost)}</span>
+            <span>Rev $${shortNumber(f.revenue)}/mo</span>
           </div>
           <div class="action-grid">
             <button class="btn btn-success" onclick="game.buyFranchise('${f.id}')">Buy</button>
@@ -6855,8 +6954,8 @@ const game = {
             <span class="tag">Owned: ${owned}</span>
           </div>
           <div class="stat-meta-row" style="margin-bottom:12px;">
-            <span>Cost $${p.cost.toLocaleString()}</span>
-            <span>Rent $${p.rent.toLocaleString()}/mo</span>
+            <span>Cost $${shortNumber(p.cost)}</span>
+            <span>Rent $${shortNumber(p.rent)}/mo</span>
           </div>
           <div class="action-grid">
             <button class="btn btn-success" onclick="game.buyProperty('${p.id}')">Buy</button>
@@ -6927,9 +7026,9 @@ const game = {
             <span class="tag safe">Units: ${units}</span>
           </div>
           <div style="font-size:0.8rem; color:var(--text-muted); margin-bottom:12px; display:grid; gap:2px;">
-            <span>Price: $${Math.floor(livePrice).toLocaleString()} / unit</span>
+            <span>Price: $${shortNumber(Math.floor(livePrice))} / unit</span>
             <span>Yield: ${(fund.yieldAnnual * 100).toFixed(2)}% annual</span>
-            <span>Est Dividend: $${Math.floor(estMonthly).toLocaleString()}/mo</span>
+            <span>Est Dividend: $${shortNumber(Math.floor(estMonthly))}/mo</span>
           </div>
           <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
             <button class="btn btn-success" onclick="game.buyDividend('${fund.id}')">Buy 1</button>
@@ -6974,15 +7073,15 @@ const game = {
         <div class="data-grid-4">
           <div class="data-box">
             <div class="data-label">Checking</div>
-            <div class="data-value">$${Math.floor(bank.checking).toLocaleString()}</div>
+            <div class="data-value">$${shortNumber(Math.floor(bank.checking))}</div>
           </div>
           <div class="data-box">
             <div class="data-label">Savings</div>
-            <div class="data-value">$${Math.floor(bank.savings).toLocaleString()}</div>
+            <div class="data-value">$${shortNumber(Math.floor(bank.savings))}</div>
           </div>
           <div class="data-box">
             <div class="data-label">Monthly Debt</div>
-            <div class="data-value" style="color:${debtService > 0 ? "var(--red)" : "inherit"}">$${Math.floor(debtService).toLocaleString()}</div>
+            <div class="data-value" style="color:${debtService > 0 ? "var(--red)" : "inherit"}">$${shortNumber(Math.floor(debtService))}</div>
           </div>
           <div class="data-box">
             <div class="data-label">Credit Used</div>
@@ -7012,7 +7111,7 @@ const game = {
             ${CONFIG.BANK_PRODUCTS.cdOffers
               .map(
                 (offer) =>
-                  `<button class="btn btn-outline" onclick="game.openBankCd('${offer.id}')">${offer.name} \u2022 ${(offer.apy * 100).toFixed(1)}% APY \u2022 Min $${offer.minDeposit.toLocaleString()}</button>`,
+                  `<button class="btn btn-outline" onclick="game.openBankCd('${offer.id}')">${offer.name} \u2022 ${(offer.apy * 100).toFixed(1)}% APY \u2022 Min $${shortNumber(offer.minDeposit)}</button>`,
               )
               .join("")}
           </div>
@@ -7025,8 +7124,8 @@ const game = {
             <span class="tag ${utilization > 0.8 ? "risk" : utilization > 0.3 ? "warning" : "safe"}">${(utilization * 100).toFixed(0)}% Used</span>
           </div>
           <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:10px;margin:12px 0">
-            <div class="mini-stat-box"><span>Balance</span><strong style="color:${cc.balance > 0 ? "var(--red)" : "inherit"}">$${Math.floor(cc.balance).toLocaleString()}</strong></div>
-            <div class="mini-stat-box"><span>Limit</span><strong>$${Math.floor(cc.limit).toLocaleString()}</strong></div>
+            <div class="mini-stat-box"><span>Balance</span><strong style="color:${cc.balance > 0 ? "var(--red)" : "inherit"}">$${shortNumber(Math.floor(cc.balance))}</strong></div>
+            <div class="mini-stat-box"><span>Limit</span><strong>$${shortNumber(Math.floor(cc.limit))}</strong></div>
             <div class="mini-stat-box"><span>APR</span><strong>${(cc.apr * 100).toFixed(1)}%</strong></div>
           </div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
@@ -7045,7 +7144,7 @@ const game = {
           return `<div class="card" style="opacity:${canApply ? 1 : 0.72};">
             <div class="card-header">
               <h3>${offer.name}</h3>
-              <span class="tag">$${offer.principal.toLocaleString()}</span>
+              <span class="tag">$${shortNumber(offer.principal)}</span>
             </div>
             <div style="font-size:0.8rem; color:var(--text-muted); margin-bottom:12px; display:grid; gap:2px;">
               <span>Term: ${offer.termMonths} months</span>
@@ -7065,11 +7164,11 @@ const game = {
               (loan) => `<div class="card">
               <div class="card-header">
                 <h3>${loan.name}</h3>
-                <span class="tag risk">$${Math.floor(loan.principal).toLocaleString()}</span>
+                <span class="tag risk">$${shortNumber(Math.floor(loan.principal))}</span>
               </div>
               <div style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px; display:grid; gap:2px;">
                 <span>APR ${(loan.apr * 100).toFixed(2)}% • ${loan.termLeft} months left</span>
-                <span>Payment $${Math.floor(loan.monthlyPayment).toLocaleString()}/mo</span>
+                <span>Payment $${shortNumber(Math.floor(loan.monthlyPayment))}/mo</span>
                 <span>Missed: ${loan.missedPayments || 0}</span>
               </div>
               <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
@@ -7090,7 +7189,7 @@ const game = {
                 <span class="tag safe">${cd.termLeft}m left</span>
               </div>
               <div style="font-size:0.8rem; color:var(--text-muted); display:grid; gap:2px;">
-                <span>Balance: $${Math.floor(cd.balance).toLocaleString()}</span>
+                <span>Balance: $${shortNumber(Math.floor(cd.balance))}</span>
                 <span>APY: ${(cd.apy * 100).toFixed(2)}%</span>
               </div>
             </div>`,
@@ -7111,7 +7210,27 @@ const game = {
       (def) => {
         let asset = this.state.assets[def.id];
         let colorClass = asset.trend >= 0 ? "text-gain" : "text-loss";
-        return `<div class="card" style="padding:12px;"><div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span style="font-weight:bold; color:#fff;">${def.name}</span><span style="color:#666; font-size:10px;">${def.id.toUpperCase()}</span></div><div style="font-size:1.4rem; font-family:'JetBrains Mono'; color:#fff; margin-bottom:4px;">$${asset.price.toFixed(2)}</div><div class="${colorClass}" style="font-size:11px; font-family:'JetBrains Mono';">${asset.trend >= 0 ? "▲" : "▼"} ${(asset.trend * 100).toFixed(2)}%</div><div style="margin-top:12px; font-size:11px; color:#888;">Owned: <span style="color:#fff">${asset.owned}</span></div><div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; margin-top:8px;"><button class="btn btn-success" style="margin:0; padding:6px;" onclick="game.trade('${def.id}', true)">BUY</button><button class="btn btn-danger" style="margin:0; padding:6px;" onclick="game.trade('${def.id}', false)">SELL</button></div></div>`;
+        return `
+        <div class="card" style="padding:12px;">
+          <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+            <span style="font-weight:bold; color:#fff;">${def.name}</span>
+            <span style="color:#666; font-size:10px;">${def.id.toUpperCase()}</span>
+          </div>
+          <div style="font-size:1.4rem; font-family:'JetBrains Mono'; color:#fff; margin-bottom:4px;">$${asset.price.toFixed(2)}</div>
+          <div class="${colorClass}" style="font-size:11px; font-family:'JetBrains Mono';">${asset.trend >= 0 ? "▲" : "▼"} ${(asset.trend * 100).toFixed(2)}%</div>
+          <div style="margin-top:12px; font-size:11px; color:#888;">Owned: <span style="color:#fff">${asset.owned}</span></div>
+
+          <div style="display:flex; gap:8px; align-items:center; margin-top:10px;">
+            <input id="market-qty-${def.id}" type="number" min="1" value="1" step="1" aria-label="Quantity for ${def.id.toUpperCase()}" style="width:84px; padding:6px; border-radius:8px; background:transparent; color:#fff; border:1px solid var(--border-dim);" />
+            <div style="margin-left:auto; display:flex; gap:8px;">
+              <button class="btn btn-ghost" style="padding:6px 8px;" onclick="(function(){const el=document.getElementById('market-qty-${def.id}'); el.value = Math.max(1, parseInt(el.value||1)+1);})()">+1</button>
+              <button class="btn btn-ghost" style="padding:6px 8px;" onclick="(function(){const el=document.getElementById('market-qty-${def.id}'); el.value = Math.max(1, parseInt(el.value||1)-1);})()">-1</button>
+              <button class="btn btn-outline" style="padding:6px 8px;" onclick="game.buyMax('${def.id}')">Buy Max</button>
+              <button class="btn btn-success" style="margin:0; padding:6px;" onclick="game.trade('${def.id}', true, parseInt(document.getElementById('market-qty-${def.id}').value || 1))">BUY</button>
+              <button class="btn btn-danger" style="margin:0; padding:6px;" onclick="game.trade('${def.id}', false, parseInt(document.getElementById('market-qty-${def.id}').value || 1))">SELL</button>
+            </div>
+          </div>
+        </div>`;
       },
     ).join("");
 
@@ -7120,7 +7239,7 @@ const game = {
         <div class="card">
             <div class="card-header">
                 <h3>${it.name}</h3>
-                <span class="tag">$${it.cost.toLocaleString()}</span>
+                <span class="tag">$${shortNumber(it.cost)}</span>
             </div>
             <div style="font-size:0.8rem; color:var(--text-muted); margin-bottom:16px;">
                 <i class="fa-solid fa-smile" style="color:var(--accent-amber); margin-right:6px;"></i> +${it.happy} Happiness
@@ -7243,7 +7362,7 @@ const game = {
               </div>
               <div class="progress-bg" style="margin:20px 0;"><div class="progress-fill" style="width:${progressPct}%; background:var(--green);"></div></div>
               <div class="edu-meta">
-                  <span><i class="fa-solid fa-coins" style="margin-right:8px; color:var(--red);"></i>Loan: <span style="color:var(--red);">$${Math.floor(this.state.edu.loans || 0).toLocaleString()}</span></span>
+                  <span><i class="fa-solid fa-coins" style="margin-right:8px; color:var(--red);"></i>Loan: <span style="color:var(--red);">$${shortNumber(Math.floor(this.state.edu.loans || 0))}</span></span>
                   <span><i class="fa-solid fa-brain" style="margin-right:8px; color:var(--blue);"></i>IQ Req: ${d.iqReq} (You: ${this.state.stats.smarts.toFixed(0)})</span>
               </div>
               <div class="edu-actions">
@@ -7263,7 +7382,7 @@ const game = {
         return `<div class="card">
                 <div class="card-header">
                     <h3>${d.name}</h3>
-                    <span class="tag">$${d.cost.toLocaleString()}</span>
+                    <span class="tag">$${shortNumber(d.cost)}</span>
                 </div>
                 <div style="margin-bottom:16px;">
                     <p style="font-size:0.85rem; display:flex; gap:8px; align-items:center;"><i class="fa-solid fa-clock" style="color:#666;"></i> ${d.duration} Months</p>
@@ -7397,14 +7516,14 @@ const game = {
           <div class="travel-cc-options">
             <div class="travel-option travel-option-legal">
               <div class="travel-opt-head"><i class="fa-solid fa-passport"></i> Legal</div>
-              <div class="travel-opt-detail">Cost: $${legalCost.toLocaleString()}</div>
+              <div class="travel-opt-detail">Cost: $${shortNumber(legalCost)}</div>
               <div class="travel-opt-detail">Time: ${legalTime}mo</div>
               <div class="travel-opt-detail">Denial: ${denialPct}%</div>
               <button class="btn btn-sm btn-primary" onclick="game.startTravel('${c[1]}','legal')" ${t.migrating ? "disabled" : ""}>Apply</button>
             </div>
             <div class="travel-option travel-option-illegal">
               <div class="travel-opt-head"><i class="fa-solid fa-person-running"></i> Illegal</div>
-              <div class="travel-opt-detail">Cost: $${illegalCost.toLocaleString()}</div>
+              <div class="travel-opt-detail">Cost: $${shortNumber(illegalCost)}</div>
               <div class="travel-opt-detail">Time: ${illegalTime}mo</div>
               <div class="travel-opt-detail">Caught: ${caughtPct}%</div>
               <button class="btn btn-sm btn-danger" onclick="game.startTravel('${c[1]}','illegal')" ${t.migrating ? "disabled" : ""}>Risk It</button>
@@ -7477,7 +7596,7 @@ const game = {
             </div>
             <div class="past-life-details">
               <div class="past-life-detail"><span>Country</span><strong>${l.country || "Unknown"}</strong></div>
-              <div class="past-life-detail"><span>Net Worth</span><strong style="color:${nwColor}">$${Number(l.netWorth || 0).toLocaleString()}</strong></div>
+              <div class="past-life-detail"><span>Net Worth</span><strong style="color:${nwColor}">$${shortNumber(Number(l.netWorth || 0))}</strong></div>
               <div class="past-life-detail"><span>Path</span><strong>${(l.primaryPath || "Unknown").toUpperCase()}</strong></div>
               <div class="past-life-detail"><span>${isDead ? "Cause of Death" : "Outcome"}</span><strong>${l.deathReason || "Unknown"}</strong></div>
             </div>
@@ -7509,7 +7628,7 @@ const game = {
 
       const netTag = document.getElementById("casino-lifetime-net");
       if (netTag) {
-        netTag.innerText = `${casino.net >= 0 ? "+" : "-"}$${Math.abs(casino.net).toLocaleString()}`;
+        netTag.innerText = `${casino.net >= 0 ? "+" : "-"}$${shortNumber(Math.abs(casino.net))}`;
         netTag.classList.remove("safe", "risk");
         netTag.classList.add(casino.net >= 0 ? "safe" : "risk");
       }
@@ -7522,11 +7641,11 @@ const game = {
       const lastOutcomeEl = document.getElementById("casino-last-outcome");
       const recentListEl = document.getElementById("casino-recent-list");
 
-      if (totalBetsEl) totalBetsEl.innerText = totalBets.toLocaleString();
+      if (totalBetsEl) totalBetsEl.innerText = shortNumber(totalBets);
       if (winRateEl) winRateEl.innerText = winRate;
       if (streakEl) streakEl.innerText = streakLabel;
       if (bestPayoutEl)
-        bestPayoutEl.innerText = `$${(casino.bestPayout || 0).toLocaleString()}`;
+        bestPayoutEl.innerText = `$${shortNumber(casino.bestPayout || 0)}`;
 
       if (lastOutcomeEl)
         lastOutcomeEl.innerText =
@@ -7550,7 +7669,7 @@ const game = {
           <div class="casino-intel-grid">
             <div class="casino-intel-item">
               <span>Avg Bet</span>
-              <strong>$${avgBet.toLocaleString()}</strong>
+              <strong>$${shortNumber(avgBet)}</strong>
             </div>
             <div class="casino-intel-item">
               <span>Bankroll Pressure</span>
@@ -7558,11 +7677,11 @@ const game = {
             </div>
             <div class="casino-intel-item">
               <span>Last Hand</span>
-              <strong>${casino.lastBet ? `$${casino.lastBet.toLocaleString()}` : "N/A"}</strong>
+              <strong>${casino.lastBet ? `$${shortNumber(casino.lastBet)}` : "N/A"}</strong>
             </div>
             <div class="casino-intel-item">
               <span>Last Payout</span>
-              <strong>${casino.lastWin ? `$${casino.lastWin.toLocaleString()}` : "$0"}</strong>
+              <strong>${casino.lastWin ? `$${shortNumber(casino.lastWin)}` : "$0"}</strong>
             </div>
           </div>
           <p class="casino-intel-tip">Tip: Keep average bet below 12% of liquid cash to reduce bust risk during cold streaks.</p>
@@ -7580,8 +7699,8 @@ const game = {
               ) => `<div class="casino-recent-row ${entry.net >= 0 ? "up" : "down"}">
               <span>${entry.game}</span>
               <span>${entry.result}</span>
-              <span>Bet $${entry.bet.toLocaleString()}</span>
-              <span>${entry.net >= 0 ? "+" : "-"}$${Math.abs(entry.net).toLocaleString()}</span>
+              <span>Bet $${shortNumber(entry.bet)}</span>
+              <span>${entry.net >= 0 ? "+" : "-"}$${shortNumber(Math.abs(entry.net))}</span>
             </div>`,
             )
             .join("");
@@ -7630,7 +7749,7 @@ const game = {
             </div>
           </div>
           <div class="casino-chip-row">
-            <span class="tag">Limits $${g.minBet.toLocaleString()}-$${g.maxBet.toLocaleString()}</span>
+            <span class="tag">Limits $${shortNumber(g.minBet)}-$${shortNumber(g.maxBet)}</span>
             <span class="tag">Edge ${m.edge}</span>
             <span class="tag">Volatility ${m.volatility}</span>
           </div>
@@ -7676,8 +7795,8 @@ const game = {
                 <div class="mini-stat-box"><span>Approval</span><strong style="color:${approvalColor}">${Math.round(p.approval)}%</strong></div>
                 <div class="mini-stat-box"><span>Laws Passed</span><strong>${p.lawsPassed}</strong></div>
                 <div class="mini-stat-box"><span>Corruption</span><strong style="color:${p.corruption > 20 ? "var(--red)" : "var(--text-muted)"}">${corruptionLevel}</strong></div>
-                <div class="mini-stat-box"><span>Salary</span><strong>$${Math.floor(roleDef.salary / 12).toLocaleString()}/mo</strong></div>
-                <div class="mini-stat-box"><span>Bribes</span><strong style="color:${p.bribesTaken > 0 ? "var(--red)" : "#fff"}">$${p.bribesTaken.toLocaleString()}</strong></div>
+                <div class="mini-stat-box"><span>Salary</span><strong>$${shortNumber(Math.floor(roleDef.salary / 12))}/mo</strong></div>
+                <div class="mini-stat-box"><span>Bribes</span><strong style="color:${p.bribesTaken > 0 ? "var(--red)" : "#fff"}">$${shortNumber(p.bribesTaken)}</strong></div>
             </div>
             <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:18px">
                 <button class="btn btn-primary" onclick="game.politicalAction('speech')"><i class="fa-solid fa-microphone"></i> Speech</button>
@@ -7720,10 +7839,10 @@ const game = {
         return `<div class="card" style="opacity:${canRun ? 1 : 0.6}">
             <div class="card-header">
                 <h3>${r.name}</h3>
-                <span class="tag">$${r.cost.toLocaleString()} Campaign</span>
+                <span class="tag">$${shortNumber(r.cost)} Campaign</span>
             </div>
             <div style="margin-bottom:12px; font-size:0.85rem; color:var(--text-muted);">
-                Salary $${r.salary.toLocaleString()}/yr • Term ${r.term}mo • Req Inf: ${r.reqRep}
+                Salary $${shortNumber(r.salary)}/yr • Term ${r.term}mo • Req Inf: ${r.reqRep}
             </div>
             <button class="btn btn-primary" onclick="game.startCampaign('${r.id}')" ${canRun ? "" : "disabled"}>
                 ${canRun ? "Launch Campaign" : "Unavailable"}
@@ -7736,8 +7855,29 @@ const game = {
   },
 };
 
+// Debounced render: coalesce frequent renderAll() calls into a single rAF for smoother UI
+(function () {
+  const orig = game.renderAll.bind(game);
+  game._renderPending = false;
+  game.renderAll = function (forceImmediate = false) {
+    if (forceImmediate) return orig();
+    if (this._renderPending) return;
+    this._renderPending = true;
+    requestAnimationFrame(() => {
+      this._renderPending = false;
+      orig();
+    });
+  };
+  // expose original synchronous render when necessary
+  game.renderNow = orig;
+})();
+
 const app = {
   mobileNavOpen: false,
+  _el: {},
+  el(id) {
+    return this._el[id] || (this._el[id] = document.getElementById(id));
+  },
   toggleMobileNav() {
     this.mobileNavOpen = !this.mobileNavOpen;
     const nav = document.getElementById("nav-tabs");
@@ -7801,38 +7941,30 @@ const app = {
       let asset = game.state.assets[a.id];
       if (asset) assetsVal += asset.price * asset.owned;
     });
-    document.getElementById("stat-cash").innerText =
-      game.state.cash.toLocaleString(undefined, { maximumFractionDigits: 0 });
+    this.el("stat-cash").innerText = shortNumber(game.state.cash, 1);
     const netWorth = game.getNetWorth();
-    document.getElementById("stat-networth").innerText =
-      netWorth.toLocaleString(undefined, { maximumFractionDigits: 0 });
-    document.getElementById("stat-age").innerText = Math.floor(
-      game.state.age / 12,
-    );
+    this.el("stat-networth").innerText = shortNumber(netWorth, 1);
+    this.el("stat-age").innerText = Math.floor(game.state.age / 12);
+    const statPlayerEl = this.el("stat-player-name");
+    if (statPlayerEl)
+      statPlayerEl.innerText = game.state.playerName || "Player";
 
     // ── Mobile Top Bar ──
-    const mtbAge = document.getElementById("mtb-age");
+    const mtbAge = this.el("mtb-age");
     if (mtbAge) mtbAge.innerText = `Age ${Math.floor(game.state.age / 12)}`;
-    const mtbName = document.getElementById("mtb-name");
+    const mtbName = this.el("mtb-name");
     if (mtbName) mtbName.innerText = game.state.playerName || "Player";
-    const mtbNw = document.getElementById("mtb-nw");
+    const mtbNw = this.el("mtb-nw");
     if (mtbNw) {
-      const nwAbbr =
-        netWorth >= 1e6
-          ? `$${(netWorth / 1e6).toFixed(1)}M`
-          : netWorth >= 1e3
-            ? `$${(netWorth / 1e3).toFixed(0)}K`
-            : netWorth <= -1e3
-              ? `-$${(Math.abs(netWorth) / 1e3).toFixed(0)}K`
-              : `$${Math.floor(netWorth)}`;
+      const nwAbbr = `$${shortNumber(netWorth, 1)}`;
       mtbNw.innerText = nwAbbr;
       mtbNw.classList.toggle("mtb-neg", netWorth < 0);
     }
 
     // ── Mobile Stats Panel ──
-    const mspHp = document.getElementById("msp-hp");
+    const mspHp = this.el("msp-hp");
     if (mspHp) mspHp.innerText = Math.round(game.state.stats.health);
-    const mspBarHp = document.getElementById("msp-bar-hp");
+    const mspBarHp = this.el("msp-bar-hp");
     if (mspBarHp)
       mspBarHp.style.width =
         Math.min(
@@ -7843,43 +7975,38 @@ const app = {
               100,
           ),
         ) + "%";
-    const mspNrg = document.getElementById("msp-nrg");
+    const mspNrg = this.el("msp-nrg");
     if (mspNrg) mspNrg.innerText = Math.round(game.state.stats.energy);
-    const mspBarNrg = document.getElementById("msp-bar-nrg");
+    const mspBarNrg = this.el("msp-bar-nrg");
     if (mspBarNrg)
       mspBarNrg.style.width =
         Math.min(100, Math.max(0, game.state.stats.energy)) + "%";
-    const mspJoy = document.getElementById("msp-joy");
+    const mspJoy = this.el("msp-joy");
     if (mspJoy) mspJoy.innerText = Math.round(game.state.stats.happiness);
-    const mspBarJoy = document.getElementById("msp-bar-joy");
+    const mspBarJoy = this.el("msp-bar-joy");
     if (mspBarJoy)
       mspBarJoy.style.width =
         Math.min(100, Math.max(0, game.state.stats.happiness)) + "%";
-    const mspIq = document.getElementById("msp-iq");
+    const mspIq = this.el("msp-iq");
     if (mspIq) mspIq.innerText = Math.round(game.state.stats.smarts);
-    const mspBarIq = document.getElementById("msp-bar-iq");
+    const mspBarIq = this.el("msp-bar-iq");
     if (mspBarIq)
       mspBarIq.style.width =
         Math.min(100, Math.max(0, game.state.stats.smarts)) + "%";
-    const mspCash = document.getElementById("msp-cash");
+    const mspCash = this.el("msp-cash");
     if (mspCash) {
       const c = game.state.cash;
-      mspCash.innerText =
-        c >= 1e6
-          ? `$${(c / 1e6).toFixed(1)}M`
-          : c >= 1e3
-            ? `$${(c / 1e3).toFixed(0)}K`
-            : `$${Math.floor(c)}`;
+      mspCash.innerText = `$${shortNumber(c, 1)}`;
     }
     const mspRisk = document.getElementById("msp-risk");
     const mspBurn = document.getElementById("msp-burn");
     const mspPartner = document.getElementById("msp-partner");
 
     // Mobile stats: player name + country
-    const mspPlayerName = document.getElementById("msp-player-name");
+    const mspPlayerName = this.el("msp-player-name");
     if (mspPlayerName)
       mspPlayerName.innerText = game.state.playerName || "Player";
-    const mspPlayerCountry = document.getElementById("msp-player-country");
+    const mspPlayerCountry = this.el("msp-player-country");
     if (mspPlayerCountry) {
       if (game.state.country) {
         const cc = CONFIG.getCountryByCode(game.state.country);
@@ -7895,19 +8022,19 @@ const app = {
     const deathRiskPct = game.estimateDeathRiskPct();
     const prevRiskPct = life.lastDeathRiskPct || 0;
     life.lastDeathRiskPct = deathRiskPct;
-    const healthLabel = document.getElementById("val-health");
+    const healthLabel = this.el("val-health");
     if (healthLabel)
       healthLabel.innerText = `${Math.round(game.state.stats.health)} / ${Math.round(life.maxHealth)}`;
-    const energyLabel = document.getElementById("val-energy");
+    const energyLabel = this.el("val-energy");
     if (energyLabel)
       energyLabel.innerText = `${Math.round(game.state.stats.energy)}%`;
-    const happyLabel = document.getElementById("val-happiness");
+    const happyLabel = this.el("val-happiness");
     if (happyLabel)
       happyLabel.innerText = `${Math.round(game.state.stats.happiness)}%`;
-    const smartLabel = document.getElementById("val-smarts");
+    const smartLabel = this.el("val-smarts");
     if (smartLabel)
       smartLabel.innerText = `${Math.round(game.state.stats.smarts)}`;
-    const smartsIQ = document.getElementById("smarts-iq");
+    const smartsIQ = this.el("smarts-iq");
     if (smartsIQ) {
       const s = game.state.stats.smarts;
       const iq = Math.round(70 + s * 1.3);
@@ -7920,10 +8047,10 @@ const app = {
       smartsIQ.innerText = `IQ: ~${iq} (${desc})`;
     }
 
-    const hudDeathRisk = document.getElementById("hud-death-risk");
+    const hudDeathRisk = this.el("hud-death-risk");
     if (hudDeathRisk) hudDeathRisk.innerText = `${deathRiskPct.toFixed(1)}%`;
 
-    const hudBurnout = document.getElementById("hud-burnout");
+    const hudBurnout = this.el("hud-burnout");
     if (hudBurnout) hudBurnout.innerText = `${Math.round(life.burnout)}%`;
 
     // ── Update mobile stats panel chips ──
@@ -7944,7 +8071,7 @@ const app = {
     if (hudBurnout?.parentElement)
       hudBurnout.parentElement.classList.add("metric-major");
 
-    const hudLegalTrend = document.getElementById("hud-legal-trend");
+    const hudLegalTrend = this.el("hud-legal-trend");
     if (hudLegalTrend) {
       const legalPressure = life.legalRecord + game.state.crime.heat / 40;
       let legalTrend = "Stable";
@@ -8106,7 +8233,7 @@ const app = {
         netWorthRow.classList.add("networth-danger");
     }
 
-    const heatLabel = document.getElementById("heat-label");
+    const heatLabel = this.el("heat-label");
     if (heatLabel) {
       heatLabel.classList.remove(
         "risk-low",
@@ -8125,8 +8252,8 @@ const app = {
       );
     }
 
-    const cashoutLabel = document.getElementById("cashout-label");
-    const cashoutPanel = document.getElementById("cashout-temptation");
+    const cashoutLabel = this.el("cashout-label");
+    const cashoutPanel = this.el("cashout-temptation");
     if (cashoutLabel && cashoutPanel) {
       const age = Math.floor(game.state.age / 12);
       const safe = CONFIG.SAFE_RETIREMENT_NETWORTH;
@@ -8174,10 +8301,6 @@ const app = {
     const hudStreak = document.getElementById("hud-action-streak");
     if (hudStreak) hudStreak.innerText = `${gameplay.actionStreak || 0}`;
 
-    const hudAchievements = document.getElementById("hud-achievements");
-    if (hudAchievements)
-      hudAchievements.innerText = `${unlockedCount}/${totalAchievements}`;
-
     const fm = game.state.finance?.lastMonth || {
       income: 0,
       taxes: 0,
@@ -8187,20 +8310,20 @@ const app = {
     };
     const hudMonthlyIncome = document.getElementById("hud-monthly-income");
     if (hudMonthlyIncome)
-      hudMonthlyIncome.innerText = `$${Math.round(fm.income || 0).toLocaleString()}`;
+      hudMonthlyIncome.innerText = `$${shortNumber(Math.round(fm.income || 0))}`;
     const hudMonthlyTax = document.getElementById("hud-monthly-tax");
     if (hudMonthlyTax)
-      hudMonthlyTax.innerText = `$${Math.round(fm.taxes || 0).toLocaleString()}`;
+      hudMonthlyTax.innerText = `$${shortNumber(Math.round(fm.taxes || 0))}`;
     const hudMonthlyLiving = document.getElementById("hud-monthly-living");
     if (hudMonthlyLiving)
-      hudMonthlyLiving.innerText = `$${Math.round(fm.livingCosts || 0).toLocaleString()}`;
+      hudMonthlyLiving.innerText = `$${shortNumber(Math.round(fm.livingCosts || 0))}`;
     const hudMonthlyExpenses = document.getElementById("hud-monthly-expenses");
     if (hudMonthlyExpenses)
-      hudMonthlyExpenses.innerText = `$${Math.round(fm.totalExpenses || 0).toLocaleString()}`;
+      hudMonthlyExpenses.innerText = `$${shortNumber(Math.round(fm.totalExpenses || 0))}`;
     const hudMonthlyNet = document.getElementById("hud-monthly-net");
     if (hudMonthlyNet) {
       const netFlow = Math.round(fm.netCashflow || 0);
-      hudMonthlyNet.innerText = `${netFlow >= 0 ? "+" : "-"}$${Math.abs(netFlow).toLocaleString()}`;
+      hudMonthlyNet.innerText = `${netFlow >= 0 ? "+" : "-"}$${shortNumber(Math.abs(netFlow))}`;
       hudMonthlyNet.classList.remove(
         "risk-low",
         "risk-mid",
@@ -8421,11 +8544,11 @@ const app = {
 
     const makeNodes = () => {
       const density = prefersReducedMotion
-        ? 0.35
+        ? 0.25
         : window.innerWidth < 900
-          ? 0.6
-          : 1;
-      const count = Math.floor(clamp((w * h) / 18000, 34, 120) * density);
+          ? 0.5
+          : 0.85;
+      const count = Math.floor(clamp((w * h) / 32000, 20, 80) * density);
       nodes = Array.from({ length: count }, () => {
         const depth = 0.35 + Math.random() * 0.85;
         return {
@@ -8475,7 +8598,11 @@ const app = {
     };
 
     window.addEventListener("pointermove", onMove, { passive: true });
-    window.addEventListener("resize", resize);
+    let resizeTimer = null;
+    window.addEventListener("resize", () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(resize, 120);
+    });
     resize();
 
     const drawReducedMotion = () => {
@@ -8499,7 +8626,7 @@ const app = {
         return;
       }
 
-      const targetFps = window.innerWidth < 900 ? 18 : 28;
+      const targetFps = window.innerWidth < 900 ? 16 : 22;
 
       if (ts - lastFrame < 1000 / targetFps) {
         requestAnimationFrame(drawGrid);
@@ -8751,6 +8878,25 @@ const charCreation = {
     const name = document.getElementById("char-name")?.value.trim();
     const btn = document.getElementById("btn-begin");
     if (btn) btn.disabled = !(name && this.selectedCountry);
+  },
+
+  randomizeCountry() {
+    // Choose from currently filtered list if a search is active, otherwise all countries
+    const searchVal = document.getElementById("country-search")?.value || "";
+    const query = searchVal.toLowerCase().trim();
+    const pool = CONFIG.COUNTRIES.filter((c) =>
+      c[0].toLowerCase().includes(query),
+    );
+    const list = pool.length ? pool : CONFIG.COUNTRIES;
+    const idx = Math.floor(Math.random() * list.length);
+    const code = list[idx][1];
+    // Select the country and briefly flash the details
+    this.selectCountry(code);
+    const el = document.querySelector(`.country-item.country-item-selected`);
+    if (el) {
+      el.classList.add("flash-anim");
+      setTimeout(() => el.classList.remove("flash-anim"), 700);
+    }
   },
 
   start() {
@@ -9265,6 +9411,9 @@ const FX = {
     setTimeout(() => el.remove(), 600);
   },
   confetti() {
+    if (this._confettiActive) return;
+    this._confettiActive = true;
+    const self = this;
     const canvas = document.createElement("canvas");
     canvas.className = "confetti-canvas";
     canvas.width = window.innerWidth;
@@ -9282,7 +9431,7 @@ const FX = {
       "#14b8a6",
       "#f97316",
     ];
-    for (let i = 0; i < 120; i++) {
+    for (let i = 0; i < 80; i++) {
       pieces.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height * -1,
@@ -9297,7 +9446,7 @@ const FX = {
       });
     }
     let frame = 0;
-    const maxFrames = 120;
+    const maxFrames = 90;
     function draw() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       pieces.forEach((p) => {
@@ -9316,7 +9465,10 @@ const FX = {
       });
       frame++;
       if (frame < maxFrames) requestAnimationFrame(draw);
-      else canvas.remove();
+      else {
+        canvas.remove();
+        self._confettiActive = false;
+      }
     }
     requestAnimationFrame(draw);
   },
@@ -9329,7 +9481,7 @@ const FX = {
     document.body.appendChild(el);
     setTimeout(() => {
       if (el.parentNode) el.remove();
-    }, 3000);
+    }, 1500);
   },
   updateStreakFire() {
     const chip = document.querySelector(".legend-chip");
@@ -9780,7 +9932,7 @@ game.triggerLifeEvent = function () {
     FX.confetti();
     FX.milestoneOverlay(
       "🏆 Legacy Secured",
-      `Retired with $${Math.floor(this.getNetWorth()).toLocaleString()}`,
+      `Retired with $${shortNumber(Math.floor(this.getNetWorth()))}`,
     );
     FX.screenFlash("epic");
   };
@@ -10043,28 +10195,28 @@ game._showWeddingOptions = function () {
     `Choose your wedding style with ${this.state.relationship.partnerName}:`,
     [
       {
-        text: `Courthouse ($${costs.courthouse.toLocaleString()})`,
+        text: `Courthouse ($${shortNumber(costs.courthouse)})`,
         cb: () => {
           this._doWedding("courthouse", costs.courthouse);
           app.closeModal();
         },
       },
       {
-        text: `Modest ($${costs.modest.toLocaleString()})`,
+        text: `Modest ($${shortNumber(costs.modest)})`,
         cb: () => {
           this._doWedding("modest", costs.modest);
           app.closeModal();
         },
       },
       {
-        text: `Lavish ($${costs.lavish.toLocaleString()})`,
+        text: `Lavish ($${shortNumber(costs.lavish)})`,
         cb: () => {
           this._doWedding("lavish", costs.lavish);
           app.closeModal();
         },
       },
       {
-        text: `Extravagant ($${costs.extravagant.toLocaleString()})`,
+        text: `Extravagant ($${shortNumber(costs.extravagant)})`,
         cb: () => {
           this._doWedding("extravagant", costs.extravagant);
           app.closeModal();
@@ -10210,7 +10362,7 @@ game.tryForBaby = function () {
 game.adoptChild = function () {
   if (this.state.cash < CONFIG.ADOPTION_COST)
     return app.toast(
-      `Need $${CONFIG.ADOPTION_COST.toLocaleString()} for adoption.`,
+      `Need $${shortNumber(CONFIG.ADOPTION_COST)} for adoption.`,
       "error",
     );
   this.modCash(-CONFIG.ADOPTION_COST);
@@ -10354,7 +10506,7 @@ game._initiateDivorce = function () {
   const name = this.state.relationship.partnerName;
   app.modal(
     "\u{2696}\u{FE0F} Divorce Proceedings",
-    `Divorcing ${name}.\n\nPrenup: ${prenupConfig.name}\nAsset Split: $${Math.floor(splitAmount).toLocaleString()}\nLegal Fees: $${CONFIG.DIVORCE_BASE_COST.toLocaleString()}\nTotal Cost: $${Math.floor(totalCost).toLocaleString()}`,
+    `Divorcing ${name}.\n\nPrenup: ${prenupConfig.name}\nAsset Split: $${shortNumber(Math.floor(splitAmount))}\nLegal Fees: $${shortNumber(CONFIG.DIVORCE_BASE_COST)}\nTotal Cost: $${shortNumber(Math.floor(totalCost))}`,
     [
       {
         text: "Proceed with Divorce",
@@ -10393,7 +10545,7 @@ game._processDivorce = function (forced) {
   FX.screenFlash("loss");
   FX.screenShake("lg");
   app.toast(
-    `Divorced ${name}. Lost $${Math.floor(totalCost).toLocaleString()}.`,
+    `Divorced ${name}. Lost $${shortNumber(Math.floor(totalCost))}.`,
     "error",
   );
   this.renderAll();
@@ -10476,10 +10628,7 @@ game.adoptPet = function (petTypeId) {
   const petConfig = CONFIG.PETS.find((p) => p.id === petTypeId);
   if (!petConfig) return;
   if (this.state.cash < petConfig.cost)
-    return app.toast(
-      `Need $${petConfig.cost.toLocaleString()} to adopt.`,
-      "error",
-    );
+    return app.toast(`Need $${shortNumber(petConfig.cost)} to adopt.`, "error");
   if (this.state.pets.length >= 4)
     return app.toast("Too many pets! Max 4.", "warning");
   this.modCash(-petConfig.cost);
@@ -10528,7 +10677,7 @@ game.processPetsMonthly = function () {
       expenses += vetCost;
       this.modStat("happiness", -5);
       app.toast(
-        `${pet.emoji} ${pet.name} needed a vet visit! -$${Math.floor(vetCost).toLocaleString()}`,
+        `${pet.emoji} ${pet.name} needed a vet visit! -$${shortNumber(Math.floor(vetCost))}`,
         "warning",
       );
     }
@@ -10649,7 +10798,7 @@ game.renderRelationships = function () {
       if (r.status === "dating")
         actions = `<button class="btn btn-primary" onclick="game.proposeMarriage()"><i class="fa-solid fa-ring"></i> Propose</button>`;
       if (r.status === "married")
-        actions = `<button class="btn btn-primary" onclick="game.tryForBaby()"><i class="fa-solid fa-baby"></i> Try for Baby</button> <button class="btn btn-outline" onclick="game.adoptChild()"><i class="fa-solid fa-hand-holding-heart"></i> Adopt ($${CONFIG.ADOPTION_COST.toLocaleString()})</button>`;
+        actions = `<button class="btn btn-primary" onclick="game.tryForBaby()"><i class="fa-solid fa-baby"></i> Try for Baby</button> <button class="btn btn-outline" onclick="game.adoptChild()"><i class="fa-solid fa-hand-holding-heart"></i> Adopt ($${shortNumber(CONFIG.ADOPTION_COST)})</button>`;
       statusCard.innerHTML = `<div class="card-header"><h3>${statusEmoji[r.status] || ""} ${r.partnerName}</h3><span class="tag ${r.status === "married" ? "safe" : ""}">${r.status.charAt(0).toUpperCase() + r.status.slice(1)}</span></div>
         <p style="opacity:0.7">${p ? p.trait : ""} \u2022 Together ${Math.floor(r.monthsTogether / 12)}yr ${r.monthsTogether % 12}mo${r.prenup !== "none" && r.status === "married" ? " \u2022 Prenup: " + r.prenup : ""}</p>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0">
@@ -10677,7 +10826,7 @@ game.renderRelationships = function () {
         .map(
           (p) => `<div class="card">
           <div class="card-header"><h3>${p.name}</h3><span class="tag">${p.trait}</span></div>
-          <p style="opacity:0.7;font-size:0.8rem">Income: $${p.income.toLocaleString()}/mo \u2022 Loyalty: ${Math.round(p.loyalty * 100)}%</p>
+          <p style="opacity:0.7;font-size:0.8rem">Income: $${shortNumber(p.income)}/mo \u2022 Loyalty: ${Math.round(p.loyalty * 100)}%</p>
           <div style="display:flex;gap:6px;margin-top:4px"><span style="font-size:0.75rem">Looks: ${"\u2B50".repeat(Math.round(p.looks / 2))}</span><span style="font-size:0.75rem">Humor: ${"\u{1F604}".repeat(Math.round(p.humor / 2))}</span></div>
           <button class="btn btn-primary" style="margin-top:10px" onclick="game.startDating('${p.id}')"><i class="fa-solid fa-heart"></i> Ask Out ($150)</button></div>`,
         )
@@ -10713,7 +10862,7 @@ game.renderRelationships = function () {
                 ? CONFIG.CHILD_MONTHLY_COST * 1.5
                 : CONFIG.CHILD_MONTHLY_COST;
           return `<div class="card"><div class="card-header"><h3>${c.name}</h3><span class="tag">${stage}</span></div>
-          <p style="opacity:0.7;font-size:0.8rem">${c.adopted ? "Adopted \u2022 " : ""}Age ${ageYrs}yr${ageMo > 0 ? " " + ageMo + "mo" : ""} \u2022 Cost: $${Math.floor(cost).toLocaleString()}/mo</p></div>`;
+          <p style="opacity:0.7;font-size:0.8rem">${c.adopted ? "Adopted \u2022 " : ""}Age ${ageYrs}yr${ageMo > 0 ? " " + ageMo + "mo" : ""} \u2022 Cost: $${shortNumber(Math.floor(cost))}/mo</p></div>`;
         })
         .join("");
     }
@@ -10736,7 +10885,7 @@ game.renderPets = function () {
       '<h4 style="grid-column:1/-1;opacity:0.6;font-size:0.8rem;margin:0">ADOPT A PET</h4>' +
       CONFIG.PETS.map(
         (p) => `<div class="card">
-          <div class="card-header"><h3>${p.emoji} ${p.name}</h3><span class="tag">$${p.cost.toLocaleString()}</span></div>
+          <div class="card-header"><h3>${p.emoji} ${p.name}</h3><span class="tag">$${shortNumber(p.cost)}</span></div>
           <p style="opacity:0.7;font-size:0.8rem">Monthly: $${p.monthlyCost}/mo \u2022 Happiness +${p.happinessBonus} \u2022 Lifespan ${p.lifespan[0]}-${p.lifespan[1]}yr</p>
           <button class="btn btn-primary" style="margin-top:8px" onclick="game.adoptPet('${p.id}')"><i class="fa-solid fa-paw"></i> Adopt</button></div>`,
       ).join("");
