@@ -6386,7 +6386,7 @@ const game = {
         let html = `<div class="card" style="grid-column: span 2;">
             <div class="card-header" style="border-bottom:1px solid var(--border-dim); padding-bottom:12px; margin-bottom:16px;">
                 <div style="display: flex; align-items: center; gap: 12px;">
-                    <img src="${track.image}" alt="${track.name}" style="width: 60px; height: 40px; object-fit: cover; border-radius: 6px;">
+                    <img src="${track.image}" alt="${track.name}" style="width: 90px; height: 60px; object-fit: cover; border-radius: 6px;">
                     <h3 style="margin:0;">${track.name}</h3>
                 </div>
             </div>

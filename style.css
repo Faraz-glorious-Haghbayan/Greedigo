@@ -288,8 +288,8 @@ body.ui-aging .age-display {
   animation: gemPulse 3s ease-in-out infinite;
 }
 .brand-logo {
-  width: 66px;
-  height: 66px;
+  width: 100px;
+  height: 100px;
   object-fit: contain;
   filter: drop-shadow(0 0 8px rgba(251, 191, 36, 0.5));
   transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -773,8 +773,8 @@ body.run-ended .nav-tabs {
   flex-shrink: 0;
 }
 .panel-image img {
-  width: 80px;
-  height: 60px;
+  width: 120px;
+  height: 90px;
   object-fit: cover;
   border-radius: 8px;
   border: 1px solid var(--border-dim);
@@ -2781,8 +2781,8 @@ textarea:focus {
 }
 .title-logo-container {
   position: relative;
-  width: 120px;
-  height: 120px;
+  width: 140px;
+  height: 140px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2798,8 +2798,8 @@ textarea:focus {
   }
 }
 .title-logo-img {
-  width: 80px;
-  height: 80px;
+  width: 110px;
+  height: 110px;
   object-fit: contain;
   position: relative;
   z-index: 2;
@@ -5230,8 +5230,8 @@ body.health-critical .fill-health {
   margin-bottom: 32px;
 }
 .char-logo {
-  width: 64px;
-  height: 64px;
+  width: 96px;
+  height: 96px;
   border-radius: 16px;
   margin-bottom: 16px;
   box-shadow: 0 0 40px rgba(79, 143, 255, 0.2);
