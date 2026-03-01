@@ -245,78 +245,56 @@ const CONFIG = {
 
   // REFACTORED CRIME SCHEMA
   CRIMES: [
-    {
-      id: "shoplift",
-      name: "Shoplift",
-      type: "Petty",
-      reqRep: 0,
-      baseChance: 0.88,
-      risk: 0.14,
-      heatAdd: 6,
-      reward: [40, 150],
-      jail: 1,
-      desc: "Swipe localized goods.",
-    },
-    {
-      id: "mug",
-      name: "Mug Tourist",
-      type: "Petty",
-      reqRep: 10,
-      baseChance: 0.77,
-      risk: 0.25,
-      heatAdd: 12,
-      reward: [150, 600],
-      jail: 3,
-      desc: "High adrenaline, quick cash.",
-    },
-    {
-      id: "burglary",
-      name: "House Burglary",
-      type: "Felony",
-      reqRep: 50,
-      baseChance: 0.62,
-      risk: 0.38,
-      heatAdd: 25,
-      reward: [1500, 6000],
-      jail: 12,
-      desc: "Break & Enter. Don't wake the dog.",
-    },
-    {
-      id: "scam",
-      name: "Crypto Rugpull",
-      type: "Cyber",
-      reqRep: 100,
-      baseChance: 0.55,
-      risk: 0.22,
-      heatAdd: 22,
-      reward: [6000, 25000],
-      jail: 24,
-      desc: "Target greedy investors online.",
-    },
-    {
-      id: "heist",
-      name: "Bank Heist",
-      type: "Organized",
-      reqRep: 500,
-      baseChance: 0.3,
-      risk: 0.88,
-      heatAdd: 95,
-      reward: [120000, 450000],
-      jail: 120,
-      desc: " The big one. High morality cost.",
-    },
-    {
-      id: "insider",
-      name: "Insider Trading",
-      type: "White Collar",
-      reqRep: 1000,
-      baseChance: 0.7,
-      risk: 0.6,
-      heatAdd: 35,
-      reward: [350000, 1500000],
-      jail: 60,
-      desc: "Exploit corporate secrets.",
-    },
+    // ── PETTY ──────────────────────────────────────────────────────────
+    { id:"shoplift",    name:"Shoplift",            type:"Petty",        reqRep:0,    baseChance:0.88, risk:0.10, heatAdd:5,   reward:[60,220],        jail:1,   skill:"stealth",       desc:"Pocket high-value items. Quick and low risk." },
+    { id:"pickpocket",  name:"Pickpocket",          type:"Petty",        reqRep:10,   baseChance:0.80, risk:0.18, heatAdd:8,   reward:[120,500],       jail:2,   skill:"stealth",       desc:"Lift wallets from crowds. All fingers, no traces." },
+    { id:"mug",         name:"Strong-Arm Robbery",  type:"Street",       reqRep:25,   baseChance:0.75, risk:0.28, heatAdd:15,  reward:[300,1200],      jail:4,   skill:"intimidation",  desc:"Take what you want. Speed is everything." },
+    // ── FELONY ─────────────────────────────────────────────────────────
+    { id:"carjack",     name:"Carjack & Strip",     type:"Felony",       reqRep:80,   baseChance:0.65, risk:0.35, heatAdd:22,  reward:[1200,5500],     jail:8,   skill:"street_smarts", desc:"Strip a luxury car for parts. Sell through a chop shop." },
+    { id:"burglary",    name:"House Burglary",      type:"Felony",       reqRep:120,  baseChance:0.60, risk:0.40, heatAdd:28,  reward:[2500,9000],     jail:14,  skill:"stealth",       desc:"Break & enter a wealthy home. Don't wake the dog." },
+    { id:"robbery",     name:"Armed Robbery",       type:"Felony",       reqRep:200,  baseChance:0.58, risk:0.50, heatAdd:38,  reward:[5000,20000],    jail:24,  skill:"intimidation",  desc:"Hit a store at gunpoint. High adrenaline, high risk." },
+    // ── CYBER / FRAUD ──────────────────────────────────────────────────
+    { id:"phishing",    name:"Phishing Campaign",   type:"Cyber",        reqRep:45,   baseChance:0.72, risk:0.18, heatAdd:14,  reward:[800,6000],      jail:12,  skill:"hacking",       desc:"Mass phishing emails, steal credentials and drain accounts." },
+    { id:"scam",        name:"Crypto Rugpull",       type:"Cyber",        reqRep:150,  baseChance:0.60, risk:0.25, heatAdd:24,  reward:[8000,40000],    jail:30,  skill:"hacking",       desc:"Launch a fake coin, hype it, pull the liquidity. Gone." },
+    { id:"corp_hack",   name:"Corporate Hack",      type:"Cyber",        reqRep:350,  baseChance:0.50, risk:0.35, heatAdd:32,  reward:[40000,180000],  jail:48,  skill:"hacking",       desc:"Breach a corp network. Steal secrets or deploy ransomware." },
+    // ── ORGANIZED ──────────────────────────────────────────────────────
+    { id:"protection",  name:"Protection Racket",   type:"Organized",    reqRep:250,  baseChance:0.68, risk:0.42, heatAdd:30,  reward:[3000,12000],    jail:36,  skill:"intimidation",  desc:"Make local businesses pay for 'security'. Monthly tribute." },
+    { id:"arms_deal",   name:"Arms Deal",            type:"Organized",    reqRep:500,  baseChance:0.52, risk:0.58, heatAdd:50,  reward:[30000,120000],  jail:60,  skill:"planning",      desc:"Broker illegal weapons. One wrong buyer ends everything." },
+    // ── DRUG TRADE ─────────────────────────────────────────────────────
+    { id:"street_deal", name:"Street Deal",         type:"Drug Trade",   reqRep:15,   baseChance:0.78, risk:0.22, heatAdd:12,  reward:[400,1800],      jail:6,   skill:"street_smarts", desc:"Move small product on the corner. Stay off the radar." },
+    { id:"cook_sell",   name:"Cook & Sell",         type:"Drug Trade",   reqRep:200,  baseChance:0.62, risk:0.40, heatAdd:30,  reward:[8000,35000],    jail:36,  skill:"chemistry",     desc:"Run a home lab. Quality product commands premium prices." },
+    { id:"distribution",name:"Distribution Run",   type:"Drug Trade",   reqRep:500,  baseChance:0.55, risk:0.52, heatAdd:45,  reward:[50000,180000],  jail:72,  skill:"planning",      desc:"Supply whole city blocks. Kilos, not grams." },
+    // ── ELITE ──────────────────────────────────────────────────────────
+    { id:"heist",       name:"Bank Heist",          type:"Elite",        reqRep:700,  baseChance:0.32, risk:0.85, heatAdd:90,  reward:[200000,700000], jail:120, skill:"planning",      desc:"The big one. Crew required. All-or-nothing." },
+    { id:"insider",     name:"Insider Trading",     type:"White Collar", reqRep:800,  baseChance:0.68, risk:0.50, heatAdd:38,  reward:[300000,1500000],jail:60,  skill:"hacking",       desc:"Exploit non-public corporate secrets. Paper trails are fatal." },
+    { id:"extortion",   name:"Political Extortion", type:"Elite",        reqRep:1200, baseChance:0.45, risk:0.65, heatAdd:55,  reward:[80000,500000],  jail:84,  skill:"planning",      desc:"Blackmail powerful figures. They pay — or they burn." },
+  ],
+
+  /* ═══ CRIME SKILLS ═══ */
+  CRIME_SKILLS: [
+    { id:"stealth",       name:"Stealth",        icon:"fa-user-ninja",     desc:"Reduces detection on B&E, pickpocket & shoplift. Train in darkness.",     trainCost:500,   energyCost:20, xpGain:35 },
+    { id:"intimidation",  name:"Intimidation",   icon:"fa-hand-fist",      desc:"Boosts mugging, robbery & protection racket success. Hit the gym.",        trainCost:400,   energyCost:25, xpGain:30 },
+    { id:"hacking",       name:"Hacking",        icon:"fa-terminal",       desc:"Powers phishing, crypto scams & corp hacks. Study systems.",               trainCost:800,   energyCost:15, xpGain:28 },
+    { id:"street_smarts", name:"Street Smarts",  icon:"fa-eye",            desc:"General underworld awareness. Lowers heat gain on all street crimes.",      trainCost:300,   energyCost:20, xpGain:40 },
+    { id:"chemistry",     name:"Chemistry",      icon:"fa-flask",          desc:"Drug lab quality & yield — higher purity = more money per batch.",         trainCost:1000,  energyCost:15, xpGain:25 },
+    { id:"planning",      name:"Tactical Planning",icon:"fa-chess",        desc:"Heist & organized crime success. Think three steps ahead.",                 trainCost:600,   energyCost:15, xpGain:30 },
+  ],
+
+  /* ═══ LAWYERS ═══ */
+  LAWYERS: [
+    { id:"public_defender", name:"Public Defender",     tier:0, monthlyCost:0,      caseFee:0,      jailReduction:0.08, dismissChance:0.04, desc:"Court-appointed. Better than nothing. Barely." },
+    { id:"local_attorney",  name:"Local Attorney",      tier:1, monthlyCost:3000,   caseFee:5000,   jailReduction:0.35, dismissChance:0.22, desc:"Knows the local DA. Can cut real deals." },
+    { id:"experienced",     name:"Experienced Counsel", tier:2, monthlyCost:12000,  caseFee:20000,  jailReduction:0.58, dismissChance:0.45, desc:"Former prosecutor. Knows every loophole." },
+    { id:"top_firm",        name:"Elite Law Firm",      tier:3, monthlyCost:45000,  caseFee:80000,  jailReduction:0.78, dismissChance:0.68, desc:"The best money can buy. Evidence? What evidence?" },
+    { id:"cartel_attorney", name:"Cartel Attorney",     tier:4, monthlyCost:200000, caseFee:300000, jailReduction:0.92, dismissChance:0.88, desc:"Makes prosecutors disappear. Drug empire only.", reqDrugTier:"network" },
+  ],
+
+  /* ═══ DRUG EMPIRE TIERS ═══ */
+  DRUG_TIERS: [
+    { id:"dealer",  name:"Street Dealer",        icon:"fa-person",         setupCost:8000,    income:[800,2200],    arrestRisk:0.06, heatPerMonth:4,  reqRep:30,  reqChem:0,   desc:"You and a burner phone. Small product, fast cash." },
+    { id:"lab",     name:"Home Cook Lab",        icon:"fa-flask-vial",     setupCost:40000,   income:[5000,15000],  arrestRisk:0.08, heatPerMonth:8,  reqRep:200, reqChem:150, desc:"Your own lab. Quality purity commands premium street prices." },
+    { id:"network", name:"Distribution Network",icon:"fa-network-wired",  setupCost:200000,  income:[25000,80000], arrestRisk:0.10, heatPerMonth:15, reqRep:500, reqChem:300, desc:"You supply the dealers. Kilos, not grams. City-wide operation." },
+    { id:"cartel",  name:"Cartel Operations",   icon:"fa-crown",          setupCost:1500000, income:[150000,600000],arrestRisk:0.13,heatPerMonth:25, reqRep:1000,reqChem:500, desc:"International supply chain. Near limitless money. DEA hunts you daily." },
   ],
 
   ASSETS: [
@@ -1215,6 +1193,65 @@ const CONFIG = {
   ADOPTION_COST: 15000,
   ADOPTION_CHILD_AGE: 4,
 
+  /* ═══ POLYGAMY / SIDE RELATIONSHIPS ═══ */
+  // Countries where polygamous marriage is legally permitted
+  POLYGAMY_ALLOWED_CODES: new Set([
+    "AF","DZ","BH","BD","BJ","BF","CM","CF","KM","CI","DJ","EG","ER","ET",
+    "GM","GN","GW","ID","IR","IQ","JO","KE","KW","LY","MY","ML","MR","MA",
+    "NE","NG","OM","PK","QA","SA","SN","SL","SO","TD","TZ","TG","TN","AE","YE","SD"
+  ]),
+
+  SIDE_PARTNERS: [
+    {
+      id: "s_yasmine", name: "Yasmine", trait: "Seductive",
+      looks: 9, humor: 5, loyalty: 0.28,
+      monthlyExpense: { fling: 220, girlfriend: 420, second_wife: 680 },
+      compatibility: () => 0.62,
+    },
+    {
+      id: "s_bianca", name: "Bianca", trait: "Thrill-seeking",
+      looks: 8, humor: 7, loyalty: 0.22,
+      monthlyExpense: { fling: 260, girlfriend: 460, second_wife: 740 },
+      compatibility: () => 0.56,
+    },
+    {
+      id: "s_nina",   name: "Nina",   trait: "Passionate",
+      looks: 7, humor: 8, loyalty: 0.38,
+      monthlyExpense: { fling: 200, girlfriend: 400, second_wife: 640 },
+      compatibility: () => 0.52,
+    },
+    {
+      id: "s_layla",  name: "Layla",  trait: "Devoted",
+      looks: 8, humor: 6, loyalty: 0.55,
+      monthlyExpense: { fling: 180, girlfriend: 380, second_wife: 600 },
+      compatibility: () => 0.68,
+    },
+    {
+      id: "s_zara",   name: "Zara",   trait: "Charismatic",
+      looks: 9, humor: 7, loyalty: 0.32,
+      monthlyExpense: { fling: 300, girlfriend: 560, second_wife: 820 },
+      compatibility: () => (typeof game !== "undefined" && game.getNetWorth() > 100000 ? 0.72 : 0.38),
+    },
+    {
+      id: "s_priya",  name: "Priya",  trait: "Alluring",
+      looks: 8, humor: 7, loyalty: 0.44,
+      monthlyExpense: { fling: 240, girlfriend: 440, second_wife: 700 },
+      compatibility: () => 0.58,
+    },
+    {
+      id: "s_camille",name: "Camille",trait: "Playful",
+      looks: 7, humor: 9, loyalty: 0.3,
+      monthlyExpense: { fling: 210, girlfriend: 410, second_wife: 660 },
+      compatibility: () => 0.55,
+    },
+    {
+      id: "s_diana",  name: "Diana",  trait: "Mysterious",
+      looks: 9, humor: 5, loyalty: 0.25,
+      monthlyExpense: { fling: 280, girlfriend: 500, second_wife: 760 },
+      compatibility: () => 0.50,
+    },
+  ],
+
   /* ═══ PETS ═══ */
   PETS: [
     {
@@ -1555,7 +1592,23 @@ const game = {
       countryWarningShown: 0,
     },
     // Crime State
-    crime: { rep: 0, heat: 0, history: [] },
+    crime: {
+      rep: 0,
+      heat: 0,
+      history: [],
+      skills: { stealth:0, intimidation:0, hacking:0, street_smarts:0, chemistry:0, planning:0 },
+      lawyer: null,       // retained lawyer id
+      lawyerMonthsLeft: 0,
+      drugEmpire: {
+        tier: null,         // null | 'dealer' | 'lab' | 'network' | 'cartel'
+        income: 0,
+        territory: 0,
+        turfWars: 0,
+        monthsActive: 0,
+        bribed: false,      // paid off local cops this month
+        deaHeat: 0,         // 0-100 DEA investigation level
+      },
+    },
     // Wellness
     wellness: { cooldowns: {}, totalSessions: 0 },
     // Relationships
@@ -1574,6 +1627,7 @@ const game = {
       children: [], // { name, age (months), adopted: bool }
       childExpenses: 0,
       lastBirthMonth: 0,
+      sideRelationships: [], // [{ id, partnerId, partnerName, type, love, monthsTogether, monthlyExpense }]
     },
     // Pets
     pets: [], // { id, name, type, ageMonths, maxAge, happiness }
@@ -2013,6 +2067,13 @@ const game = {
           this.state.relationship.sideRelationships = [];
         }
         if (!this.state.pets) this.state.pets = [];
+        // Migration: crime skills/lawyer/drugEmpire
+        if (!this.state.crime) this.state.crime = { rep:0, heat:0, history:[] };
+        if (!this.state.crime.skills) this.state.crime.skills = { stealth:0, intimidation:0, hacking:0, street_smarts:0, chemistry:0, planning:0 };
+        if (this.state.crime.lawyer === undefined) this.state.crime.lawyer = null;
+        if (this.state.crime.lawyerMonthsLeft === undefined) this.state.crime.lawyerMonthsLeft = 0;
+        if (!this.state.crime.drugEmpire) this.state.crime.drugEmpire = { tier:null, income:0, territory:0, turfWars:0, monthsActive:0, bribed:false, deaHeat:0 };
+        if (this.state.crime.drugEmpire.deaHeat === undefined) this.state.crime.drugEmpire.deaHeat = 0;
         if (!this.state.prison) {
           this.state.prison = {
             monthsServed: 0,
@@ -2095,7 +2156,12 @@ const game = {
         caughtIllegally: 0,
         countryWarningShown: 0,
       },
-      crime: { rep: 0, heat: 0, history: [] },
+      crime: {
+        rep: 0, heat: 0, history: [],
+        skills: { stealth:0, intimidation:0, hacking:0, street_smarts:0, chemistry:0, planning:0 },
+        lawyer: null, lawyerMonthsLeft: 0,
+        drugEmpire: { tier:null, income:0, territory:0, turfWars:0, monthsActive:0, bribed:false, deaHeat:0 },
+      },
       wellness: { cooldowns: {}, totalSessions: 0 },
       relationship: {
         status: "single",
@@ -2112,6 +2178,7 @@ const game = {
         children: [],
         childExpenses: 0,
         lastBirthMonth: 0,
+        sideRelationships: [],
       },
       pets: [],
       prison: {
@@ -2532,11 +2599,11 @@ const game = {
     const life = this.state.life;
     const riskExposure = this.getRiskExposure();
     let deathRisk = 0;
-    if (health < 30) deathRisk += (30 - health) * 0.004;
-    if (ageYears > 58) deathRisk += (ageYears - 58) * 0.002;
-    deathRisk += life.chronicStress * 0.0009;
-    deathRisk += life.riskDebt * 0.0008;
-    deathRisk += riskExposure * 0.012;
+    if (health < 30) deathRisk += (30 - health) * 0.0012;   // scaled down
+    if (ageYears > 58) deathRisk += (ageYears - 58) * 0.0006;
+    deathRisk += life.chronicStress * 0.0002;
+    deathRisk += life.riskDebt * 0.0002;
+    deathRisk += riskExposure * 0.003;
     return Math.max(0, Math.min(95, deathRisk * 100));
   },
 
@@ -3005,16 +3072,76 @@ const game = {
     this.saveGame();
 
     const rel = this.state.relationship;
-    let deathDesc = `You died at age ${ageYrs}.\n\nCause: ${reason}\nNet worth left behind: $${shortNumber(Math.floor(nw))}`;
-    if (rel.status === "married")
-      deathDesc += `\n\n${rel.partnerName} mourns your loss.`;
-    if (rel.children.length > 0)
-      deathDesc += `\n${rel.children.length} child${rel.children.length > 1 ? "ren" : ""} left behind.`;
+    const overlay = document.getElementById("death-overlay");
 
-    app.modal("\u{1F480} Death", deathDesc, [
-      { text: "Accept Fate", cb: () => app.closeModal() },
-    ]);
+    if (overlay) {
+      // ── Populate overlay ──
+      const causeEl    = document.getElementById("death-cause-text");
+      const ageEl      = document.getElementById("death-stat-age");
+      const nwEl       = document.getElementById("death-stat-nw");
+      const greedEl    = document.getElementById("death-stat-greed");
+      const legacyEl   = document.getElementById("death-stat-legacy");
+      const epitaphEl  = document.getElementById("death-epitaph");
+      const mourningEl = document.getElementById("death-mourning");
+
+      if (causeEl)  causeEl.innerText  = reason;
+      if (ageEl)    ageEl.innerText    = `${ageYrs} yrs`;
+      if (nwEl) {
+        const sign = nw < 0 ? "\u2212" : "+";
+        nwEl.innerText = `${sign}$${shortNumber(Math.abs(Math.floor(nw)))}`;
+        nwEl.style.color = nw >= 0 ? "#4ade80" : "#f87171";
+      }
+      if (greedEl)  greedEl.innerText  = Math.round(this.state.life.greed || 0);
+      if (legacyEl) legacyEl.innerText = Math.round(this.state.gameplay?.legendScore || 0);
+
+      // Epitaph
+      const epitaphs = [
+        "They worked hard. They played harder. The ledger never lies.",
+        "Fortune favors the bold \u2014 but the bold still die.",
+        "In the pursuit of more, they lost everything.",
+        "A life lived on the edge. The edge won.",
+        "The market never forgives. Neither does time.",
+        "They chased the dream until it ran out of road.",
+        "Every decision led here. Every coin spent or saved.",
+        "Ambition is only as long as your heartbeat.",
+        "Wealth without health is just a number in the dark.",
+        "At the end, the score doesn\u2019t care who\u2019s keeping it.",
+      ];
+      const greed = Math.round(this.state.life.greed || 0);
+      const epi = epitaphs[greed % epitaphs.length];
+      if (epitaphEl) epitaphEl.innerText = `\u201c${epi}\u201d`;
+
+      // Mourning
+      if (mourningEl) {
+        const parts = [];
+        if (rel && rel.status === "married") parts.push(`${rel.partnerName} mourns your passing.`);
+        const kids = rel?.children?.length || 0;
+        if (kids > 0) parts.push(`${kids} child${kids > 1 ? "ren" : ""} left behind.`);
+        mourningEl.innerText = parts.join("  ");
+      }
+
+      // ── Show overlay ──
+      overlay.style.display = "flex";
+      overlay.offsetHeight; // reflow
+      overlay.classList.add("death-visible");
+    } else {
+      // Fallback modal
+      let deathDesc = `You died at age ${ageYrs}.\n\nCause: ${reason}\nNet worth: $${shortNumber(Math.floor(nw))}`;
+      if (rel && rel.status === "married") deathDesc += `\n\n${rel.partnerName} mourns your loss.`;
+      if (rel && rel.children?.length > 0)
+        deathDesc += `\n${rel.children.length} child${rel.children.length > 1 ? "ren" : ""} left behind.`;
+      app.modal("\u{1F480} Death", deathDesc, [
+        { text: "Accept Fate", cb: () => app.closeModal() },
+      ]);
+    }
     this.renderAll();
+  },
+
+  _closeDeath() {
+    const overlay = document.getElementById("death-overlay");
+    if (!overlay) return;
+    overlay.classList.remove("death-visible");
+    setTimeout(() => { overlay.style.display = "none"; }, 650);
   },
 
   startNewTimeline() {
@@ -3090,11 +3217,11 @@ const game = {
 
     // --- Build death risk ---
     let deathRisk = 0;
-    if (health < 30) deathRisk += (30 - health) * 0.002;
-    if (ageYears > 58) deathRisk += (ageYears - 58) * 0.001;
-    deathRisk += life.chronicStress * 0.0004;
-    deathRisk += life.riskDebt * 0.0003;
-    deathRisk += riskExposure * 0.005;
+    if (health < 30) deathRisk += (30 - health) * 0.0006;   // was 0.002
+    if (ageYears > 58) deathRisk += (ageYears - 58) * 0.0003; // was 0.001
+    deathRisk += life.chronicStress * 0.00008;               // was 0.0004
+    deathRisk += life.riskDebt * 0.00008;                    // was 0.0003
+    deathRisk += riskExposure * 0.0015;                      // was 0.005
 
     // Country safety/stability modifier
     if (cp) {
@@ -3146,13 +3273,13 @@ const game = {
         0,
       ) +
       (this.state.edu?.loans || 0);
-    if (happiness <= 5 && totalDebt > 50000 && Math.random() < 0.004) {
+    if (happiness <= 5 && totalDebt > 50000 && Math.random() < 0.0012) {
       this.die(
         "Died from severe depression brought on by crushing debt and despair.",
       );
       return;
     }
-    if (happiness <= 3 && life.chronicStress > 80 && Math.random() < 0.003) {
+    if (happiness <= 3 && life.chronicStress > 80 && Math.random() < 0.0008) {
       this.die(
         "Took their own life after years of unbearable stress and hopelessness.",
       );
@@ -3160,19 +3287,19 @@ const game = {
     }
 
     // --- Heart attack from low health + age ---
-    if (health < 25 && ageYears > 40 && Math.random() < 0.003) {
+    if (health < 25 && ageYears > 40 && Math.random() < 0.0008) {
       this.die(
         "Suffered a fatal heart attack. Years of poor health caught up.",
       );
       return;
     }
-    if (health < 15 && Math.random() < 0.004) {
+    if (health < 15 && Math.random() < 0.001) {
       this.die("Massive stroke. Your body couldn't take it anymore.");
       return;
     }
 
     // --- Drug/alcohol related (high stress + low happiness) ---
-    if (life.chronicStress > 85 && happiness < 20 && Math.random() < 0.002) {
+    if (life.chronicStress > 85 && happiness < 20 && Math.random() < 0.0005) {
       const substance = [
         "Died from an accidental overdose while self-medicating chronic pain.",
         "Alcohol poisoning after years of heavy drinking to cope with stress.",
@@ -4040,149 +4167,330 @@ const game = {
 
   launderHeat() {
     if (!this.canAct()) return;
-    if (this.state.cash < 1000) return app.toast("Need $1k needed", "error");
-    if (this.state.crime.heat <= 0)
-      return app.toast("No heat to clean", "info");
+    if (this.state.cash < 1000) return app.toast("Need $1k to launder", "error");
+    if (this.state.crime.heat <= 0) return app.toast("No heat to clean", "info");
     this.modCash(-1000);
     this.state.crime.heat = Math.max(0, this.state.crime.heat - 20);
-    app.toast("Heat lowered", "success");
+    app.toast("Money laundered — heat cooled off.", "success");
     this.renderAll();
+  },
+
+  // ── CRIME SKILL TRAINING ──────────────────────────────────────────────────
+  trainCrimeSkill(skillId) {
+    if (!this.canAct()) return;
+    const s = CONFIG.CRIME_SKILLS.find(x => x.id === skillId);
+    if (!s) return;
+    if (this.state.cash < s.trainCost) return app.toast(`Need $${shortNumber(s.trainCost)} to train`, "error");
+    if (this.state.stats.energy < s.energyCost) return app.toast("Too tired to train", "error");
+    this.modCash(-s.trainCost);
+    this.modStat("energy", -s.energyCost);
+    const prev = this.state.crime.skills[skillId] || 0;
+    this.state.crime.skills[skillId] = Math.min(3000, prev + s.xpGain);
+    const lvl = this._crimeSkillLevel(this.state.crime.skills[skillId]);
+    app.toast(`${s.name} trained → ${lvl} (+${s.xpGain} XP)`, "success");
+    this.renderAll();
+  },
+
+  _crimeSkillLevel(xp) {
+    if (xp >= 2500) return "👑 Master";
+    if (xp >= 1500) return "💀 Expert";
+    if (xp >= 700)  return "🔥 Advanced";
+    if (xp >= 250)  return "⚡ Skilled";
+    if (xp >= 80)   return "🌱 Novice";
+    return "🔒 Untrained";
+  },
+
+  // ── LAWYER MANAGEMENT ─────────────────────────────────────────────────────
+  hireLawyer(lawyerId) {
+    if (!this.canAct()) return;
+    const l = CONFIG.LAWYERS.find(x => x.id === lawyerId);
+    if (!l) return;
+    if (l.reqDrugTier && (!this.state.crime.drugEmpire.tier || this._drugTierIndex(this.state.crime.drugEmpire.tier) < this._drugTierIndex(l.reqDrugTier))) {
+      return app.toast("You need a drug empire at Network tier to access this attorney.", "error");
+    }
+    if (l.monthlyCost > 0 && this.state.cash < l.monthlyCost) return app.toast(`Need $${shortNumber(l.monthlyCost)} first month retainer`, "error");
+    if (l.monthlyCost > 0) this.modCash(-l.monthlyCost);
+    this.state.crime.lawyer = lawyerId;
+    app.toast(`Retained: ${l.name}. Monthly retainer: $${shortNumber(l.monthlyCost)}`, "success");
+    this.renderAll();
+  },
+
+  fireLawyer() {
+    if (!this.state.crime.lawyer) return;
+    const l = CONFIG.LAWYERS.find(x => x.id === this.state.crime.lawyer);
+    this.state.crime.lawyer = null;
+    app.toast(`Dismissed ${l ? l.name : 'attorney'}. You are exposed.`, "warning");
+    this.renderAll();
+  },
+
+  // ── DRUG EMPIRE ───────────────────────────────────────────────────────────
+  _drugTierIndex(tierId) {
+    const order = ["dealer","lab","network","cartel"];
+    return order.indexOf(tierId);
+  },
+
+  startDrugOperation(tierId) {
+    if (!this.canAct()) return;
+    const tier = CONFIG.DRUG_TIERS.find(t => t.id === tierId);
+    if (!tier) return;
+
+    const currentIdx = this._drugTierIndex(this.state.crime.drugEmpire.tier);
+    const newIdx     = this._drugTierIndex(tierId);
+
+    if (newIdx <= currentIdx) return app.toast("Already at or above this tier", "error");
+    if (newIdx > currentIdx + 1 && currentIdx >= 0) return app.toast("Must upgrade one tier at a time", "error");
+    if (this.state.crime.rep < tier.reqRep) return app.toast(`Need ${tier.reqRep} Street Rep`, "error");
+    if (tier.reqChem > 0 && (this.state.crime.skills.chemistry || 0) < tier.reqChem) return app.toast(`Need ${tier.reqChem} Chemistry XP`, "error");
+    if (this.state.cash < tier.setupCost) return app.toast(`Need $${shortNumber(tier.setupCost)} setup cash`, "error");
+
+    this.modCash(-tier.setupCost);
+    this.state.crime.drugEmpire.tier = tierId;
+    this.state.crime.drugEmpire.monthsActive = 0;
+    this.state.crime.drugEmpire.bribed = false;
+    if (tierId === "dealer")  this.state.crime.drugEmpire.income = 1200;
+    if (tierId === "lab")     this.state.crime.drugEmpire.income = 9000;
+    if (tierId === "network") this.state.crime.drugEmpire.income = 45000;
+    if (tierId === "cartel")  this.state.crime.drugEmpire.income = 300000;
+
+    FX.screenFlash("gain");
+    app.toast(`🏴 ${tier.name} launched. Passive income: $${shortNumber(this.state.crime.drugEmpire.income)}/mo`, "epic");
+    this.renderAll();
+  },
+
+  shutDownDrugOp() {
+    if (!this.state.crime.drugEmpire.tier) return app.toast("No operation running", "info");
+    this.state.crime.drugEmpire.tier = null;
+    this.state.crime.drugEmpire.income = 0;
+    this.state.crime.drugEmpire.deaHeat = 0;
+    app.toast("Operation shut down and evidence destroyed.", "warning");
+    this.renderAll();
+  },
+
+  bribeLocalCops() {
+    if (!this.canAct()) return;
+    const de = this.state.crime.drugEmpire;
+    if (!de.tier) return app.toast("No active operation to protect", "error");
+    const tierDef = CONFIG.DRUG_TIERS.find(t => t.id === de.tier);
+    const bribeCost = Math.round((de.income || 1000) * 0.18);
+    if (this.state.cash < bribeCost) return app.toast(`Need $${shortNumber(bribeCost)} for bribes`, "error");
+    this.modCash(-bribeCost);
+    de.bribed = true;
+    de.deaHeat = Math.max(0, de.deaHeat - 20);
+    this.state.crime.heat = Math.max(0, this.state.crime.heat - 15);
+    app.toast(`💵 Local cops paid off. Operation protected this month. ($${shortNumber(bribeCost)})`, "success");
+    this.renderAll();
+  },
+
+  expandTerritory() {
+    if (!this.canAct()) return;
+    const de = this.state.crime.drugEmpire;
+    if (!de.tier) return app.toast("No operation to expand", "error");
+    const cost = Math.round((de.income || 1000) * 0.5);
+    if (this.state.cash < cost) return app.toast(`Need $${shortNumber(cost)} to muscle in`, "error");
+    this.modCash(-cost);
+    de.territory = Math.min(100, (de.territory || 0) + 15);
+    de.income = Math.round(de.income * 1.15);
+    de.turfWars = (de.turfWars || 0) + 1;
+    this.state.crime.heat += 20;
+    app.toast(`Territory expanded +15%. Income now $${shortNumber(de.income)}/mo. Rivals are angry.`, "warning");
+    this.renderAll();
+  },
+
+  processDrugEmpireMonthly() {
+    const de = this.state.crime.drugEmpire;
+    if (!de.tier) return;
+    const tierDef = CONFIG.DRUG_TIERS.find(t => t.id === de.tier);
+    if (!tierDef) return;
+
+    de.monthsActive = (de.monthsActive || 0) + 1;
+
+    // Chemistry skill bonus to income (up to +40%)
+    const chemBonus = 1 + Math.min(0.4, (this.state.crime.skills.chemistry || 0) / 3000 * 1.2);
+    const actualIncome = Math.round(
+      (tierDef.income[0] + Math.random() * (tierDef.income[1] - tierDef.income[0])) *
+      chemBonus *
+      (1 + (de.territory || 0) * 0.005)
+    );
+    de.income = actualIncome;
+    this.modCash(actualIncome);
+    this.state.runStats.crimeActions = (this.state.runStats.crimeActions || 0);
+    this.state.crime.heat += tierDef.heatPerMonth;
+    de.deaHeat = Math.min(100, (de.deaHeat || 0) + tierDef.heatPerMonth * 0.6);
+    this.state.crime.rep += Math.ceil(tierDef.heatPerMonth * 0.5);
+
+    // Lawyer costs paid monthly
+    if (this.state.crime.lawyer) {
+      const lDef = CONFIG.LAWYERS.find(l => l.id === this.state.crime.lawyer);
+      if (lDef && lDef.monthlyCost > 0) {
+        if (this.state.cash >= lDef.monthlyCost) {
+          this.modCash(-lDef.monthlyCost);
+        } else {
+          this.state.crime.lawyer = null;
+          app.toast("Couldn't afford lawyer retainer — contract terminated.", "error");
+        }
+      }
+    }
+
+    // Turf war random event
+    if (de.turfWars > 0 && Math.random() < 0.15 * (de.turfWars * 0.3)) {
+      const loss = Math.round(actualIncome * (0.2 + Math.random() * 0.4));
+      this.modCash(-loss);
+      this.modStat("health", -5);
+      this.state.crime.heat += 15;
+      app.toast(`🔫 Rival gang hit one of your spots. Lost $${shortNumber(loss)} and took hits.`, "error");
+    }
+
+    // DEA raid chance
+    if (!de.bribed) {
+      const raidChance = tierDef.arrestRisk + (de.deaHeat / 100) * 0.22;
+      if (Math.random() < raidChance) {
+        const sentence = de.tier === "cartel" ? 120 : de.tier === "network" ? 72 : de.tier === "lab" ? 36 : 10;
+        const lawyer = this.state.crime.lawyer ? CONFIG.LAWYERS.find(l => l.id === this.state.crime.lawyer) : CONFIG.LAWYERS[0];
+        const reducedSentence = lawyer ? Math.max(1, Math.round(sentence * (1 - lawyer.jailReduction))) : sentence;
+
+        // Dismiss charges?
+        if (lawyer && Math.random() < lawyer.dismissChance) {
+          if (lawyer.caseFee) this.modCash(-lawyer.caseFee);
+          de.deaHeat = Math.max(0, de.deaHeat - 30);
+          app.toast(`🚨 DEA Raid! ${lawyer.name} got it dismissed. Case fee: $${shortNumber(lawyer.caseFee)}`, "success");
+        } else {
+          this.state.crime.drugEmpire.tier = null;
+          this.state.crime.drugEmpire.income = 0;
+          this.state.crime.drugEmpire.deaHeat = 0;
+          this.state.jail = reducedSentence;
+          this.state.prison.monthsServed = 0;
+          this.state.prison.totalSentence = reducedSentence;
+          this.state.prison.prisonJob = null; this.state.prison.gangProtection = false;
+          this.state.prison.solitary = 0; this.state.prison.infractions = 0;
+          this.state.life.legalRecord += Math.max(3, sentence / 12);
+          FX.screenFlash("jail");
+          app.modal("🚨 DEA RAID!", `Your operation was busted. ${lawyer && lawyer.tier > 0 ? `${lawyer.name} negotiated ${sentence} → ${reducedSentence} months.` : `${reducedSentence} months federal.`}`, [
+            { text: "It's over", cb: () => app.closeModal() }
+          ]);
+        }
+        return;
+      }
+    }
+    de.bribed = false; // bribe protection only lasts one month
   },
 
   commitCrime(id) {
     if (!this.canAct()) return;
-    if (this.state.stats.energy < 30) return app.toast("Too tired", "error");
+    if (this.state.stats.energy < 30) return app.toast("Too exhausted", "error");
 
-    let c = CONFIG.CRIMES.find((x) => x.id === id);
+    const c = CONFIG.CRIMES.find((x) => x.id === id);
+    if (!c) return;
+    if (this.state.crime.rep < c.reqRep) return app.toast(`Need ${c.reqRep} Street Rep`, "error");
+
     this.state.runStats.crimeActions += 1;
-    if (this.state.onboarding.active && this.state.onboarding.month < 9) {
-      app.log("Tutorial: crime raises death risk fast. Use with caution.");
-    }
-
-    // Rep Check
-    if (this.state.crime.rep < c.reqRep)
-      return app.toast(`Need ${c.reqRep} Rep`, "error");
-
     this.modStat("energy", -30);
 
-    // Calc Success
-    // Base - (Heat Penalty) + (Smarts Bonus) + (Rep Bonus)
-    let heatPenalty = this.state.crime.heat * 0.005; // 50 heat = -25% chance
-    let smartsBonus = this.state.stats.smarts * 0.002; // 100 smarts = +20% chance
-    let legalPenalty = this.state.life.legalRecord * 0.012;
-    let netChance = c.baseChance - heatPenalty - legalPenalty + smartsBonus;
+    // ── Skill bonus (relevant skill XP → up to +30% success) ──────────────────
+    const skillXp  = (this.state.crime.skills[c.skill] || 0);
+    const skillBonus = Math.min(0.30, skillXp / 3000);
 
-    // Cap chance
-    netChance = Math.max(0.05, Math.min(0.95, netChance));
+    // ── Other modifiers ────────────────────────────────────────────────────────
+    const heatPenalty   = this.state.crime.heat * 0.005;
+    const smartsBonus   = this.state.stats.smarts * 0.002;
+    const legalPenalty  = this.state.life.legalRecord * 0.012;
+
+    let netChance = c.baseChance + skillBonus - heatPenalty - legalPenalty + smartsBonus;
+    netChance = Math.max(0.05, Math.min(0.97, netChance));
+
+    // ── Gain XP in relevant skill regardless of outcome ───────────────────────
+    const skillDef = CONFIG.CRIME_SKILLS.find(s => s.id === c.skill);
+    if (skillDef) this.state.crime.skills[c.skill] = Math.min(3000, (this.state.crime.skills[c.skill]||0) + 10);
 
     if (Math.random() < netChance) {
-      // Success
+      // ── SUCCESS ───────────────────────────────────────────────────────────────
       let reward = c.reward[0] + Math.random() * (c.reward[1] - c.reward[0]);
-      reward *= Math.max(0.55, 1 - this.state.crime.heat * 0.0035);
+      // Chemistry skill multiplies drug crime rewards
+      if (c.type === "Drug Trade") reward *= (1 + Math.min(0.5, (this.state.crime.skills.chemistry||0)/3000));
+      reward *= Math.max(0.55, 1 - this.state.crime.heat * 0.003);
       this.modCash(reward);
-      this.state.crime.rep += Math.ceil(c.heatAdd / 2); // Gain rep
+      this.state.crime.rep += Math.ceil(c.heatAdd * 0.6);
       this.state.crime.heat += c.heatAdd;
-      this.recordGreed(c.heatAdd * 0.45, `${c.name} payouts`);
-      this.state.life.riskDebt = Math.min(
-        300,
-        this.state.life.riskDebt + c.risk * 5,
-      );
+      this.recordGreed(c.heatAdd * 0.45, `${c.name} payout`);
+      this.state.life.riskDebt = Math.min(300, this.state.life.riskDebt + c.risk * 4);
 
-      // "Critical Success" - no heat gained?
-      if (Math.random() > 0.9) {
-        this.state.crime.heat -= c.heatAdd;
-        app.toast(`CLEAN GETAWAY! +$${reward.toFixed(0)}`, "epic");
+      const cleanGetaway = Math.random() > 0.88;
+      if (cleanGetaway) {
+        this.state.crime.heat = Math.max(0, this.state.crime.heat - c.heatAdd);
+        app.toast(`CLEAN GETAWAY! +$${shortNumber(reward)} — no traces left`, "epic");
         FX.screenFlash("gain");
       } else {
-        app.toast(`Success! +$${reward.toFixed(0)} (Heat Up)`, "warning");
+        app.toast(`${c.name} success! +$${shortNumber(reward)} 🔥 heat rising`, "warning");
       }
       this.registerAction(5);
 
-      const successDeathRisk =
-        c.risk * 0.015 + Math.max(0, this.state.crime.heat - 60) * 0.0008;
-      if (
-        this.checkSuddenDeath(
-          `Crime: ${c.name}`,
-          successDeathRisk,
-          "Killed during the getaway after escalating criminal exposure",
-        )
-      ) {
-        return;
-      }
+      const successDeathRisk = c.risk * 0.012 + Math.max(0, this.state.crime.heat - 60) * 0.0007;
+      if (this.checkSuddenDeath(`Crime: ${c.name}`, successDeathRisk, "Killed during the getaway")) return;
+
     } else {
-      // Failure - Roll for Jail
-      // Higher heat = higher jail chance
-      let jailChance =
+      // ── FAILURE ───────────────────────────────────────────────────────────────
+      const jailChance = Math.min(0.96,
         c.risk +
         this.state.crime.heat * 0.01 +
         this.state.life.legalRecord * 0.03 +
-        this.state.life.greed * 0.0008;
-      if (Math.random() < jailChance) {
-        this.state.jail = c.jail;
-        // Initialize prison state for this sentence
-        this.state.prison.monthsServed = 0;
-        this.state.prison.totalSentence = c.jail;
-        this.state.prison.prisonJob = null;
-        this.state.prison.gangProtection = false;
-        this.state.prison.solitary = 0;
-        this.state.prison.infractions = 0;
-        this.state.life.legalRecord += Math.max(1, c.jail / 18);
-        this.state.life.opportunitiesLost += Math.max(
-          1,
-          Math.floor(c.jail / 24),
-        );
-        this.state.life.maxHealth = Math.max(
-          30,
-          this.state.life.maxHealth - c.jail * 0.05,
-        );
-        this.state.crime.heat = 0; // Heat resets on jail? Or maybe drops to 50?
-        FX.screenFlash("jail");
-        FX.screenShake("lg");
-        app.modal(
-          "BUSTED!",
-          `Police caught you. ${c.jail} months in federal prison.`,
-          [{ text: "Damn", cb: () => app.closeModal() }],
-        );
+        this.state.life.greed * 0.0007
+      );
 
-        const arrestDeathRisk =
-          c.risk * 0.045 +
-          this.state.crime.heat * 0.0018 +
-          this.state.life.legalRecord * 0.01;
-        if (
-          this.checkSuddenDeath(
-            `Arrested: ${c.name}`,
-            arrestDeathRisk,
-            "Lethal force incident during arrest",
-          )
-        ) {
-          return;
+      if (Math.random() < jailChance) {
+        // ── BUSTED — check lawyer ──────────────────────────────────────────────
+        const lawyer = this.state.crime.lawyer
+          ? CONFIG.LAWYERS.find(l => l.id === this.state.crime.lawyer)
+          : CONFIG.LAWYERS[0]; // public defender by default
+
+        // Try to dismiss charges outright
+        if (lawyer && Math.random() < lawyer.dismissChance) {
+          const caseFee = lawyer.caseFee || 0;
+          if (caseFee > 0) this.modCash(-caseFee);
+          this.state.crime.heat += c.heatAdd * 0.5;
+          app.toast(`Your ${lawyer.name} got the charges DROPPED. Cost: $${shortNumber(caseFee)}`, "success");
+          FX.screenFlash("gain");
+        } else {
+          // Serve reduced sentence
+          let sentenceMonths = c.jail;
+          if (lawyer) sentenceMonths = Math.max(1, Math.round(c.jail * (1 - lawyer.jailReduction)));
+          const caseFee = lawyer ? (lawyer.caseFee || 0) : 0;
+          if (caseFee > 0) this.modCash(-caseFee);
+
+          this.state.jail = sentenceMonths;
+          this.state.prison.monthsServed = 0;
+          this.state.prison.totalSentence = sentenceMonths;
+          this.state.prison.prisonJob = null;
+          this.state.prison.gangProtection = false;
+          this.state.prison.solitary = 0;
+          this.state.prison.infractions = 0;
+          this.state.life.legalRecord += Math.max(1, sentenceMonths / 18);
+          this.state.life.opportunitiesLost += Math.max(1, Math.floor(sentenceMonths / 24));
+          this.state.life.maxHealth = Math.max(30, this.state.life.maxHealth - sentenceMonths * 0.05);
+          this.state.crime.heat = 0;
+
+          const lawyerMsg = lawyer && lawyer.tier > 0
+            ? ` ${lawyer.name} reduced your sentence from ${c.jail} → ${sentenceMonths} months.`
+            : "";
+
+          FX.screenFlash("jail");
+          FX.screenShake("lg");
+          app.modal("🚔 BUSTED!", `Police caught you.${lawyerMsg} ${sentenceMonths} months in federal prison.`, [
+            { text: "Damn", cb: () => app.closeModal() },
+          ]);
+
+          const arrestDeathRisk = c.risk * 0.04 + this.state.crime.heat * 0.0015 + this.state.life.legalRecord * 0.008;
+          if (this.checkSuddenDeath(`Arrested: ${c.name}`, arrestDeathRisk, "Lethal force incident during arrest")) return;
         }
       } else {
-        app.toast("Failed but escaped!", "text-loss");
-        this.state.crime.heat += c.heatAdd * 1.5; // Botched job = more heat
-        this.state.life.riskDebt = Math.min(
-          300,
-          this.state.life.riskDebt + c.heatAdd * 0.6,
-        );
-
-        const botchedDeathRisk = c.risk * 0.03 + this.state.crime.heat * 0.0015;
-        if (
-          this.checkSuddenDeath(
-            `Botched: ${c.name}`,
-            botchedDeathRisk,
-            "Killed during a botched operation",
-          )
-        ) {
-          return;
-        }
+        // Escaped but botched
+        app.toast("Botched — escaped by the skin of your teeth. Heat explodes.", "text-loss");
+        this.state.crime.heat += c.heatAdd * 1.8;
+        this.state.life.riskDebt = Math.min(300, this.state.life.riskDebt + c.heatAdd * 0.7);
+        const botchedDeathRisk = c.risk * 0.03 + this.state.crime.heat * 0.0012;
+        if (this.checkSuddenDeath(`Botched: ${c.name}`, botchedDeathRisk, "Killed during a botched operation")) return;
       }
     }
 
-    if (this.state.crime.heat > 70) {
-      this.modStat("health", -1.5);
-      this.modStat("happiness", -2);
-    }
-
+    if (this.state.crime.heat > 70) { this.modStat("health", -1.5); this.modStat("happiness", -2); }
     this.renderAll();
   },
 
@@ -5812,16 +6120,12 @@ const game = {
   studyHard() {
     if (!this.canAct()) return;
     if (this.state.stats.energy < 20)
-      return app.modal("Exhausted", "Too tired to study.");
+      return app.toast("Too tired to study. Need 20 energy.", "error");
     this.state.stats.energy -= 20;
-    this.state.edu.progress += 0.5; // Speed up degree
-    this.modStat("smarts", 0.5); // Gain smarts
+    this.state.edu.progress += 0.5;
+    this.modStat("smarts", 0.5);
     this.registerAction(2);
-    app.modal(
-      "Studied",
-      "You crammed for exams. (+0.5 Progress, +0.5 Smarts)",
-      [{ text: "Ok", cb: () => app.closeModal() }],
-    );
+    app.toast("Crammed for exams — +0.5 Progress, +0.5 Smarts", "success");
     this.renderAll();
   },
 
@@ -5845,9 +6149,16 @@ const game = {
     );
   },
 
-  playCasino(gameId) {
+  playCasino(gameId, presetAmt) {
     if (!this.canAct()) return;
     const g = CONFIG.CASINO_GAMES.find((x) => x.id === gameId);
+    if (!g) return;
+
+    // Quick-bet: amount already chosen, skip modal
+    if (presetAmt !== undefined) {
+      const bet = Math.min(Math.max(presetAmt, g.minBet), g.maxBet);
+      return this._resolveBet(g, bet);
+    }
 
     app.modal("Place Bet", `${g.name}: ${g.desc}`, [
       { text: `$${g.minBet}`, cb: () => this._resolveBet(g, g.minBet) },
@@ -6321,51 +6632,67 @@ const game = {
             : "#f59e0b";
 
       jobEl.innerHTML = `
-        <div class="panel-header">
-            <div class="panel-image">
-                <img src="${t.image}" alt="${t.name}" />
-            </div>
-            <div class="panel-title">
-                <h2>${lvl.title}</h2>
-                <div class="panel-subtitle">${t.name}</div>
-            </div>
-            <div style="text-align:right;">
-                <span class="tag safe">$${shortNumber(this.state.job.salary)}/yr</span>
+        <div class="panel-hero-strip">
+            <img src="${t.image}" alt="${t.name}" />
+            <div class="panel-hero-strip-overlay">
+                <div class="panel-hero-info">
+                    <div class="panel-hero-eyebrow">${t.name}</div>
+                    <div class="panel-hero-title">${lvl.title}</div>
+                </div>
+                <div class="panel-hero-right">
+                    <div class="panel-hero-salary-label">Annual Salary</div>
+                    <div class="panel-hero-salary">$${shortNumber(this.state.job.salary)}</div>
+                </div>
             </div>
         </div>
+        <div class="panel-body">
+            <div class="career-kpi-row">
+                <div class="career-kpi">
+                    <span class="career-kpi-label">Performance</span>
+                    <span class="career-kpi-val" style="color:${perfColor};">${this.state.job.performance}%</span>
+                </div>
+                <div class="career-kpi">
+                    <span class="career-kpi-label">Politics</span>
+                    <span class="career-kpi-val" style="color:#8b5cf6;">${this.state.job.politics || 0}<span style="font-size:0.75rem;opacity:0.55;">/100</span></span>
+                </div>
+                <div class="career-kpi">
+                    <span class="career-kpi-label">Stress</span>
+                    <span class="career-kpi-val" style="color:var(--accent-red);">${(this.state.job.stress || 0).toFixed(1)}%</span>
+                </div>
+            </div>
 
-        <div class="stats-grid-2">
-            <div>
-                <div class="stat-meta-row"><span>Performance</span><span>${this.state.job.performance}%</span></div>
-                <div class="progress-bg"><div class="progress-fill" style="width:${this.state.job.performance}%; background:${perfColor};"></div></div>
-                
-                <div class="stat-meta-row" style="margin-top:12px;"><span>Politics</span><span>${this.state.job.politics || 0}/100</span></div>
-                <div class="progress-bg"><div class="progress-fill" style="width:${this.state.job.politics || 0}%; background:var(--accent-purple, #8b5cf6);"></div></div>
+            <div class="stats-grid-2" style="margin-bottom:20px;">
+                <div>
+                    <div class="stat-meta-row"><span>Performance</span><span style="color:${perfColor};">${this.state.job.performance}%</span></div>
+                    <div class="progress-bg"><div class="progress-fill" style="width:${this.state.job.performance}%; background:${perfColor};"></div></div>
+                    <div class="stat-meta-row" style="margin-top:12px;"><span>Politics</span><span style="color:#8b5cf6;">${this.state.job.politics || 0}/100</span></div>
+                    <div class="progress-bg"><div class="progress-fill" style="width:${this.state.job.politics || 0}%; background:#8b5cf6;"></div></div>
+                </div>
+                <div>
+                    <div class="stat-meta-row"><span>Stress</span><span style="color:var(--accent-red);">${(this.state.job.stress || 0).toFixed(1)}%</span></div>
+                    <div class="progress-bg"><div class="progress-fill" style="width:${this.state.job.stress || 0}%; background:var(--accent-red);"></div></div>
+                    <div class="stat-note" style="margin-top:10px;"><i class="fa-solid fa-circle-info" style="margin-right:5px;opacity:0.5;"></i>Gain skills over time to earn a promotion.</div>
+                </div>
             </div>
-            <div>
-                <div class="stat-meta-row"><span>Stress</span><span>${(this.state.job.stress || 0).toFixed(1)}%</span></div>
-                <div class="progress-bg"><div class="progress-fill" style="width:${this.state.job.stress || 0}%; background:var(--accent-red);"></div></div>
-                <div class="stat-note">Gain skills over time to promote.</div>
-            </div>
-        </div>
 
-        <div class="action-grid-3">
-            <button class="btn btn-primary btn-multiline" onclick="game.performWork('hard')">
-                <span>Grind</span>
-                <span class="btn-subtext">+Perf +Stress</span>
-            </button>
-            <button class="btn btn-outline btn-multiline" onclick="game.performWork('network')">
-                <span>Schmooze</span>
-                <span class="btn-subtext">+Politics</span>
-            </button>
-            <button class="btn btn-outline btn-multiline" onclick="game.performWork('slack')">
-                 <span>Slack Off</span>
-                 <span class="btn-subtext">-Stress -Perf</span>
-            </button>
-        </div>
-        <div class="panel-footer">
-            <button class="btn btn-success" onclick="game.askPromotion()">Request Promotion</button>
-            <button class="btn btn-danger" onclick="game.quitJob()">Resign</button>
+            <div class="action-grid-3">
+                <button class="btn btn-primary btn-multiline" onclick="game.performWork('hard')">
+                    <span>Grind</span>
+                    <span class="btn-subtext">+Perf  +Stress</span>
+                </button>
+                <button class="btn btn-outline btn-multiline" onclick="game.performWork('network')">
+                    <span>Schmooze</span>
+                    <span class="btn-subtext">+Politics</span>
+                </button>
+                <button class="btn btn-outline btn-multiline" onclick="game.performWork('slack')">
+                    <span>Slack Off</span>
+                    <span class="btn-subtext">-Stress  -Perf</span>
+                </button>
+            </div>
+            <div class="panel-footer">
+                <button class="btn btn-success" onclick="game.askPromotion()"><i class="fa-solid fa-arrow-up" style="margin-right:6px;"></i>Request Promotion</button>
+                <button class="btn btn-danger" onclick="game.quitJob()"><i class="fa-solid fa-door-open" style="margin-right:6px;"></i>Resign</button>
+            </div>
         </div>`;
     } else {
       jobEl.innerHTML = `<div class="empty-state">
@@ -6384,13 +6711,11 @@ const game = {
             : -1;
 
         let html = `<div class="card" style="grid-column: span 2;">
-            <div class="card-header" style="border-bottom:1px solid var(--border-dim); padding-bottom:12px; margin-bottom:16px;">
-                <div style="display: flex; align-items: center; gap: 12px;">
-                    <img src="${track.image}" alt="${track.name}" style="width: 90px; height: 60px; object-fit: cover; border-radius: 6px;">
-                    <h3 style="margin:0;">${track.name}</h3>
-                </div>
+            <div class="career-track-header">
+                <img src="${track.image}" alt="${track.name}" class="career-track-img-sm">
+                <h3 class="career-track-name">${track.name}</h3>
             </div>
-            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:16px;">`;
+            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap:14px;">`;
 
         html += track.levels
           .map((lvl, idx) => {
@@ -6426,10 +6751,10 @@ const game = {
                 </div>
                 ${
                   !isCurrent
-                    ? `<button class="btn btn-outline" onclick="game.applyJob('${track.id}', ${idx})" ${locked ? "disabled" : ""}>
-                        ${locked ? '<i class="fa-solid fa-lock"></i> Locked' : "Apply Now"}
+                    ? `<button class="btn ${locked ? 'btn-outline' : 'btn-primary'}" onclick="game.applyJob('${track.id}', ${idx})" ${locked ? "disabled" : ""}>
+                        ${locked ? '<i class="fa-solid fa-lock" style="margin-right:5px;"></i>Locked' : '<i class="fa-solid fa-paper-plane" style="margin-right:6px;"></i>Apply Now'}
                        </button>`
-                    : '<div style="text-align:center;"><span class="tag safe" style="width:100%; display:block; text-align:center;">CURRENT ROLE</span></div>'
+                    : '<div style="margin-top:auto;"><span class="tag safe" style="width:100%; display:block; text-align:center; padding:8px; font-size:0.75rem; letter-spacing:1px;"><i class="fa-solid fa-check" style="margin-right:5px;"></i>CURRENT ROLE</span></div>'
                 }
             </div>`;
           })
@@ -6444,7 +6769,7 @@ const game = {
     const skillHTML = Object.entries(this.state.skills)
       .map(([key, xp]) => {
         let lvl = game.getSkillLevel(key);
-        return `<div class="tag" style="margin-right:4px; margin-bottom:4px;">${CONFIG.SKILLS[key].name} Lv.${lvl}</div>`;
+        return `<div class="tag" style="margin-right:4px; margin-bottom:4px;"><i class="fa-solid fa-star" style="font-size:0.6rem;margin-right:4px;opacity:0.5;"></i>${CONFIG.SKILLS[key].name} <span style="font-family:var(--font-mono);font-weight:800;">Lv.${lvl}</span></div>`;
       })
       .join("");
 
@@ -6454,85 +6779,373 @@ const game = {
       let d = document.createElement("div");
       d.id = "skill-cloud";
       d.style.gridColumn = "span 2";
-      d.style.marginBottom = "16px";
-      d.innerHTML = `<h4 style="color:#888; margin-bottom:8px;">My Skills XP</h4><div style="display:flex; flex-wrap:wrap;">${skillHTML || '<span style="color:#666; font-size:0.8rem;">No skills yet. Get a job to learn.</span>'}</div>`;
+      d.style.marginBottom = "8px";
+      d.innerHTML = `<h4><i class="fa-solid fa-bolt" style="margin-right:7px;color:var(--gold);"></i>My Skills</h4><div style="display:flex; flex-wrap:wrap; gap:4px; margin-top:2px;">${skillHTML || '<span style="color:var(--text-dim); font-size:0.82rem;">No skills yet — get a job to start learning.</span>'}</div>`;
       eduEl.prepend(d);
     } else if (document.getElementById("skill-cloud")) {
       document.getElementById("skill-cloud").innerHTML =
-        `<h4 style="color:#888; margin-bottom:8px;">My Skills XP</h4><div style="display:flex; flex-wrap:wrap;">${skillHTML || '<span style="color:#666; font-size:0.8rem;">No skills yet. Get a job to learn.</span>'}</div>`;
+        `<h4><i class="fa-solid fa-bolt" style="margin-right:7px;color:var(--gold);"></i>My Skills</h4><div style="display:flex; flex-wrap:wrap; gap:4px; margin-top:2px;">${skillHTML || '<span style="color:var(--text-dim); font-size:0.82rem;">No skills yet — get a job to start learning.</span>'}</div>`;
     }
 
-    // --- DASHBOARD CRIME ---
-    document.getElementById("meter-heat").style.width =
-      Math.min(100, this.state.crime.heat) + "%";
-    document.getElementById("heat-label").innerText =
-      this.state.crime.heat > 80
-        ? "MANHUNT"
-        : this.state.crime.heat > 50
-          ? "HOT"
-          : this.state.crime.heat > 20
-            ? "SUSPICIOUS"
-            : "CLEAR";
-    document.getElementById("stat-rep").innerText = this.state.crime.rep;
-    document.getElementById("rep-level").innerText =
-      Math.floor(this.state.crime.rep / 100) + 1;
+    // --- CRIME SECTION ---
+    {
+      const cr = this.state.crime;
+      const de = cr.drugEmpire;
 
-    document.getElementById("crime-list").innerHTML = CONFIG.CRIMES.map((c) => {
-      let locked = this.state.crime.rep < c.reqRep;
-      let successChance = Math.max(
-        0.05,
-        Math.min(
-          0.95,
-          c.baseChance -
-            this.state.crime.heat * 0.005 +
-            this.state.stats.smarts * 0.002,
-        ),
-      );
-      let color =
-        successChance > 0.7
-          ? "var(--accent-green)"
-          : successChance > 0.4
-            ? "var(--accent-amber)"
-            : "var(--accent-red)";
+      // ── CRIME HUD ─────────────────────────────────────────────────────────
+      const hudEl = document.getElementById("crime-hud");
+      if (hudEl) {
+        const heatPct  = Math.min(100, cr.heat);
+        const heatColor = cr.heat > 80 ? "#ef4444" : cr.heat > 50 ? "#f97316" : cr.heat > 20 ? "#f59e0b" : "#4ade80";
+        const heatLabel = cr.heat > 80 ? "🚨 MANHUNT" : cr.heat > 50 ? "🔥 HOT" : cr.heat > 20 ? "⚠️ SUSPICIOUS" : "✅ CLEAR";
+        const repLevel  = Math.floor(cr.rep / 100) + 1;
+        const repTitle  = repLevel >= 13 ? "Kingpin" : repLevel >= 10 ? "Boss" : repLevel >= 7 ? "Made Man" : repLevel >= 4 ? "Soldier" : repLevel >= 2 ? "Street Thug" : "Small-Timer";
+        const lDef      = cr.lawyer ? CONFIG.LAWYERS.find(l => l.id === cr.lawyer) : null;
+        const drugActive = de && de.tier;
+        const drugTDef   = drugActive ? CONFIG.DRUG_TIERS.find(t => t.id === de.tier) : null;
 
-      let riskVal = ((1 - successChance) * 100).toFixed(0);
-
-      return `
-             <div class="card" ${locked ? 'style="opacity:0.5; pointer-events:none;"' : ""}>
-                <div class="card-header">
-                    <div>
-                        <h3>${c.name}</h3>
-                        <div style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px;">${c.type}</div>
-                    </div>
-                    ${locked ? `<span class="tag" style="border-color:var(--text-muted);">Need ${c.reqRep} Rep</span>` : `<span class="tag" style="color:${color}; border-color:${color}; background:rgba(0,0,0,0.2);">Risk: ${riskVal}%</span>`}
-                </div>
-                <p>${c.desc}</p>
-                <div style="margin: 12px 0; padding:8px; background:rgba(255,255,255,0.03); border-radius:4px; font-size:0.8rem; display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
-                     <div style="display:flex; flex-direction:column;">
-                        <span style="color:var(--text-muted); font-size:0.7em;">PAYOUT</span>
-                        <span style="color:var(--accent-green); font-weight:600;">$${c.reward[0] / 1000}k - $${c.reward[1] / 1000}k</span>
-                     </div>
-                     <div style="display:flex; flex-direction:column; text-align:right;">
-                        <span style="color:var(--text-muted); font-size:0.7em;">JAIL TIME</span>
-                        <span style="color:var(--accent-red); font-weight:600;">${c.jail} mo</span>
-                     </div>
-                </div>
-                ${
-                  !locked
-                    ? `
-                <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:var(--text-muted); margin-bottom:4px;">
-                    <span>Success Chance</span>
-                    <span>${(successChance * 100).toFixed(0)}%</span>
-                </div>
-                <div class="progress-bg" style="height:6px; margin-bottom:16px; border-radius:3px;">
-                    <div class="progress-fill" style="width:${successChance * 100}%; background:${color}; border-radius:3px;"></div>
-                </div>
-                <button class="btn btn-danger" onclick="game.commitCrime('${c.id}')"><i class="fa-solid fa-mask"></i> COMMIT CRIME</button>`
-                    : '<button class="btn btn-outline" disabled><i class="fa-solid fa-lock"></i> LOCKED</button>'
-                }
+        hudEl.innerHTML = `
+          <div class="crime-hud-card">
+            <div class="crime-hud-label">Wanted Level</div>
+            <div class="crime-hud-value" style="color:${heatColor};">${heatLabel}</div>
+            <div class="crime-hud-bar"><div class="crime-hud-bar-fill" style="width:${heatPct}%;background:${heatColor};"></div></div>
+            <div class="crime-hud-sub">${heatPct.toFixed(0)}% heat — higher heat = more busts</div>
+            <div class="crime-hud-action">
+              <button class="btn btn-outline heat-launder-btn" onclick="game.launderHeat()"><i class="fa-solid fa-water" style="margin-right:5px;"></i>Launder Heat ($1k)</button>
             </div>
-            `;
-    }).join("");
+          </div>
+          <div class="crime-hud-card">
+            <div class="crime-hud-label">Street Rep</div>
+            <div class="crime-hud-value" style="background:linear-gradient(135deg,#a855f7,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">${cr.rep}</div>
+            <div class="crime-hud-sub"><strong style="color:#a78bfa;">Lv.${repLevel}</strong> ${repTitle}</div>
+          </div>
+          <div class="crime-hud-card">
+            <div class="crime-hud-label">Legal Defense</div>
+            <div class="crime-hud-value" style="font-size:0.95rem;color:${lDef?'#4ade80':'var(--text-muted)'};">${lDef ? lDef.name : 'None'}</div>
+            <div class="crime-hud-sub">${lDef ? `−${Math.round(lDef.jailReduction*100)}% sentence · ${Math.round(lDef.dismissChance*100)}% dismiss` : 'No attorney retained'}</div>
+          </div>
+          <div class="crime-hud-card" style="${drugActive ? '' : 'opacity:0.55;'}">
+            <div class="crime-hud-label">Drug Empire</div>
+            <div class="crime-hud-value" style="font-size:0.95rem;color:${drugActive?'#f87171':'var(--text-muted)'};">${drugActive ? drugTDef.name : 'None'}</div>
+            <div class="crime-hud-sub">${drugActive ? `$${shortNumber(de.income)}/mo · DEA: ${Math.round(de.deaHeat||0)}%` : 'Not running operations'}</div>
+          </div>`;
+      }
+
+      // ── DRUG EMPIRE PANEL ──────────────────────────────────────────────────
+      const drugPanel = document.getElementById("drug-empire-panel");
+      if (drugPanel) {
+        const DRUG_IMGS = {
+          dealer:  'https://images.unsplash.com/photo-1587590741732-db3f6ccf99ea?w=800&h=400&fit=crop&auto=format',
+          lab:     'https://images.unsplash.com/photo-1614924308600-fc72e1b0dce4?w=800&h=400&fit=crop&auto=format',
+          network: 'https://images.unsplash.com/photo-1494438639946-1ebd1d20bf85?w=800&h=400&fit=crop&auto=format',
+          cartel:  'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800&h=400&fit=crop&auto=format',
+        };
+        const currentIdx = this._drugTierIndex(de.tier);
+
+        if (!de.tier) {
+          // Tier progression cards
+          drugPanel.innerHTML = `<div style="grid-column:1/-1;font-size:0.8rem;color:var(--text-muted);margin-bottom:12px;padding:10px 14px;border-radius:10px;border:1px solid rgba(239,68,68,0.15);background:rgba(239,68,68,0.04);">
+            <i class="fa-solid fa-circle-info" style="margin-right:7px;color:#f87171;"></i>
+            Build a drug empire to earn passive income. Start as a Street Dealer, then upgrade to dominate the city. Requires <strong>Rep + Chemistry skill</strong>.
+          </div>` + CONFIG.DRUG_TIERS.map((t, idx) => {
+            const repOk  = cr.rep >= t.reqRep;
+            const chemOk = (cr.skills.chemistry || 0) >= t.reqChem;
+            const cashOk = this.state.cash >= t.setupCost;
+            const canStart = idx === 0 && repOk && chemOk && cashOk;
+            const isLocked = !repOk || !chemOk;
+            return `<div class="drug-tier-card${isLocked ? ' locked-tier' : ''}">
+              <img class="drug-tier-img" src="${DRUG_IMGS[t.id]}" alt="${t.name}" loading="lazy">
+              <div class="drug-tier-overlay">
+                <div class="drug-tier-icon"><i class="fa-solid ${t.icon}"></i></div>
+                <div>
+                  <div class="drug-tier-name">${t.name}</div>
+                  <div class="drug-tier-tag">Tier ${idx + 1} · $${shortNumber(t.setupCost)} setup</div>
+                </div>
+              </div>
+              <div class="drug-tier-body">
+                <div class="drug-tier-desc">${t.desc}</div>
+                <div class="drug-tier-stats">
+                  <div class="drug-stat-box">
+                    <div class="drug-stat-label">Income</div>
+                    <div class="drug-stat-val" style="color:#4ade80;">$${shortNumber(t.income[0])}–$${shortNumber(t.income[1])}/mo</div>
+                  </div>
+                  <div class="drug-stat-box">
+                    <div class="drug-stat-label">Arrest Risk</div>
+                    <div class="drug-stat-val" style="color:#f87171;">${(t.arrestRisk*100).toFixed(0)}%/mo</div>
+                  </div>
+                  <div class="drug-stat-box">
+                    <div class="drug-stat-label">Req Rep</div>
+                    <div class="drug-stat-val" style="color:${repOk?'#4ade80':'#f87171'};">${t.reqRep}</div>
+                  </div>
+                  <div class="drug-stat-box">
+                    <div class="drug-stat-label">Req Chem XP</div>
+                    <div class="drug-stat-val" style="color:${chemOk?'#4ade80':'#f87171'};">${t.reqChem || '—'}</div>
+                  </div>
+                </div>
+                ${idx === 0 ? `<button class="btn ${canStart ? 'btn-danger' : 'btn-outline'}" onclick="game.startDrugOperation('${t.id}')" ${canStart ?'':'disabled'}>
+                  <i class="fa-solid fa-flask" style="margin-right:6px;"></i>${cashOk?(repOk&&chemOk?'Launch Operation':'Skill Req Not Met'):'Need More Cash'}
+                </button>` : `<div style="font-size:0.75rem;opacity:0.45;text-align:center;padding:6px;border:1px dashed rgba(255,255,255,0.08);border-radius:8px;"><i class="fa-solid fa-lock" style="margin-right:5px;"></i>Upgrade from Street Dealer first</div>`}
+              </div>
+            </div>`;
+          }).join("");
+        } else {
+          // Active empire — full status card
+          const tDef      = CONFIG.DRUG_TIERS.find(t => t.id === de.tier);
+          const nextTier  = CONFIG.DRUG_TIERS[currentIdx + 1] || null;
+          const deaPct    = Math.round(de.deaHeat || 0);
+          const deaColor  = deaPct > 70 ? "#ef4444" : deaPct > 40 ? "#f97316" : "#f59e0b";
+          const bribeCost = Math.round((de.income || 1000) * 0.18);
+          const terrCost  = Math.round((de.income || 1000) * 0.5);
+          drugPanel.innerHTML = `
+            <div class="card drug-empire-active">
+              <div class="drug-empire-hero">
+                <img src="${DRUG_IMGS[de.tier]}" alt="${tDef.name}" loading="lazy">
+                <div class="drug-empire-hero-overlay">
+                  <div class="drug-empire-hero-info">
+                    <div class="drug-empire-eyebrow"><i class="fa-solid ${tDef.icon}" style="margin-right:6px;"></i>${tDef.name} · ${de.monthsActive} months active</div>
+                    <div class="drug-empire-title">Drug Lord Operations</div>
+                  </div>
+                  <div class="drug-empire-right">
+                    <div class="drug-empire-income-label">Monthly Income</div>
+                    <div class="drug-empire-income">$${shortNumber(de.income)}</div>
+                  </div>
+                </div>
+              </div>
+              <div class="drug-empire-body">
+                <div class="drug-empire-kpis">
+                  <div class="drug-empire-kpi"><div class="drug-empire-kpi-label">Territory</div><div class="drug-empire-kpi-val">${de.territory || 0}%</div></div>
+                  <div class="drug-empire-kpi"><div class="drug-empire-kpi-label">DEA Heat</div><div class="drug-empire-kpi-val" style="color:${deaColor};">${deaPct}%</div></div>
+                  <div class="drug-empire-kpi"><div class="drug-empire-kpi-label">Turf Wars</div><div class="drug-empire-kpi-val">${de.turfWars || 0}</div></div>
+                  <div class="drug-empire-kpi"><div class="drug-empire-kpi-label">Police Bribed</div><div class="drug-empire-kpi-val" style="color:${de.bribed?'#4ade80':'var(--text-muted)'};">${de.bribed?'Yes':'No'}</div></div>
+                </div>
+                <div class="drug-empire-dea-row">
+                  <div class="drug-empire-dea-header">
+                    <span><i class="fa-solid fa-shield-halved" style="color:${deaColor};margin-right:5px;"></i>DEA Investigation Progress</span>
+                    <span style="color:${deaColor};font-weight:700;">${deaPct}%</span>
+                  </div>
+                  <div class="progress-bg" style="height:8px;margin:0;">
+                    <div class="progress-fill" style="width:${deaPct}%;background:${deaColor};border-radius:999px;"></div>
+                  </div>
+                </div>
+                <div class="drug-empire-actions">
+                  <button class="btn btn-outline" onclick="game.bribeLocalCops()" ${de.bribed?'disabled':''}><i class="fa-solid fa-hand-holding-dollar" style="margin-right:6px;"></i>Bribe Cops ($${shortNumber(bribeCost)})</button>
+                  <button class="btn btn-outline" onclick="game.expandTerritory()"><i class="fa-solid fa-map-location-dot" style="margin-right:6px;"></i>Expand Territory ($${shortNumber(terrCost)})</button>
+                  ${nextTier ? `<button class="btn btn-primary" onclick="game.startDrugOperation('${nextTier.id}')"><i class="fa-solid fa-arrow-trend-up" style="margin-right:6px;"></i>Upgrade to ${nextTier.name}</button>` : ''}
+                  <button class="btn btn-danger" onclick="app.modal('Shut Down Empire?','Destroy all evidence and dissolve operations. All passive income stops permanently.',[{text:'Confirm Shutdown',cb:()=>{app.closeModal();game.shutDownDrugOp();}},{text:'Cancel',cb:()=>app.closeModal()}])"><i class="fa-solid fa-power-off" style="margin-right:6px;"></i>Shut Down</button>
+                </div>
+              </div>
+            </div>`;
+        }
+      }
+
+      // ── CRIME SKILLS ──────────────────────────────────────────────────────
+      const skillsList = document.getElementById("crime-skills-list");
+      if (skillsList) {
+        const SKILL_IMGS = {
+          stealth:       'https://images.unsplash.com/photo-1550399105-c4db5fb85c18?w=700&h=300&fit=crop&auto=format',
+          intimidation:  'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=700&h=300&fit=crop&auto=format',
+          hacking:       'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=700&h=300&fit=crop&auto=format',
+          street_smarts: 'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=700&h=300&fit=crop&auto=format',
+          chemistry:     'https://images.unsplash.com/photo-1554475901-4538ddfbccc2?w=700&h=300&fit=crop&auto=format',
+          planning:      'https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?w=700&h=300&fit=crop&auto=format',
+        };
+        skillsList.innerHTML = CONFIG.CRIME_SKILLS.map(s => {
+          const xp      = cr.skills[s.id] || 0;
+          const xpPct   = Math.min(100, Math.round(xp / 3000 * 100));
+          const bonus   = Math.round(Math.min(0.30, xp / 3000) * 100);
+          const lvlLabel= this._crimeSkillLevel(xp);
+          const canTrain= this.state.cash >= s.trainCost && this.state.stats.energy >= s.energyCost;
+          return `<div class="card crime-skill-card">
+            <img class="card-img" src="${SKILL_IMGS[s.id]}" alt="${s.name}" loading="lazy">
+            <div style="margin-bottom:10px;">
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px;">
+                <h3 style="margin:0;display:flex;align-items:center;gap:8px;"><i class="fa-solid ${s.icon}" style="color:#a78bfa;"></i>${s.name}</h3>
+                <div style="display:flex;gap:6px;align-items:center;flex-shrink:0;">
+                  <span class="crime-skill-level-badge">${lvlLabel}</span>
+                  <span class="crime-skill-bonus-badge"><i class="fa-solid fa-arrow-trend-up"></i>+${bonus}%</span>
+                </div>
+              </div>
+              <p style="font-size:0.8rem;color:var(--text-muted);margin:0 0 10px;">${s.desc}</p>
+            </div>
+            <div class="crime-skill-xp-row"><span>XP Progress</span><span>${xp.toLocaleString()} / 3,000</span></div>
+            <div class="crime-skill-bar"><div class="crime-skill-bar-fill" style="width:${xpPct}%;"></div></div>
+            <button class="btn ${canTrain?'btn-primary':'btn-outline'}" onclick="game.trainCrimeSkill('${s.id}')" ${canTrain?'':'disabled'}>
+              <i class="fa-solid fa-dumbbell" style="margin-right:6px;"></i>Train (+${s.xpGain} XP) — <span style="font-family:var(--font-mono);">$${shortNumber(s.trainCost)}</span> / <span style="opacity:0.7;">${s.energyCost}⚡</span>
+            </button>
+          </div>`;
+        }).join("");
+      }
+
+      // ── LAWYERS ──────────────────────────────────────────────────────────
+      const lawyerList = document.getElementById("lawyer-list");
+      if (lawyerList) {
+        const LAW_IMGS = [
+          'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=700&h=300&fit=crop&auto=format',
+          'https://images.unsplash.com/photo-1575505586569-646b2ca898fc?w=700&h=300&fit=crop&auto=format',
+          'https://images.unsplash.com/photo-1521587760476-6c12a4b040da?w=700&h=300&fit=crop&auto=format',
+          'https://images.unsplash.com/photo-1607703703520-bb638e84caf2?w=700&h=300&fit=crop&auto=format',
+          'https://images.unsplash.com/photo-1453728013993-6d66e9c9123a?w=700&h=300&fit=crop&auto=format',
+        ];
+        lawyerList.innerHTML = CONFIG.LAWYERS.map((l, i) => {
+          const isCurrent = cr.lawyer === l.id;
+          const canAfford = this.state.cash >= l.monthlyCost;
+          const locked    = l.reqDrugTier && this._drugTierIndex(de.tier) < this._drugTierIndex(l.reqDrugTier);
+          return `<div class="card${locked?' crime-op-locked':''}" style="${isCurrent?'border:1px solid rgba(74,222,128,0.35);box-shadow:0 0 0 1px rgba(74,222,128,0.08) inset;':''}">
+            <img class="card-img" src="${LAW_IMGS[i]}" alt="${l.name}" loading="lazy">
+            <div style="margin-bottom:4px;">
+              <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:3px;">
+                <h3 style="margin:0;">${l.name}</h3>
+                <span class="tag ${isCurrent?'safe':''}" style="flex-shrink:0;">${l.monthlyCost>0?`$${shortNumber(l.monthlyCost)}/mo`:'Free'}</span>
+              </div>
+              <span class="lawyer-card-tier">Tier ${l.tier} Attorney</span>
+            </div>
+            <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:10px;">${l.desc}</p>
+            <div class="lawyer-card-stats">
+              <div class="lawyer-stat-box">
+                <div class="lawyer-stat-label">Sentence Cut</div>
+                <div class="lawyer-stat-val" style="color:#fbbf24;">−${Math.round(l.jailReduction*100)}%</div>
+              </div>
+              <div class="lawyer-stat-box">
+                <div class="lawyer-stat-label">Dismiss Chance</div>
+                <div class="lawyer-stat-val" style="color:#4ade80;">${Math.round(l.dismissChance*100)}%</div>
+              </div>
+              ${l.caseFee>0?`<div class="lawyer-stat-box" style="grid-column:span 2;"><div class="lawyer-stat-label">Case Fee</div><div class="lawyer-stat-val">$${shortNumber(l.caseFee)}</div></div>`:''}
+            </div>
+            ${locked ? `<div class="crime-op-locked-badge"><i class="fa-solid fa-lock"></i>Requires Drug Empire: ${l.reqDrugTier}</div>` :
+              isCurrent ? `<div style="display:flex;gap:8px;"><button class="btn btn-outline" style="flex:1;" disabled><i class="fa-solid fa-check" style="margin-right:5px;color:#4ade80;"></i>Currently Retained</button><button class="btn btn-danger" onclick="game.fireLawyer()" style="width:auto;padding:0 16px;">Fire</button></div>` :
+              `<button class="btn ${canAfford||l.monthlyCost===0?'btn-primary':'btn-outline'}" onclick="game.hireLawyer('${l.id}')" ${canAfford||l.monthlyCost===0?'':'disabled'}><i class="fa-solid fa-handshake" style="margin-right:6px;"></i>${canAfford||l.monthlyCost===0?'Retain Attorney':'Insufficient Funds'}</button>`
+            }
+          </div>`;
+        }).join("");
+      }
+
+      // ── CRIME OPERATIONS ──────────────────────────────────────────────────
+      const TYPE_COLORS = {
+        "Petty":        { color:"#94a3b8", glow:"rgba(148,163,184,0.3)" },
+        "Street":       { color:"#f97316", glow:"rgba(249,115,22,0.3)" },
+        "Felony":       { color:"#ef4444", glow:"rgba(239,68,68,0.3)" },
+        "Cyber":        { color:"#3b82f6", glow:"rgba(59,130,246,0.3)" },
+        "Drug Trade":   { color:"#a855f7", glow:"rgba(168,85,247,0.3)" },
+        "Organized":    { color:"#dc2626", glow:"rgba(220,38,38,0.3)" },
+        "White Collar": { color:"#38bdf8", glow:"rgba(56,189,248,0.3)" },
+        "Elite":        { color:"#f59e0b", glow:"rgba(245,158,11,0.3)" },
+      };
+      const CRIME_IMGS = {
+        shoplift:    'https://images.unsplash.com/photo-1568702846914-96b305d2aaeb?w=700&h=300&fit=crop&auto=format',
+        pickpocket:  'https://images.unsplash.com/photo-1573408301185-9519f17b9c69?w=700&h=300&fit=crop&auto=format',
+        mug:         'https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=700&h=300&fit=crop&auto=format',
+        carjack:     'https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?w=700&h=300&fit=crop&auto=format',
+        burglary:    'https://images.unsplash.com/photo-1504701954957-2010ec3bcec1?w=700&h=300&fit=crop&auto=format',
+        robbery:     'https://images.unsplash.com/photo-1590556409324-aa1d726e5c3c?w=700&h=300&fit=crop&auto=format',
+        phishing:    'https://images.unsplash.com/photo-1563986768494-4dee2763ff3f?w=700&h=300&fit=crop&auto=format',
+        scam:        'https://images.unsplash.com/photo-1614064641938-3bbee52942c7?w=700&h=300&fit=crop&auto=format',
+        corp_hack:   'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=700&h=300&fit=crop&auto=format',
+        protection:  'https://images.unsplash.com/photo-1453873531674-2151bcd01707?w=700&h=300&fit=crop&auto=format',
+        arms_deal:   'https://images.unsplash.com/photo-1595590424283-b8f17842773f?w=700&h=300&fit=crop&auto=format',
+        street_deal: 'https://images.unsplash.com/photo-1587590741732-db3f6ccf99ea?w=700&h=300&fit=crop&auto=format',
+        cook_sell:   'https://images.unsplash.com/photo-1614924308600-fc72e1b0dce4?w=700&h=300&fit=crop&auto=format',
+        distribution:'https://images.unsplash.com/photo-1494438639946-1ebd1d20bf85?w=700&h=300&fit=crop&auto=format',
+        heist:       'https://images.unsplash.com/photo-1504707748692-419802426bc6?w=700&h=300&fit=crop&auto=format',
+        insider:     'https://images.unsplash.com/photo-1642543492481-44e81e3914a7?w=700&h=300&fit=crop&auto=format',
+        extortion:   'https://images.unsplash.com/photo-1575368127640-c9f3c09b8fca?w=700&h=300&fit=crop&auto=format',
+      };
+
+      const typeOrder = ["Petty","Street","Felony","Cyber","Drug Trade","Organized","White Collar","Elite"];
+      const byType    = {};
+      CONFIG.CRIMES.forEach(c => { (byType[c.type] = byType[c.type]||[]).push(c); });
+
+      const CRIME_TYPE_ICONS = {
+        "Petty":        "fa-hand",
+        "Street":       "fa-street-view",
+        "Felony":       "fa-handcuffs",
+        "Cyber":        "fa-laptop-code",
+        "Drug Trade":   "fa-tablets",
+        "Organized":    "fa-people-group",
+        "White Collar": "fa-briefcase",
+        "Elite":        "fa-crown",
+      };
+
+      let crimeHTML = "";
+      typeOrder.forEach(type => {
+        if (!byType[type]) return;
+        const tc = TYPE_COLORS[type] || { color:"#94a3b8", glow:"rgba(148,163,184,0.3)" };
+        const unlockedOps = byType[type].filter(c => cr.rep >= c.reqRep);
+        if (!unlockedOps.length) return;
+        crimeHTML += `<div class="crime-op-type-header" style="color:${tc.color};"><i class="fa-solid fa-circle-dot" style="font-size:0.5rem;"></i>${type}</div>`;
+        crimeHTML += unlockedOps.map(c => {
+          const skillXp     = cr.skills[c.skill] || 0;
+          const skillBonus  = Math.min(0.30, skillXp / 3000);
+          const successChance = Math.max(0.05, Math.min(0.97,
+            c.baseChance + skillBonus - cr.heat * 0.005
+            - this.state.life.legalRecord * 0.012
+            + this.state.stats.smarts * 0.002
+          ));
+          const successColor = successChance > 0.7 ? "#4ade80" : successChance > 0.4 ? "#fbbf24" : "#f87171";
+          const skillDef  = CONFIG.CRIME_SKILLS.find(sk => sk.id === c.skill);
+          const lawyerDef = cr.lawyer ? CONFIG.LAWYERS.find(l => l.id === cr.lawyer) : null;
+          const reducedJail = lawyerDef ? Math.max(1, Math.round(c.jail * (1 - lawyerDef.jailReduction))) : c.jail;
+          const heatPenalty = cr.heat > 25 ? `<div style="display:flex;align-items:center;gap:6px;padding:6px 10px;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.18);border-radius:8px;font-size:0.74rem;color:#fca5a5;margin-bottom:10px;"><i class="fa-solid fa-fire-flame-curved" style="color:#ef4444;"></i> Heat penalty: −${(cr.heat * 0.5).toFixed(0)}% success</div>` : '';
+
+          return `<div class="card crime-op-card" style="--op-color:${tc.color};">
+            <div class="crime-op-top-bar" style="background:linear-gradient(90deg,${tc.color},${tc.color}44,transparent);"></div>
+            <div class="crime-op-head">
+              <div class="crime-op-icon" style="color:${tc.color};background:${tc.color}15;border:1px solid ${tc.color}33;">
+                <i class="fa-solid ${CRIME_TYPE_ICONS[c.type]||'fa-skull'}"></i>
+              </div>
+              <div style="flex:1;min-width:0;">
+                <div style="font-weight:800;font-size:0.96rem;margin-bottom:3px;">${c.name}</div>
+                <span style="font-family:var(--font-mono);font-size:0.6rem;letter-spacing:1.5px;text-transform:uppercase;color:${tc.color};opacity:0.9;">${c.type}</span>
+              </div>
+              <div class="crime-op-ring" style="border-color:${successColor}55;">
+                <span style="font-family:var(--font-mono);font-size:1rem;font-weight:900;color:${successColor};line-height:1;">${(successChance*100).toFixed(0)}</span>
+                <span style="font-size:0.5rem;letter-spacing:1px;color:var(--text-dim);text-transform:uppercase;">%</span>
+              </div>
+            </div>
+            <p style="font-size:0.79rem;color:var(--text-muted);margin:0 0 12px;line-height:1.55;">${c.desc}</p>
+            <div class="crime-op-meta">
+              <div class="crime-op-meta-box">
+                <div class="crime-op-meta-label">Payout</div>
+                <div class="crime-op-meta-val" style="color:#4ade80;">$${shortNumber(c.reward[0])}<span style="opacity:0.4;font-size:0.8em;">–</span>${shortNumber(c.reward[1])}</div>
+              </div>
+              <div class="crime-op-meta-box">
+                <div class="crime-op-meta-label">Sentence</div>
+                <div class="crime-op-meta-val" style="color:#f87171;">${reducedJail}${lawyerDef&&reducedJail<c.jail?`<span style="text-decoration:line-through;opacity:0.35;font-size:0.75em;margin-left:3px;">${c.jail}</span>`:""} mo</div>
+              </div>
+              <div class="crime-op-meta-box">
+                <div class="crime-op-meta-label">Skill</div>
+                <div class="crime-op-meta-val" style="color:#a78bfa;"><i class="fa-solid ${skillDef?skillDef.icon:'fa-bolt'}" style="font-size:0.75em;margin-right:3px;"></i>+${Math.round(skillBonus*100)}%</div>
+              </div>
+            </div>
+            <div class="crime-op-bar" style="margin-bottom:${cr.heat>25?'8px':'12px'};">
+              <div class="crime-op-bar-fill" style="width:${successChance*100}%;background:linear-gradient(90deg,${successColor}99,${successColor});"></div>
+            </div>
+            ${heatPenalty}
+            <button class="btn crime-execute-btn" style="background:linear-gradient(135deg,${tc.color}dd,${tc.color}88);border:1px solid ${tc.color}55;color:#fff;font-weight:800;" onclick="game.commitCrime('${c.id}')"><i class="fa-solid fa-masks-theater"></i> Run the Job</button>
+          </div>`;
+        }).join("");
+      });
+      // Locked operations — compact section
+      const allLockedOps = CONFIG.CRIMES.filter(function(c) { return cr.rep < c.reqRep; });
+      if (allLockedOps.length > 0) {
+        var lockedHtml = '<div class="crime-locked-section" style="grid-column:1/-1;">';
+        lockedHtml += '<div class="crime-locked-header">';
+        lockedHtml += '<span class="crime-locked-title"><i class="fa-solid fa-lock"></i> Locked Operations <span class="crime-locked-count">' + allLockedOps.length + '</span></span>';
+        lockedHtml += '<span class="crime-locked-hint">Commit crimes to earn Street Rep and unlock more operations</span>';
+        lockedHtml += '</div><div class="crime-locked-grid">';
+        allLockedOps.forEach(function(lc) {
+          const ltc = TYPE_COLORS[lc.type] || { color:'#94a3b8' };
+          lockedHtml += '<div class="crime-locked-item">';
+          lockedHtml += '<span class="crime-locked-item-type" style="color:' + ltc.color + ';border-color:' + ltc.color + '33;">' + lc.type + '</span>';
+          lockedHtml += '<span class="crime-locked-item-name">' + lc.name + '</span>';
+          lockedHtml += '<span class="crime-locked-item-pay">$' + shortNumber(lc.reward[1]) + '</span>';
+          lockedHtml += '<span class="crime-locked-item-req"><i class="fa-solid fa-lock"></i> ' + lc.reqRep + ' Rep</span>';
+          lockedHtml += '</div>';
+        });
+        lockedHtml += '</div></div>';
+        crimeHTML += lockedHtml;
+      }
+      document.getElementById("crime-list").innerHTML = crimeHTML;
+    }
 
     // --- STARTUPS ---
     // Business dashboard
@@ -6792,6 +7405,13 @@ const game = {
       })
       .join("");
 
+    const HUSTLE_IMGS = {
+      freelance_code:   'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=700&h=300&fit=crop&auto=format',
+      private_tutor:    'https://images.unsplash.com/photo-1523580494863-6f3031224c94?w=700&h=300&fit=crop&auto=format',
+      flip_items:       'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=700&h=300&fit=crop&auto=format',
+      event_photos:     'https://images.unsplash.com/photo-1452587925148-ce544e77e70d?w=700&h=300&fit=crop&auto=format',
+      luxury_delivery:  'https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?w=700&h=300&fit=crop&auto=format',
+    };
     const hustleList = document.getElementById("hustle-list");
     if (hustleList) {
       hustleList.innerHTML = CONFIG.SIDE_HUSTLES.map((h) => {
@@ -6800,7 +7420,9 @@ const game = {
           this.state.stats.energy >= h.energy &&
           !this.state.life.dead &&
           !this.state.life.retired;
+        const hImg = HUSTLE_IMGS[h.id] || HUSTLE_IMGS.freelance_code;
         return `<div class="card">
+          <img class="card-img" src="${hImg}" alt="${h.name}" loading="lazy">
           <div class="card-header">
             <h3>${h.name}</h3>
             <span class="tag">$${h.payout[0]} - $${h.payout[1]}</span>
@@ -6817,6 +7439,12 @@ const game = {
       }).join("");
     }
 
+    const CONTRACT_IMGS = {
+      cto_advisor:     'https://images.unsplash.com/photo-1535378917042-10a22c95931a?w=700&h=300&fit=crop&auto=format',
+      funnel_consult:  'https://images.unsplash.com/photo-1552664730-d307ca884978?w=700&h=300&fit=crop&auto=format',
+      ai_automation:   'https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=700&h=300&fit=crop&auto=format',
+      exec_coaching:   'https://images.unsplash.com/photo-1521791136064-7986c2920216?w=700&h=300&fit=crop&auto=format',
+    };
     const contractList = document.getElementById("contract-list");
     if (contractList) {
       contractList.innerHTML = CONFIG.HIGH_TICKET_CONTRACTS.map((c) => {
@@ -6825,7 +7453,9 @@ const game = {
           this.state.stats.energy >= c.energy &&
           !this.state.life.dead &&
           !this.state.life.retired;
+        const cImg = CONTRACT_IMGS[c.id] || CONTRACT_IMGS.cto_advisor;
         return `<div class="card">
+          <img class="card-img" src="${cImg}" alt="${c.name}" loading="lazy">
           <div class="card-header">
             <h3>${c.name}</h3>
             <span class="tag safe">$${c.payout[0]} - $${c.payout[1]}</span>
@@ -6842,6 +7472,11 @@ const game = {
       }).join("");
     }
 
+    const CHANNEL_IMGS = {
+      youtube_finance: 'youtube.png',
+      shortform:       'https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=700&h=300&fit=crop&auto=format',
+      newsletter:      'https://images.unsplash.com/photo-1586339949916-3e9457bef6d3?w=700&h=300&fit=crop&auto=format',
+    };
     const creatorList = document.getElementById("creator-list");
     if (creatorList) {
       const launchCards = CONFIG.CHANNEL_TYPES.map((t) => {
@@ -6850,7 +7485,9 @@ const game = {
           this.state.cash >= t.cost &&
           !this.state.life.dead &&
           !this.state.life.retired;
+        const cImg = CHANNEL_IMGS[t.id] || CHANNEL_IMGS.youtube_finance;
         return `<div class="card">
+          <img class="card-img" src="${cImg}" alt="${t.name}" loading="lazy">
           <div class="card-header">
             <h3>${t.name}</h3>
             <span class="tag">$${shortNumber(t.cost)}</span>
@@ -6925,9 +7562,15 @@ const game = {
 
     const franchiseList = document.getElementById("franchise-list");
     if (franchiseList) {
+      const FRANCH_IMGS = {
+        coffee_chain:  'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=700&h=300&fit=crop&auto=format',
+        gym_studio:    'https://images.unsplash.com/photo-1571902943202-507ec2618e8f?w=700&h=300&fit=crop&auto=format',
+        storage_units: 'https://images.unsplash.com/photo-1600880292089-90a7e086ee0c?w=700&h=300&fit=crop&auto=format',
+      };
       franchiseList.innerHTML = CONFIG.FRANCHISES.map((f) => {
         const owned = this.state.wealth.franchises?.[f.id] || 0;
         return `<div class="card">
+          <img class="card-img" src="${FRANCH_IMGS[f.id] || FRANCH_IMGS.coffee_chain}" alt="${f.name}" loading="lazy">
           <div class="card-header">
             <h3>${f.name}</h3>
             <span class="tag">Owned: ${owned}</span>
@@ -6946,9 +7589,15 @@ const game = {
 
     const propertyList = document.getElementById("property-list");
     if (propertyList) {
+      const PROP_IMGS = {
+        duplex:    'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=700&h=300&fit=crop&auto=format',
+        stripmall: 'https://images.unsplash.com/photo-1486325212027-8081e485255e?w=700&h=300&fit=crop&auto=format',
+        warehouse: 'https://images.unsplash.com/photo-1587293852726-70cdb56c2866?w=700&h=300&fit=crop&auto=format',
+      };
       propertyList.innerHTML = CONFIG.PROPERTIES.map((p) => {
         const owned = this.state.wealth.properties[p.id] || 0;
         return `<div class="card">
+          <img class="card-img" src="${PROP_IMGS[p.id] || PROP_IMGS.duplex}" alt="${p.name}" loading="lazy">
           <div class="card-header">
             <h3>${p.name}</h3>
             <span class="tag">Owned: ${owned}</span>
@@ -6984,6 +7633,7 @@ const game = {
           this.state.economy.inflation * 0.25,
       );
       bondList.innerHTML = `<div class="card" style="grid-column: span 2;">
+        <img class="card-img" src="https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=700&h=300&fit=crop&auto=format" alt="Bonds" loading="lazy">
         <div class="card-header">
           <h3>Government & Corporate Bonds</h3>
           <span class="tag safe">Defensive Income</span>
@@ -7015,12 +7665,18 @@ const game = {
 
     const dividendList = document.getElementById("dividend-list");
     if (dividendList) {
+      const DIV_IMGS = {
+        div_stable: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=700&h=300&fit=crop&auto=format',
+        div_reit:   'https://images.unsplash.com/photo-1560520653-9e0e4c89eb11?w=700&h=300&fit=crop&auto=format',
+        div_energy: 'https://images.unsplash.com/photo-1466611653911-95081537e5b7?w=700&h=300&fit=crop&auto=format',
+      };
       dividendList.innerHTML = CONFIG.DIVIDEND_FUNDS.map((fund) => {
         const units = this.state.wealth.dividends?.[fund.id] || 0;
         const livePrice =
           this.state.wealth.dividendPrices?.[fund.id] ?? fund.unitPrice;
         const estMonthly = (livePrice * units * fund.yieldAnnual) / 12;
         return `<div class="card">
+          <img class="card-img" src="${DIV_IMGS[fund.id] || DIV_IMGS.div_stable}" alt="${fund.name}" loading="lazy">
           <div class="card-header">
             <h3>${fund.name}</h3>
             <span class="tag safe">Units: ${units}</span>
@@ -7065,74 +7721,76 @@ const game = {
               ? "var(--accent-amber)"
               : "var(--accent-red)";
 
+      const scoreTier = bank.creditScore >= 760 ? "Excellent" : bank.creditScore >= 680 ? "Good" : bank.creditScore >= 620 ? "Fair" : "Poor";
       bankOverview.innerHTML = `
-        <div class="card-header">
-          <h3><i class="fa-solid fa-shield-halved"></i> Financial Health</h3>
-          <span class="tag" style="color:${scoreColor}; border-color:${scoreColor};"><i class="fa-solid fa-star"></i> ${Math.round(bank.creditScore)}</span>
-        </div>
-        <div class="data-grid-4">
-          <div class="data-box">
-            <div class="data-label">Checking</div>
-            <div class="data-value">$${shortNumber(Math.floor(bank.checking))}</div>
+        <div class="bank-hero">
+          <div class="bank-score-wrap">
+            <div class="bank-score-circle" style="--score-color:${scoreColor};">
+              <span class="bank-score-num" style="color:${scoreColor};">${Math.round(bank.creditScore)}</span>
+              <span class="bank-score-tier">${scoreTier}</span>
+            </div>
+            <div class="bank-score-label">Credit Score</div>
           </div>
-          <div class="data-box">
-            <div class="data-label">Savings</div>
-            <div class="data-value">$${shortNumber(Math.floor(bank.savings))}</div>
-          </div>
-          <div class="data-box">
-            <div class="data-label">Monthly Debt</div>
-            <div class="data-value" style="color:${debtService > 0 ? "var(--red)" : "inherit"}">$${shortNumber(Math.floor(debtService))}</div>
-          </div>
-          <div class="data-box">
-            <div class="data-label">Credit Used</div>
-            <div class="data-value">${(utilization * 100).toFixed(0)}%</div>
+          <div class="bank-kpi-grid">
+            <div class="bank-kpi"><div class="bank-kpi-icon" style="color:#22d3ee;"><i class="fa-solid fa-arrows-rotate"></i></div><div class="bank-kpi-label">Checking</div><div class="bank-kpi-val">$${shortNumber(Math.floor(bank.checking))}</div></div>
+            <div class="bank-kpi"><div class="bank-kpi-icon" style="color:#34d399;"><i class="fa-solid fa-piggy-bank"></i></div><div class="bank-kpi-label">Savings</div><div class="bank-kpi-val">$${shortNumber(Math.floor(bank.savings))}</div></div>
+            <div class="bank-kpi"><div class="bank-kpi-icon" style="color:${debtService>0?'#f87171':'#34d399'};"><i class="fa-solid fa-file-invoice-dollar"></i></div><div class="bank-kpi-label">Monthly Debt</div><div class="bank-kpi-val" style="color:${debtService>0?'#f87171':'#34d399'};">$${shortNumber(Math.floor(debtService))}</div></div>
+            <div class="bank-kpi"><div class="bank-kpi-icon" style="color:${utilization>0.7?'#f87171':'#fbbf24'};"><i class="fa-solid fa-credit-card"></i></div><div class="bank-kpi-label">CC Used</div><div class="bank-kpi-val" style="color:${utilization>0.7?'#f87171':utilization>0.4?'#fbbf24':'#34d399'};"> ${(utilization*100).toFixed(0)}%</div></div>
           </div>
         </div>`;
 
       bankAccounts.innerHTML = `
-        <div class="card">
-          <div class="card-header">
-            <h3><i class="fa-solid fa-arrows-rotate"></i> Transfer Money</h3>
+        <div class="bank-panel-card">
+          <div class="bank-panel-header">
+            <span class="bank-panel-title"><i class="fa-solid fa-arrows-rotate" style="color:#22d3ee;"></i> Transfer Funds</span>
           </div>
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:10px;">
-            <button class="btn btn-outline" onclick="game.transferBankFunds('cash','checking',500)"><i class="fa-solid fa-arrow-right"></i> Deposit $500</button>
-            <button class="btn btn-outline" onclick="game.transferBankFunds('checking','cash',500)"><i class="fa-solid fa-arrow-left"></i> Withdraw $500</button>
-            <button class="btn btn-primary" onclick="game.transferBankFunds('cash','savings',2000)"><i class="fa-solid fa-piggy-bank"></i> Save $2,000</button>
-            <button class="btn btn-outline" onclick="game.transferBankFunds('savings','checking',1000)"><i class="fa-solid fa-arrow-down"></i> From Savings $1k</button>
+          <div class="bank-acct-strip">
+            <div class="bank-acct-col"><div class="bank-acct-name">CHECKING</div><div class="bank-acct-bal">$${shortNumber(Math.floor(bank.checking))}</div></div>
+            <i class="fa-solid fa-arrows-left-right" style="color:var(--text-dim);font-size:0.85rem;"></i>
+            <div class="bank-acct-col" style="text-align:right;"><div class="bank-acct-name">SAVINGS</div><div class="bank-acct-bal" style="color:#34d399;">$${shortNumber(Math.floor(bank.savings))}</div></div>
+          </div>
+          <div class="bank-btn-grid">
+            <button class="btn btn-outline bank-action-btn" onclick="game.transferBankFunds('cash','checking',500)"><i class="fa-solid fa-arrow-down"></i> Deposit $500</button>
+            <button class="btn btn-outline bank-action-btn" onclick="game.transferBankFunds('checking','cash',500)"><i class="fa-solid fa-arrow-up"></i> Withdraw $500</button>
+            <button class="btn btn-primary bank-action-btn" onclick="game.transferBankFunds('cash','savings',2000)"><i class="fa-solid fa-piggy-bank"></i> Save $2,000</button>
+            <button class="btn btn-outline bank-action-btn" onclick="game.transferBankFunds('savings','checking',1000)"><i class="fa-solid fa-circle-down"></i> Take $1k</button>
           </div>
         </div>
-        <div class="card">
-          <div class="card-header">
-            <h3><i class="fa-solid fa-lock"></i> CDs</h3>
+        <div class="bank-panel-card">
+          <div class="bank-panel-header">
+            <span class="bank-panel-title"><i class="fa-solid fa-lock" style="color:#fbbf24;"></i> Certificates of Deposit</span>
             <span class="tag safe">Guaranteed</span>
           </div>
-          <p style="font-size:.78rem;color:var(--text-muted);margin:6px 0">Lock money away for higher interest rates.</p>
-          <div style="display:grid; gap:6px;">
-            ${CONFIG.BANK_PRODUCTS.cdOffers
-              .map(
-                (offer) =>
-                  `<button class="btn btn-outline" onclick="game.openBankCd('${offer.id}')">${offer.name} \u2022 ${(offer.apy * 100).toFixed(1)}% APY \u2022 Min $${shortNumber(offer.minDeposit)}</button>`,
-              )
-              .join("")}
+          <p style="font-size:0.78rem;color:var(--text-muted);margin:0 0 12px;">Lock cash away for higher guaranteed returns.</p>
+          <div style="display:grid;gap:6px;">
+            ${CONFIG.BANK_PRODUCTS.cdOffers.map(offer => `<button class="btn btn-outline bank-cd-btn" onclick="game.openBankCd('${offer.id}')"><span>${offer.name}</span><span style="color:#fbbf24;font-weight:700;">${(offer.apy*100).toFixed(1)}% APY</span><span style="color:var(--text-dim);">Min $${shortNumber(offer.minDeposit)}</span></button>`).join("")}
           </div>
         </div>`;
 
       bankCredit.innerHTML = `
-        <div class="card">
-          <div class="card-header">
-            <h3><i class="fa-solid fa-credit-card"></i> Credit Card</h3>
+        <div class="bank-panel-card bank-cc-card">
+          <div class="bank-panel-header">
+            <span class="bank-panel-title"><i class="fa-solid fa-credit-card" style="color:#a855f7;"></i> Credit Card</span>
             <span class="tag ${utilization > 0.8 ? "risk" : utilization > 0.3 ? "warning" : "safe"}">${(utilization * 100).toFixed(0)}% Used</span>
           </div>
-          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:10px;margin:12px 0">
-            <div class="mini-stat-box"><span>Balance</span><strong style="color:${cc.balance > 0 ? "var(--red)" : "inherit"}">$${shortNumber(Math.floor(cc.balance))}</strong></div>
-            <div class="mini-stat-box"><span>Limit</span><strong>$${shortNumber(Math.floor(cc.limit))}</strong></div>
-            <div class="mini-stat-box"><span>APR</span><strong>${(cc.apr * 100).toFixed(1)}%</strong></div>
+          <div class="bank-cc-art">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+              <span style="font-family:var(--font-mono);font-size:0.62rem;letter-spacing:2px;color:rgba(255,255,255,0.4);">GREEDIGO PREMIUM</span>
+              <i class="fa-brands fa-cc-visa" style="font-size:1.6rem;color:rgba(255,255,255,0.3);"></i>
+            </div>
+            <div style="font-family:var(--font-mono);font-size:0.9rem;letter-spacing:3px;color:rgba(255,255,255,0.6);margin-bottom:14px;">•••• •••• •••• ${String(Math.round(bank.creditScore*0.0413)).padStart(4,String.fromCharCode(48))}</div>
+            <div class="bank-cc-stats-row">
+              <div class="bank-cc-stat"><div class="bank-cc-stat-label">Balance</div><div class="bank-cc-stat-val" style="color:${cc.balance>0?'#f87171':'#34d399'};">$${shortNumber(Math.floor(cc.balance))}</div></div>
+              <div class="bank-cc-stat"><div class="bank-cc-stat-label">Limit</div><div class="bank-cc-stat-val">$${shortNumber(Math.floor(cc.limit))}</div></div>
+              <div class="bank-cc-stat"><div class="bank-cc-stat-label">APR</div><div class="bank-cc-stat-val" style="color:#fbbf24;">${(cc.apr*100).toFixed(1)}%</div></div>
+            </div>
+            <div class="bank-cc-util-bar"><div style="width:${Math.min(100,utilization*100).toFixed(0)}%;height:100%;background:${utilization>0.8?'#ef4444':utilization>0.5?'#f97316':'#22d3ee'};border-radius:999px;"></div></div>
           </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-            <button class="btn btn-outline" onclick="game.takeCreditCashAdvance(500)"><i class="fa-solid fa-plus"></i> Borrow $500</button>
-            <button class="btn btn-primary" onclick="game.payCreditCard(500)"><i class="fa-solid fa-minus"></i> Pay $500</button>
-            <button class="btn btn-outline" onclick="game.takeCreditCashAdvance(2000)"><i class="fa-solid fa-plus"></i> Borrow $2k</button>
-            <button class="btn btn-primary" onclick="game.payCreditCard(2000)"><i class="fa-solid fa-minus"></i> Pay $2k</button>
+          <div class="bank-btn-grid">
+            <button class="btn btn-outline bank-action-btn" onclick="game.takeCreditCashAdvance(500)"><i class="fa-solid fa-plus"></i> Borrow $500</button>
+            <button class="btn btn-primary bank-action-btn" onclick="game.payCreditCard(500)"><i class="fa-solid fa-minus"></i> Pay $500</button>
+            <button class="btn btn-outline bank-action-btn" onclick="game.takeCreditCashAdvance(2000)"><i class="fa-solid fa-plus"></i> Borrow $2k</button>
+            <button class="btn btn-primary bank-action-btn" onclick="game.payCreditCard(2000)"><i class="fa-solid fa-minus"></i> Pay $2k</button>
           </div>
         </div>`;
 
@@ -7141,19 +7799,19 @@ const game = {
           const eligibleScore = bank.creditScore >= offer.minScore;
           const dtiGate = dti <= 0.68;
           const canApply = eligibleScore && dtiGate;
-          return `<div class="card" style="opacity:${canApply ? 1 : 0.72};">
-            <div class="card-header">
-              <h3>${offer.name}</h3>
-              <span class="tag">$${shortNumber(offer.principal)}</span>
+          const blockReason = !eligibleScore ? `Score too low (need ${offer.minScore}+)` : `DTI too high (${(dti*100).toFixed(0)}%)`;
+          return `<div class="bank-panel-card bank-loan-card${canApply ? "" : " bank-loan-dim"}">
+            <div class="bank-loan-header">
+              <div><div class="bank-loan-name">${offer.name}</div><div class="bank-loan-principal">$${shortNumber(offer.principal)}</div></div>
+              <div class="bank-loan-rate-badge">${(offer.baseApr*100).toFixed(1)}<small>% APR</small></div>
             </div>
-            <div style="font-size:0.8rem; color:var(--text-muted); margin-bottom:12px; display:grid; gap:2px;">
-              <span>Term: ${offer.termMonths} months</span>
-              <span>Base APR: ${(offer.baseApr * 100).toFixed(2)}%</span>
-              <span>Min Score: ${offer.minScore}</span>
+            <div class="bank-loan-meta">
+              <span><i class="fa-solid fa-calendar-days"></i> ${offer.termMonths} months</span>
+              <span><i class="fa-solid fa-star-half-stroke"></i> Min ${offer.minScore} score</span>
             </div>
-            <button class="btn btn-primary" onclick="game.applyBankLoan('${offer.id}')" ${canApply ? "" : "disabled"}>
-              ${canApply ? "Apply Now" : "Credit / DTI Too Weak"}
-            </button>
+            ${canApply
+              ? `<button class="btn btn-primary bank-apply-btn" onclick="game.applyBankLoan('${offer.id}')"><i class="fa-solid fa-check-circle"></i> Apply Now</button>`
+              : `<div class="bank-loan-blocked"><i class="fa-solid fa-circle-xmark"></i> ${blockReason}</div>`}
           </div>`;
         })
         .join("");
@@ -7161,41 +7819,38 @@ const game = {
       const activeLoanCards = bank.loans.length
         ? bank.loans
             .map(
-              (loan) => `<div class="card">
-              <div class="card-header">
-                <h3>${loan.name}</h3>
-                <span class="tag risk">$${shortNumber(Math.floor(loan.principal))}</span>
+              (loan) => `<div class="bank-panel-card bank-active-loan">
+              <div class="bank-loan-header">
+                <div><div class="bank-loan-name">${loan.name}</div><div style="font-size:0.72rem;color:var(--text-dim);margin-top:2px;">${loan.termLeft}mo left · ${(loan.apr*100).toFixed(2)}% APR</div></div>
+                <div class="bank-loan-rate-badge" style="background:rgba(248,113,113,0.08);border-color:rgba(248,113,113,0.22);color:#f87171;">$${shortNumber(Math.floor(loan.principal))}</div>
               </div>
-              <div style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px; display:grid; gap:2px;">
-                <span>APR ${(loan.apr * 100).toFixed(2)}% • ${loan.termLeft} months left</span>
-                <span>Payment $${shortNumber(Math.floor(loan.monthlyPayment))}/mo</span>
-                <span>Missed: ${loan.missedPayments || 0}</span>
+              <div style="margin:10px 0;height:5px;background:rgba(255,255,255,0.07);border-radius:999px;overflow:hidden;"><div style="width:${Math.max(5,100-Math.round(loan.termLeft/Math.max(1,loan.termLeft)*50))}%;height:100%;background:linear-gradient(90deg,#f87171,#f97316);border-radius:999px;"></div></div>
+              <div class="bank-loan-meta" style="margin-bottom:10px;">
+                <span>$${shortNumber(Math.floor(loan.monthlyPayment))}/mo</span>
+                ${(loan.missedPayments||0)>0?'<span style="color:#f87171;"><i class="fa-solid fa-triangle-exclamation"></i> '+(loan.missedPayments||0)+' missed</span>':'<span style="color:#34d399;"><i class="fa-solid fa-check"></i> On track</span>'}
               </div>
-              <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
-                <button class="btn btn-success" onclick="game.payLoanExtra('${loan.id}', 500)">Extra $500</button>
-                <button class="btn btn-success" onclick="game.payLoanExtra('${loan.id}', 2000)">Extra $2,000</button>
+              <div class="bank-btn-grid">
+                <button class="btn btn-success" onclick="game.payLoanExtra('${loan.id}',500)"><i class="fa-solid fa-plus"></i> $500</button>
+                <button class="btn btn-success" onclick="game.payLoanExtra('${loan.id}',2000)"><i class="fa-solid fa-plus"></i> $2k</button>
               </div>
             </div>`,
             )
             .join("")
-        : `<div class="card" style="grid-column: span 2;"><p style="margin:0; color:var(--text-muted);">No active installment loans.</p></div>`;
+        : `<div class="bank-panel-card" style="opacity:0.55;"><p style="margin:0;color:var(--text-muted);text-align:center;padding:12px 0;"><i class="fa-solid fa-check-circle" style="color:#34d399;margin-right:6px;"></i>No active loans.</p></div>`;
 
       const cdCards = bank.cds.length
         ? bank.cds
             .map(
-              (cd) => `<div class="card">
-              <div class="card-header">
-                <h3>${cd.name}</h3>
-                <span class="tag safe">${cd.termLeft}m left</span>
+              (cd) => `<div class="bank-panel-card">
+              <div class="bank-loan-header">
+                <div><div class="bank-loan-name">${cd.name}</div><div style="font-size:0.72rem;color:var(--text-dim);margin-top:2px;">${cd.termLeft} months remaining</div></div>
+                <div class="bank-loan-rate-badge" style="background:rgba(251,191,36,0.08);border-color:rgba(251,191,36,0.22);color:#fbbf24;">${(cd.apy*100).toFixed(2)}% APY</div>
               </div>
-              <div style="font-size:0.8rem; color:var(--text-muted); display:grid; gap:2px;">
-                <span>Balance: $${shortNumber(Math.floor(cd.balance))}</span>
-                <span>APY: ${(cd.apy * 100).toFixed(2)}%</span>
-              </div>
+              <div class="bank-loan-meta" style="margin-top:8px;"><span>Balance: $${shortNumber(Math.floor(cd.balance))}</span></div>
             </div>`,
             )
             .join("")
-        : `<div class="card"><p style="margin:0; color:var(--text-muted);">No active CDs.</p></div>`;
+        : `<div class="bank-panel-card" style="opacity:0.55;"><p style="margin:0;color:var(--text-muted);text-align:center;padding:12px 0;"><i class="fa-solid fa-piggy-bank" style="color:#fbbf24;margin-right:6px;"></i>No active CDs.</p></div>`;
 
       bankActiveLoans.innerHTML = activeLoanCards + cdCards;
     }
@@ -7234,9 +7889,18 @@ const game = {
       },
     ).join("");
 
+    const ITEM_IMGS = {
+      bike:    'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=700&h=300&fit=crop&auto=format',
+      civic:   'https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=700&h=300&fit=crop&auto=format',
+      tesla:   'https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=700&h=300&fit=crop&auto=format',
+      porsche: 'https://images.unsplash.com/photo-1580274455191-1c62238fa333?w=700&h=300&fit=crop&auto=format',
+      apt:     'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=700&h=300&fit=crop&auto=format',
+      mansion: 'https://images.unsplash.com/photo-1613977257363-707ba9348227?w=700&h=300&fit=crop&auto=format',
+    };
     document.getElementById("shop-list").innerHTML = CONFIG.ITEMS.map(
       (it) => `
         <div class="card">
+            <img class="card-img" src="${ITEM_IMGS[it.id] || ITEM_IMGS.apt}" alt="${it.name}" loading="lazy">
             <div class="card-header">
                 <h3>${it.name}</h3>
                 <span class="tag">$${shortNumber(it.cost)}</span>
@@ -7300,6 +7964,19 @@ const game = {
           </div>
         </div>`;
     }
+    const WELLNESS_IMGS = {
+      gym:     'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=700&h=300&fit=crop&auto=format',
+      yoga:    'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=700&h=300&fit=crop&auto=format',
+      meditate:'https://images.unsplash.com/photo-1545205597-3d9d02c29597?w=700&h=300&fit=crop&auto=format',
+      jog:     'https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=700&h=300&fit=crop&auto=format',
+      read:    'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=700&h=300&fit=crop&auto=format',
+      spa:     'https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=700&h=300&fit=crop&auto=format',
+      haircut: 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=700&h=300&fit=crop&auto=format',
+      therapy: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=700&h=300&fit=crop&auto=format',
+      hike:    'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=700&h=300&fit=crop&auto=format',
+      martial: 'https://images.unsplash.com/photo-1555597673-b21d5c935865?w=700&h=300&fit=crop&auto=format',
+      swim:    'https://images.unsplash.com/photo-1530549387789-4c1017266635?w=700&h=300&fit=crop&auto=format',
+    };
     const wellnessActivities = document.getElementById("wellness-activities");
     if (wellnessActivities) {
       wellnessActivities.innerHTML = CONFIG.WELLNESS.map((act) => {
@@ -7330,7 +8007,9 @@ const game = {
           : act.cost > 0
             ? `$${act.cost}`
             : "Free";
+        const wImg = WELLNESS_IMGS[act.id] || WELLNESS_IMGS.gym;
         return `<div class="card" style="${disabled ? "opacity:0.65;" : ""}">
+          <img class="card-img" src="${wImg}" alt="${act.name}" loading="lazy">
           <div class="card-header">
             <h3><i class="fa-solid ${act.icon}" style="margin-right:6px;"></i>${act.name}</h3>
             <span class="tag">${act.cost > 0 ? "$" + act.cost : "Free"}</span>
@@ -7353,23 +8032,28 @@ const game = {
       let progressPct = (this.state.edu.progress / d.duration) * 100;
       eduList.innerHTML = `
            <div class="card edu-active-card">
-              <div class="card-header">
+              <div class="card-header" style="margin-bottom:18px;">
                  <div style="display:flex; flex-direction:column;">
-                    <span class="edu-label">Enrolled In</span>
+                    <span class="edu-label"><i class="fa-solid fa-graduation-cap" style="margin-right:5px;"></i>Currently Enrolled</span>
                     <h3 class="edu-title">${d.name}</h3>
                  </div>
-                 <span class="tag safe">Month ${this.state.edu.progress}/${d.duration}</span>
+                 <div style="text-align:right;">
+                    <span class="tag safe">Month ${this.state.edu.progress}/${d.duration}</span>
+                    <div style="margin-top:5px;font-family:var(--font-mono);font-size:0.75rem;color:var(--accent-green);">${progressPct.toFixed(0)}% complete</div>
+                 </div>
               </div>
-              <div class="progress-bg" style="margin:20px 0;"><div class="progress-fill" style="width:${progressPct}%; background:var(--green);"></div></div>
+              <div class="progress-bg" style="margin:0 0 20px; height:8px; border-radius:999px;">
+                <div class="progress-fill" style="width:${progressPct}%; background:linear-gradient(90deg,#10b981,#34d399); border-radius:999px;"></div>
+              </div>
               <div class="edu-meta">
-                  <span><i class="fa-solid fa-coins" style="margin-right:8px; color:var(--red);"></i>Loan: <span style="color:var(--red);">$${shortNumber(Math.floor(this.state.edu.loans || 0))}</span></span>
-                  <span><i class="fa-solid fa-brain" style="margin-right:8px; color:var(--blue);"></i>IQ Req: ${d.iqReq} (You: ${this.state.stats.smarts.toFixed(0)})</span>
+                  <span><i class="fa-solid fa-coins" style="margin-right:7px; color:var(--accent-red);"></i>Loan: <strong style="color:var(--accent-red);">$${shortNumber(Math.floor(this.state.edu.loans || 0))}</strong></span>
+                  <span><i class="fa-solid fa-brain" style="margin-right:7px; color:var(--blue);"></i>IQ Req: <strong>${d.iqReq}</strong> <span style="opacity:0.55;">(You: ${this.state.stats.smarts.toFixed(0)})</span></span>
               </div>
               <div class="edu-actions">
                  <button class="btn btn-primary" onclick="game.studyHard()">
-                    <i class="fa-solid fa-book-open"></i> Study Hard <span style="opacity:0.6; font-size:0.8em; margin-left:4px;">(-20 NRG)</span>
+                    <i class="fa-solid fa-book-open" style="margin-right:7px;"></i>Study Hard <span style="opacity:0.65; font-size:0.8em; margin-left:4px;">(-20 NRG)</span>
                  </button>
-                 <button class="btn btn-danger" onclick="game.dropOut()" style="width:auto;">Drop Out</button>
+                 <button class="btn btn-danger" onclick="game.dropOut()" style="width:auto;padding:0 18px;">Drop Out</button>
               </div>
            </div>
         `;
@@ -7377,18 +8061,27 @@ const game = {
       eduList.innerHTML = CONFIG.DEGREES.map((d) => {
         let owned = this.state.edu.degrees.includes(d.id);
         if (owned && d.id !== "basic")
-          return `<div class="card" style="opacity:0.6;"><div class="card-header"><h3>${d.name}</h3><span class="tag safe"><i class="fa-solid fa-check"></i> COMPLETED</span></div></div>`;
+          return `<div class="card" style="opacity:0.55;">
+            <div class="card-header">
+              <h3 style="margin:0;">${d.name}</h3>
+              <span class="tag safe"><i class="fa-solid fa-check" style="margin-right:5px;"></i>Completed</span>
+            </div>
+          </div>`;
 
-        return `<div class="card">
-                <div class="card-header">
-                    <h3>${d.name}</h3>
-                    <span class="tag">$${shortNumber(d.cost)}</span>
+        const canAfford = this.state.cash >= d.cost;
+        const hasIQ = this.state.stats.smarts >= d.iqReq;
+        return `<div class="card edu-degree-card">
+                <div class="card-header" style="margin-bottom:6px;">
+                    <h3 style="margin:0;">${d.name}</h3>
                 </div>
-                <div style="margin-bottom:16px;">
-                    <p style="font-size:0.85rem; display:flex; gap:8px; align-items:center;"><i class="fa-solid fa-clock" style="color:#666;"></i> ${d.duration} Months</p>
-                    <p style="font-size:0.85rem; display:flex; gap:8px; align-items:center; margin-top:4px;"><i class="fa-solid fa-brain" style="color:#666;"></i> ${d.iqReq} IQ Req</p>
+                <span class="edu-degree-cost">$${shortNumber(d.cost)}<span style="font-size:0.65rem;font-weight:600;opacity:0.5;margin-left:4px;">/ loan</span></span>
+                <div class="edu-degree-meta-row">
+                    <span class="edu-chip"><i class="fa-solid fa-clock"></i> ${d.duration} Months</span>
+                    <span class="edu-chip" style="${hasIQ ? '' : 'border-color:rgba(239,68,68,0.3);color:var(--accent-red);'}"><i class="fa-solid fa-brain"></i> ${d.iqReq} IQ</span>
                 </div>
-                <button class="btn btn-outline" onclick="game.enroll('${d.id}')">Enroll Now</button>
+                <button class="btn ${canAfford && hasIQ ? 'btn-primary' : 'btn-outline'}" onclick="game.enroll('${d.id}')" ${!hasIQ ? 'disabled' : ''} style="margin-top:auto;">
+                    ${!hasIQ ? '<i class="fa-solid fa-lock" style="margin-right:5px;"></i>IQ Too Low' : '<i class="fa-solid fa-graduation-cap" style="margin-right:6px;"></i>Enroll Now'}
+                </button>
             </div>`;
       }).join("");
     }
@@ -7606,249 +8299,231 @@ const game = {
       }
     }
 
+    // ── CASINO SECTION ────────────────────────────────────────────
+    const casinoHud  = document.getElementById("casino-hud");
     const casinoList = document.getElementById("casino-games-list");
-    if (casinoList) {
-      const casino = this.state.casino;
+    const sessionLog = document.getElementById("casino-session-log");
+
+    if (casinoHud || casinoList || sessionLog) {
+      const casino    = this.state.casino;
       const totalBets = casino.wins + casino.losses;
-      const winRate = totalBets
-        ? `${Math.round((casino.wins / totalBets) * 100)}%`
-        : "0%";
-      const rtp = casino.wagered
-        ? `${((casino.paidOut / casino.wagered) * 100).toFixed(1)}%`
-        : "0.0%";
-      const avgBet = casino.lifetimeSpins
-        ? Math.round(casino.wagered / casino.lifetimeSpins)
-        : 0;
+      const winRate   = totalBets ? Math.round((casino.wins / totalBets) * 100) : 0;
+      const netColor  = casino.net > 0 ? "#4ade80" : casino.net < 0 ? "#f87171" : "#94a3b8";
       const streakLabel =
-        casino.streak > 0
-          ? `Heater +${casino.streak}`
-          : casino.streak < 0
-            ? `Cold ${casino.streak}`
-            : "Neutral";
+        casino.streak > 0 ? `🔥 Hot +${casino.streak}` :
+        casino.streak < 0 ? `❄️ Cold ${casino.streak}` : "Neutral";
 
-      const netTag = document.getElementById("casino-lifetime-net");
-      if (netTag) {
-        netTag.innerText = `${casino.net >= 0 ? "+" : "-"}$${shortNumber(Math.abs(casino.net))}`;
-        netTag.classList.remove("safe", "risk");
-        netTag.classList.add(casino.net >= 0 ? "safe" : "risk");
+      // HUD cards
+      if (casinoHud) {
+        casinoHud.innerHTML = `
+          <div class="casino-hud-card">
+            <div class="casino-hud-label">Session P&amp;L</div>
+            <div class="casino-hud-value" style="color:${netColor};">${casino.net >= 0 ? '+' : ''}$${shortNumber(casino.net)}</div>
+            <div class="casino-hud-sub">${totalBets} hands played total</div>
+          </div>
+          <div class="casino-hud-card">
+            <div class="casino-hud-label">Win Rate</div>
+            <div class="casino-hud-value" style="color:${winRate >= 50 ? '#4ade80' : '#f87171'};">${winRate}%</div>
+            <div class="casino-hud-sub">${casino.wins}W / ${casino.losses}L</div>
+          </div>
+          <div class="casino-hud-card">
+            <div class="casino-hud-label">Hot Streak</div>
+            <div class="casino-hud-value" style="font-size:0.95rem;">${streakLabel}</div>
+            <div class="casino-hud-sub">Last: ${casino.lastGame || 'No hands yet'}</div>
+          </div>
+          <div class="casino-hud-card">
+            <div class="casino-hud-label">Best Payout</div>
+            <div class="casino-hud-value" style="color:#fbbf24;">$${shortNumber(casino.bestPayout || 0)}</div>
+            <div class="casino-hud-sub">Lifetime single win</div>
+          </div>`;
       }
 
-      const totalBetsEl = document.getElementById("casino-total-bets");
-      const winRateEl = document.getElementById("casino-win-rate");
-      const streakEl = document.getElementById("casino-streak");
-      const bestPayoutEl = document.getElementById("casino-best-payout");
-      const intelEl = document.getElementById("casino-intel-card");
-      const lastOutcomeEl = document.getElementById("casino-last-outcome");
-      const recentListEl = document.getElementById("casino-recent-list");
-
-      if (totalBetsEl) totalBetsEl.innerText = shortNumber(totalBets);
-      if (winRateEl) winRateEl.innerText = winRate;
-      if (streakEl) streakEl.innerText = streakLabel;
-      if (bestPayoutEl)
-        bestPayoutEl.innerText = `$${shortNumber(casino.bestPayout || 0)}`;
-
-      if (lastOutcomeEl)
-        lastOutcomeEl.innerText =
-          casino.lastOutcome && casino.lastGame
-            ? `${casino.lastOutcome} - ${casino.lastGame}`
-            : "No hands yet";
-
-      const bankrollPressure =
-        this.state.cash <= avgBet * 2
-          ? "High"
-          : this.state.cash <= avgBet * 6
-            ? "Medium"
-            : "Low";
-
-      if (intelEl) {
-        intelEl.innerHTML = `
-          <div class="card-header">
-            <h3>Table Intelligence</h3>
-            <span class="tag">RTP ${rtp}</span>
-          </div>
-          <div class="casino-intel-grid">
-            <div class="casino-intel-item">
-              <span>Avg Bet</span>
-              <strong>$${shortNumber(avgBet)}</strong>
+      // Game cards
+      if (casinoList) {
+        const GAME_IMGS = {
+          slots:     'https://images.unsplash.com/photo-1596838132731-3301c3fd4317?w=800&h=400&fit=crop&auto=format',
+          blackjack: 'blackjack.png',
+          horse:     'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=400&fit=crop&auto=format',
+        };
+        const GAME_META = {
+          slots:     { edge:'5%',   rtp:'95%',  volatility:'High',    grad:'linear-gradient(135deg,#d946ef,#9333ea)', desc:'3-reel spin. 8% jackpot at 15× payout. 35% double-up chance.' },
+          blackjack: { edge:'1–3%', rtp:'97%+', volatility:'Medium',  grad:'linear-gradient(135deg,#10b981,#14b8a6)', desc:'Beat the dealer. Best odds in the house with disciplined play.' },
+          horse:     { edge:'12%',  rtp:'88%',  volatility:'Extreme', grad:'linear-gradient(135deg,#fbbf24,#f97316)', desc:'Track betting on live odds. 15% chance for 6× payout.' },
+        };
+        casinoList.innerHTML = CONFIG.CASINO_GAMES.map(g => {
+          const meta = GAME_META[g.id] || { edge:'N/A', rtp:'N/A', volatility:'Unknown', grad:'linear-gradient(135deg,#64748b,#475569)', desc: g.desc };
+          const img  = GAME_IMGS[g.id] || '';
+          const bets = [g.minBet, Math.round(g.minBet * 5), g.maxBet];
+          return `<div class="card casino-game-card game-${g.id}">
+            <div class="casino-game-bg" style="background-image:url('${img}');">
+              <div class="casino-game-bg-overlay"></div>
+              <div class="casino-game-badge" style="background:${meta.grad};-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">${g.name}</div>
             </div>
-            <div class="casino-intel-item">
-              <span>Bankroll Pressure</span>
-              <strong>${bankrollPressure}</strong>
+            <div class="casino-game-body">
+              <p class="casino-game-desc">${meta.desc}</p>
+              <div class="casino-game-meta">
+                <div class="casino-meta-box"><span>House Edge</span><strong style="color:#f87171;">${meta.edge}</strong></div>
+                <div class="casino-meta-box"><span>RTP</span><strong style="color:#4ade80;">${meta.rtp}</strong></div>
+                <div class="casino-meta-box"><span>Volatility</span><strong style="color:#fbbf24;">${meta.volatility}</strong></div>
+                <div class="casino-meta-box"><span>Limits</span><strong>$${shortNumber(g.minBet)}–$${shortNumber(g.maxBet)}</strong></div>
+              </div>
+              <div class="casino-bet-row">
+                ${bets.map(b => `<button class="btn btn-outline casino-bet-btn" onclick="game.playCasino('${g.id}',${b})">$${shortNumber(b)}</button>`).join('')}
+                <button class="btn btn-primary casino-bet-main" onclick="game.playCasino('${g.id}')"><i class="fa-solid fa-dice"></i> Bet…</button>
+              </div>
             </div>
-            <div class="casino-intel-item">
-              <span>Last Hand</span>
-              <strong>${casino.lastBet ? `$${shortNumber(casino.lastBet)}` : "N/A"}</strong>
-            </div>
-            <div class="casino-intel-item">
-              <span>Last Payout</span>
-              <strong>${casino.lastWin ? `$${shortNumber(casino.lastWin)}` : "$0"}</strong>
-            </div>
-          </div>
-          <p class="casino-intel-tip">Tip: Keep average bet below 12% of liquid cash to reduce bust risk during cold streaks.</p>
-        `;
+          </div>`;
+        }).join('');
       }
 
-      if (recentListEl) {
-        if (!casino.history.length) {
-          recentListEl.innerHTML = `<div class="casino-recent-empty">Play a hand to populate table history.</div>`;
+      // Session log
+      if (sessionLog) {
+        if (!casino.history || !casino.history.length) {
+          sessionLog.innerHTML = `<div style="text-align:center;padding:24px;color:var(--text-dim);font-size:0.82rem;font-family:var(--font-mono);">No hands played yet — hit the tables to populate history.</div>`;
         } else {
-          recentListEl.innerHTML = casino.history
-            .map(
-              (
-                entry,
-              ) => `<div class="casino-recent-row ${entry.net >= 0 ? "up" : "down"}">
-              <span>${entry.game}</span>
-              <span>${entry.result}</span>
-              <span>Bet $${shortNumber(entry.bet)}</span>
-              <span>${entry.net >= 0 ? "+" : "-"}$${shortNumber(Math.abs(entry.net))}</span>
-            </div>`,
-            )
-            .join("");
+          sessionLog.innerHTML = `<div class="casino-log-grid">` +
+            casino.history.slice().reverse().map(entry => `
+              <div class="casino-log-row ${entry.net >= 0 ? 'log-win' : 'log-loss'}">
+                <div class="casino-log-icon">${entry.result === 'Jackpot' ? '🎰' : entry.net >= 0 ? '✅' : '❌'}</div>
+                <div class="casino-log-game">${entry.game || '—'}</div>
+                <div class="casino-log-result${entry.result === 'Jackpot' ? ' jackpot' : ''}">${entry.result || '—'}</div>
+                <div class="casino-log-bet">Bet: <strong>$${shortNumber(entry.bet)}</strong></div>
+                <div class="casino-log-net" style="color:${entry.net >= 0 ? '#4ade80' : '#f87171'};">${entry.net >= 0 ? '+' : ''}$${shortNumber(entry.net)}</div>
+              </div>`).join('') +
+          `</div>`;
         }
       }
-
-      const gameMeta = {
-        slots: {
-          icon: "fa-solid fa-cherry",
-          edge: "5%",
-          volatility: "High",
-          line: "Fast outcomes, streaky returns",
-          cta: "Spin Table",
-        },
-        blackjack: {
-          icon: "fa-solid fa-spade",
-          edge: "1-3%",
-          volatility: "Medium",
-          line: "Best odds with disciplined sizing",
-          cta: "Deal Hand",
-        },
-        horse: {
-          icon: "fa-solid fa-horse-head",
-          edge: "8-12%",
-          volatility: "Very High",
-          line: "Huge upside, heavy drawdowns",
-          cta: "Open Track",
-        },
-      };
-
-      casinoList.innerHTML = CONFIG.CASINO_GAMES.map((g) => {
-        const m = gameMeta[g.id] || {
-          icon: "fa-solid fa-dice",
-          edge: "N/A",
-          volatility: "Unknown",
-          line: g.desc,
-          cta: "Play",
-        };
-
-        return `<article class="card casino-game-card game-${g.id}">
-          <div class="casino-game-header">
-            <div class="casino-game-icon"><i class="${m.icon}"></i></div>
-            <div>
-              <h3 class="casino-game-title">${g.name}</h3>
-              <p class="casino-game-desc">${m.line}</p>
-            </div>
-          </div>
-          <div class="casino-chip-row">
-            <span class="tag">Limits $${shortNumber(g.minBet)}-$${shortNumber(g.maxBet)}</span>
-            <span class="tag">Edge ${m.edge}</span>
-            <span class="tag">Volatility ${m.volatility}</span>
-          </div>
-          <button class="btn btn-primary casino-action-btn" onclick="game.playCasino('${g.id}')">${m.cta}</button>
-        </article>`;
-      }).join("");
     }
 
-    const politicsDash = document.getElementById("politics-dashboard");
-    const politicsList = document.getElementById("politics-roles-list");
+    // ── POLITICS SECTION ─────────────────────────────────────────
+    const politicsHud    = document.getElementById("politics-hud");
+    const politicsAction = document.getElementById("politics-action-panel");
+    const politicsList   = document.getElementById("politics-roles-list");
 
-    if (politicsDash && politicsList) {
+    if (politicsHud || politicsAction || politicsList) {
       const p = this.state.politics;
-      p.approval = p.approval ?? 50;
-      p.corruption = p.corruption ?? 0;
-      if (p.role) {
-        const roleDef = CONFIG.POLITICS_ROLES.find((r) => r.id === p.role);
-        const approvalColor =
-          p.approval >= 60
-            ? "var(--green)"
-            : p.approval >= 35
-              ? "var(--amber)"
-              : "var(--red)";
-        const corruptionLevel =
-          p.corruption > 50
-            ? "High Risk"
-            : p.corruption > 20
-              ? "Moderate"
-              : "Low";
-        politicsDash.innerHTML = `
-            <div class="card-header">
-                <div>
-                    <span class="tag safe" style="margin-bottom:6px;display:inline-block">${roleDef.name}</span>
-                    <h3 style="font-size:1.4rem;color:#fff;margin:0">In Office</h3>
-                </div>
-                <div style="text-align:right">
-                     <div style="font-size:0.78rem;color:var(--text-muted)">Term Remaining</div>
-                     <div style="font-family:var(--font-mono);font-size:1.3rem;color:#fff">${p.termLeft} mo</div>
-                </div>
+      p.approval    = p.approval    ?? 50;
+      p.corruption  = p.corruption  ?? 0;
+      p.bribesTaken = p.bribesTaken ?? 0;
+
+      // ── HUD
+      if (politicsHud) {
+        const approvalColor = p.approval >= 60 ? "#4ade80" : p.approval >= 35 ? "#fbbf24" : "#f87171";
+        const corruptColor  = p.corruption > 50 ? "#f87171" : p.corruption > 20 ? "#fbbf24" : "#94a3b8";
+        const corruptLabel  = p.corruption > 50 ? "High Risk" : p.corruption > 20 ? "Moderate" : "Clean";
+        politicsHud.innerHTML = `
+          <div class="politics-hud-card">
+            <div class="politics-hud-label">Influence</div>
+            <div class="politics-hud-value" style="color:#a78bfa;">${p.influence}</div>
+            <div class="politics-hud-sub">${p.role ? "Currently in office" : "Not in office"}</div>
+          </div>
+          <div class="politics-hud-card">
+            <div class="politics-hud-label">Public Approval</div>
+            <div class="politics-hud-value" style="color:${approvalColor};">${Math.round(p.approval)}%</div>
+            <div class="politics-hud-sub">
+              <div class="politics-approval-bar"><div class="politics-approval-fill" style="width:${Math.round(p.approval)}%;background:${approvalColor};"></div></div>
             </div>
-            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:14px;margin-top:18px">
-                <div class="mini-stat-box"><span>Influence</span><strong style="color:var(--accent-purple)">${p.influence}</strong></div>
-                <div class="mini-stat-box"><span>Approval</span><strong style="color:${approvalColor}">${Math.round(p.approval)}%</strong></div>
-                <div class="mini-stat-box"><span>Laws Passed</span><strong>${p.lawsPassed}</strong></div>
-                <div class="mini-stat-box"><span>Corruption</span><strong style="color:${p.corruption > 20 ? "var(--red)" : "var(--text-muted)"}">${corruptionLevel}</strong></div>
-                <div class="mini-stat-box"><span>Salary</span><strong>$${shortNumber(Math.floor(roleDef.salary / 12))}/mo</strong></div>
-                <div class="mini-stat-box"><span>Bribes</span><strong style="color:${p.bribesTaken > 0 ? "var(--red)" : "#fff"}">$${shortNumber(p.bribesTaken)}</strong></div>
-            </div>
-            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:18px">
+          </div>
+          <div class="politics-hud-card">
+            <div class="politics-hud-label">Laws Passed</div>
+            <div class="politics-hud-value">${p.lawsPassed}</div>
+            <div class="politics-hud-sub">career total</div>
+          </div>
+          <div class="politics-hud-card">
+            <div class="politics-hud-label">Corruption</div>
+            <div class="politics-hud-value" style="color:${corruptColor};font-size:1rem;">${corruptLabel}</div>
+            <div class="politics-hud-sub">Bribes: $${shortNumber(p.bribesTaken)}</div>
+          </div>`;
+      }
+
+      // ── Action panel
+      if (politicsAction) {
+        if (p.role) {
+          const roleDef = CONFIG.POLITICS_ROLES.find(r => r.id === p.role);
+          politicsAction.innerHTML = `
+            <div class="politics-office-banner">
+              <div class="politics-office-left">
+                <div class="politics-office-badge">${roleDef ? roleDef.name : p.role}</div>
+                <div class="politics-office-title">Currently in Office</div>
+                <div class="politics-office-sub">Term ending in <strong>${p.termLeft} months</strong>&nbsp;&middot;&nbsp;Salary <strong>$${roleDef ? shortNumber(Math.floor(roleDef.salary / 12)) : "?"}/mo</strong></div>
+              </div>
+              <div class="politics-office-actions">
                 <button class="btn btn-primary" onclick="game.politicalAction('speech')"><i class="fa-solid fa-microphone"></i> Speech</button>
                 <button class="btn btn-primary" onclick="game.politicalAction('passlaw')"><i class="fa-solid fa-scroll"></i> Pass Law</button>
                 <button class="btn btn-outline" onclick="game.politicalAction('outreach')"><i class="fa-solid fa-handshake"></i> Outreach</button>
                 <button class="btn btn-outline" onclick="game.politicalAction('debate')"><i class="fa-solid fa-comments"></i> Debate</button>
                 <button class="btn btn-outline" onclick="game.politicalAction('fundraise')"><i class="fa-solid fa-hand-holding-dollar"></i> Fundraise</button>
                 <button class="btn btn-danger" onclick="game.politicalAction('embezzle')"><i class="fa-solid fa-mask"></i> Embezzle</button>
-            </div>
-        `;
-      } else {
-        politicsDash.innerHTML = `
-            <div style="text-align:center;padding:32px">
-                <i class="fa-solid fa-landmark" style="font-size:3rem;color:var(--text-muted);margin-bottom:16px;display:block"></i>
-                <h3 style="color:#fff;margin-bottom:8px">Not in Office</h3>
-                <p style="color:var(--text-muted);margin-bottom:16px">Build your influence through volunteering and community work, then run for office below.</p>
-                <div style="display:flex;justify-content:center;gap:20px;margin-bottom:18px">
-                    <div class="mini-stat-box"><span>Influence</span><strong style="color:var(--accent-purple)">${p.influence}</strong></div>
-                    <div class="mini-stat-box"><span>Laws Passed</span><strong>${p.lawsPassed}</strong></div>
-                </div>
-                <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
-                    <button class="btn btn-primary" onclick="game.politicsVolunteer()"><i class="fa-solid fa-hand-holding-heart"></i> Volunteer (+2 Inf)</button>
-                    <button class="btn btn-outline" onclick="game.politicsRally()"><i class="fa-solid fa-bullhorn"></i> Attend Rally (+1 Inf)</button>
-                    <button class="btn btn-outline" onclick="game.politicsDonate()"><i class="fa-solid fa-donate"></i> Donate $500 (+3 Inf)</button>
-                </div>
-            </div>
-        `;
+              </div>
+            </div>`;
+        } else {
+          politicsAction.innerHTML = `
+            <div class="politics-grassroots">
+              <div class="politics-grassroots-label">
+                <i class="fa-solid fa-seedling" style="color:#4ade80;"></i>
+                Grassroots &mdash; Build Your Base
+              </div>
+              <div class="politics-grassroots-grid">
+                <button class="politics-gr-btn" onclick="game.politicsVolunteer()">
+                  <i class="fa-solid fa-hand-holding-heart"></i>
+                  <span class="pgb-title">Volunteer</span>
+                  <span class="pgb-sub">+2 Influence &middot; &minus;15 NRG</span>
+                </button>
+                <button class="politics-gr-btn" onclick="game.politicsRally()">
+                  <i class="fa-solid fa-bullhorn"></i>
+                  <span class="pgb-title">Attend Rally</span>
+                  <span class="pgb-sub">+1 Influence &middot; &minus;10 NRG</span>
+                </button>
+                <button class="politics-gr-btn" onclick="game.politicsDonate()">
+                  <i class="fa-solid fa-donate"></i>
+                  <span class="pgb-title">Donate $500</span>
+                  <span class="pgb-sub">+3 Influence &middot; &minus;$500</span>
+                </button>
+              </div>
+            </div>`;
+        }
       }
 
-      politicsList.innerHTML = CONFIG.POLITICS_ROLES.map((r) => {
-        const isCurrent = p.role === r.id;
-        const canRun =
-          !p.role &&
-          this.state.cash >= r.cost &&
-          p.influence >= r.reqRep && // using reqRep from config as influence req
-          !this.state.life.dead;
-
-        if (isCurrent) return ""; // Don't show current role in list
-
-        return `<div class="card" style="opacity:${canRun ? 1 : 0.6}">
-            <div class="card-header">
-                <h3>${r.name}</h3>
-                <span class="tag">$${shortNumber(r.cost)} Campaign</span>
+      // ── Role cards
+      if (politicsList) {
+        const POL_IMGS = {
+          council:  "https://images.unsplash.com/photo-1555848962-6e79363797c3?w=700&h=280&fit=crop&auto=format",
+          mayor:    "https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=700&h=280&fit=crop&auto=format",
+          governor: "https://images.unsplash.com/photo-1575517111839-3a3843ee7f5d?w=700&h=280&fit=crop&auto=format",
+          senator:  "https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=700&h=280&fit=crop&auto=format",
+        };
+        const POL_TIERS = {
+          council:  { color: "#22d3ee", label: "Local",    grad: "linear-gradient(135deg,#0ea5e9,#22d3ee)" },
+          mayor:    { color: "#4ade80", label: "Municipal", grad: "linear-gradient(135deg,#16a34a,#4ade80)" },
+          governor: { color: "#a78bfa", label: "State",    grad: "linear-gradient(135deg,#7c3aed,#a78bfa)" },
+          senator:  { color: "#fbbf24", label: "Federal",  grad: "linear-gradient(135deg,#d97706,#fbbf24)" },
+        };
+        politicsList.innerHTML = CONFIG.POLITICS_ROLES.map(r => {
+          const isCurrent = p.role === r.id;
+          const canRun = !p.role && this.state.cash >= r.cost && p.influence >= r.reqRep && !this.state.life.dead;
+          const tier = POL_TIERS[r.id] || { color: "#94a3b8", label: "Unknown", grad: "linear-gradient(135deg,#475569,#94a3b8)" };
+          if (isCurrent) return "";
+          const lockReason = p.role ? "Already in Office" : p.influence < r.reqRep ? `Need ${r.reqRep} Influence` : `Need $${shortNumber(r.cost)}`;
+          return `<div class="card politics-role-card${canRun ? "" : " locked"}">
+            <div class="politics-role-bg" style="background-image:url('${POL_IMGS[r.id] || POL_IMGS.council}');">
+              <div class="politics-role-bg-overlay"></div>
+              <div class="politics-role-tier" style="background:${tier.grad}">${tier.label}</div>
+              <div class="politics-role-name" style="color:${tier.color};">${r.name}</div>
             </div>
-            <div style="margin-bottom:12px; font-size:0.85rem; color:var(--text-muted);">
-                Salary $${shortNumber(r.salary)}/yr • Term ${r.term}mo • Req Inf: ${r.reqRep}
+            <div class="politics-role-body">
+              <div class="politics-role-meta">
+                <div class="politics-meta-box"><span>Campaign Cost</span><strong>$${shortNumber(r.cost)}</strong></div>
+                <div class="politics-meta-box"><span>Annual Salary</span><strong style="color:#4ade80;">$${shortNumber(r.salary)}</strong></div>
+                <div class="politics-meta-box"><span>Term Length</span><strong>${r.term} mo</strong></div>
+                <div class="politics-meta-box"><span>Min. Influence</span><strong style="color:#a78bfa;">${r.reqRep}</strong></div>
+              </div>
+              <button class="btn ${canRun ? "btn-primary" : "btn-outline"} politics-run-btn" onclick="game.startCampaign('${r.id}')" ${canRun ? "" : "disabled"}>
+                ${canRun ? '<i class="fa-solid fa-person-booth"></i> Launch Campaign' : lockReason}
+              </button>
             </div>
-            <button class="btn btn-primary" onclick="game.startCampaign('${r.id}')" ${canRun ? "" : "disabled"}>
-                ${canRun ? "Launch Campaign" : "Unavailable"}
-            </button>
-        </div>`;
-      }).join("");
+          </div>`;
+        }).join("");
+      }
     }
 
     app.drawChart();
@@ -7920,6 +8595,12 @@ const app = {
     document
       .querySelectorAll(".nav-item")
       .forEach((e) => e.classList.remove("active"));
+    // Sync bottom nav active tab
+    document
+      .querySelectorAll(".mbn-tab[data-view]")
+      .forEach((e) => e.classList.remove("active"));
+    const mbnTab = document.querySelector(`.mbn-tab[data-view="${id}"]`);
+    if (mbnTab) mbnTab.classList.add("active");
     const target = document.getElementById("view-" + id);
     if (target) target.classList.add("active");
     const tab =
@@ -10551,6 +11232,445 @@ game._processDivorce = function (forced) {
   this.renderAll();
 };
 
+/* ════════════════════════════════════════════════════════
+   SIDE RELATIONSHIPS  –  flings, girlfriends, extra wives
+   Available in polygamy-legal countries for official wives;
+   available as secret affairs everywhere (high risk).
+   ════════════════════════════════════════════════════════ */
+
+game.isPolygamyAllowed = function () {
+  return CONFIG.POLYGAMY_ALLOWED_CODES.has(this.state.country);
+};
+
+/** Called from the UI "Start Side Affair" button */
+game.openSideRelationshipMenu = function () {
+  if (!this.canAct()) return;
+  const r = this.state.relationship;
+  if (r.status === "single")
+    return app.toast("You need to be in a relationship first.", "warning");
+
+  const poly = this.isPolygamyAllowed();
+  const countryName = this.state.country || "your country";
+
+  const buttons = [
+    {
+      text: "💋 Fling (Secret) — ~$220/mo",
+      cb: () => { app.closeModal(); game._pickSidePartner("fling"); },
+    },
+    {
+      text: "❤️ Girlfriend (Secret) — ~$440/mo",
+      cb: () => { app.closeModal(); game._pickSidePartner("girlfriend"); },
+    },
+  ];
+
+  if (poly && r.status === "married") {
+    buttons.push({
+      text: "💍 Second Wife (Official) — ~$670/mo",
+      cb: () => { app.closeModal(); game._pickSidePartner("second_wife"); },
+    });
+  }
+  buttons.push({ text: "Cancel", cb: () => app.closeModal() });
+
+  const warningLine = poly
+    ? `You live in ${countryName} — polygamy is legal here. Official marriages are recognised; all wives will know about each other and will react.`
+    : `In ${countryName} this is an affair. If your partner finds out, consequences will be severe. Risk grows every month.`;
+
+  app.modal(
+    "💔 Start a Side Relationship",
+    warningLine,
+    buttons,
+  );
+};
+
+/** Show partner picker for the chosen side-relationship type */
+game._pickSidePartner = function (type) {
+  const r = this.state.relationship;
+  const takenIds = r.sideRelationships.map((sr) => sr.partnerId);
+  const available = CONFIG.SIDE_PARTNERS.filter((sp) => !takenIds.includes(sp.id));
+  if (available.length === 0)
+    return app.toast("No one else available right now.", "info");
+
+  const btns = available.slice(0, 5).map((sp) => ({
+    text: `${sp.name} — ${sp.trait}  (Looks ${"⭐".repeat(Math.round(sp.looks / 2))})`,
+    cb: () => { app.closeModal(); game._attemptSideRelationship(sp.id, type); },
+  }));
+  btns.push({ text: "Never mind", cb: () => app.closeModal() });
+
+  const typeLabel = type === "fling" ? "Fling" : type === "girlfriend" ? "Girlfriend" : "Second Wife";
+  app.modal(`Choose — ${typeLabel}`, "Pick someone:", btns);
+};
+
+/** Attempt to start the chosen side relationship */
+game._attemptSideRelationship = function (partnerId, type) {
+  if (!this.canAct()) return;
+  if (this.state.stats.energy < 20)
+    return app.toast("Too tired right now.", "error");
+
+  const sp = CONFIG.SIDE_PARTNERS.find((x) => x.id === partnerId);
+  if (!sp) return;
+
+  // Poly check for second_wife
+  if (type === "second_wife" && !this.isPolygamyAllowed())
+    return app.toast("This is only possible in countries where polygamy is legal.", "error");
+  if (type === "second_wife" && this.state.relationship.status !== "married")
+    return app.toast("You must be married to take a second wife.", "error");
+
+  const dateCost = type === "fling" ? 100 : 150;
+  if (this.state.cash < dateCost)
+    return app.toast(`Need at least $${dateCost} to make a move.`, "error");
+
+  this.modCash(-dateCost);
+  this.modStat("energy", -20);
+
+  const compat = sp.compatibility();
+  if (Math.random() > compat) {
+    this.modStat("happiness", -3);
+    app.toast(`${sp.name} wasn't interested.`, "error");
+    this.registerAction(1);
+    this.renderAll();
+    return;
+  }
+
+  const expense = sp.monthlyExpense[type] || sp.monthlyExpense["fling"];
+  const typeLabel = type === "fling" ? "a fling" : type === "girlfriend" ? "your girlfriend" : "your second wife";
+
+  const entry = {
+    id: "sr_" + Date.now(),
+    partnerId: sp.id,
+    partnerName: sp.name,
+    partnerTrait: sp.trait,
+    partnerLooks: sp.looks,
+    type,
+    love: 20 + Math.floor(Math.random() * 20),
+    monthsTogether: 0,
+    monthlyExpense: expense,
+  };
+
+  this.state.relationship.sideRelationships.push(entry);
+  this.modStat("happiness", type === "second_wife" ? 12 : 10);
+
+  const typeEmoji = type === "fling" ? "🔥" : type === "girlfriend" ? "💋" : "💍";
+  app.toast(`${typeEmoji} ${sp.name} is now ${typeLabel}!`, "success");
+  FX.screenFlash("gain");
+
+  if (type === "second_wife") {
+    const mainName = this.state.relationship.partnerName;
+    setTimeout(() => {
+      app.toast(
+        `${mainName} has been told. She's quiet — for now. Watch for jealousy.`,
+        "warning",
+      );
+    }, 1800);
+  }
+
+  this.registerAction(2);
+  this.renderAll();
+};
+
+/** Player-initiated end to a side relationship */
+game.endSideRelationship = function (sideRelId) {
+  const r = this.state.relationship;
+  const idx = r.sideRelationships.findIndex((sr) => sr.id === sideRelId);
+  if (idx === -1) return;
+  const sr = r.sideRelationships[idx];
+  const name = sr.partnerName;
+
+  const msg =
+    sr.type === "second_wife"
+      ? `Divorced ${name}. She will receive a settlement.`
+      : sr.type === "girlfriend"
+      ? `Ended things with ${name}. She's hurt and confused.`
+      : `Cut off the fling with ${name}. Awkward, but done.`;
+
+  r.sideRelationships.splice(idx, 1);
+
+  if (sr.type === "second_wife") {
+    const settlement = Math.min(this.state.cash * 0.08, 8000);
+    this.modCash(-settlement);
+    app.toast(`${msg} Settlement: -$${shortNumber(Math.floor(settlement))}`, "warning");
+  } else {
+    app.toast(msg, "warning");
+  }
+  this.modStat("happiness", sr.type === "second_wife" ? -12 : -5);
+  FX.screenFlash("loss");
+  this.renderAll();
+};
+
+/** Monthly processing for all side relationships — returns total expense */
+game.processSideRelationshipsMonthly = function () {
+  const r = this.state.relationship;
+  if (!r.sideRelationships || r.sideRelationships.length === 0) return 0;
+
+  let totalExpenses = 0;
+  const toRemove = [];
+
+  r.sideRelationships.forEach((sr) => {
+    sr.monthsTogether++;
+    totalExpenses += sr.monthlyExpense;
+
+    // ── Official second wife track (known polygamy arrangement) ──
+    if (sr.type === "second_wife" && this.isPolygamyAllowed()) {
+      if (r.status !== "single" && Math.random() < 0.22) {
+        this._wifeJealousyEvent(sr, r);
+      }
+      // Small regular happiness from the new relation
+      if (Math.random() < 0.1) {
+        this.modStat("happiness", 2);
+        app.toast(`Spent quality time with ${sr.partnerName}.`, "info");
+      }
+      return;
+    }
+
+    // ── Secret relationship / affair track ──
+    // Discovery chance rises over time
+    const baseChance = sr.type === "fling" ? 0.014 : sr.type === "girlfriend" ? 0.024 : 0.034;
+    const growthPerMonth = sr.type === "fling" ? 0.0008 : 0.0015;
+    const discoveryChance = Math.min(0.28, baseChance + sr.monthsTogether * growthPerMonth);
+
+    if (r.status !== "single" && Math.random() < discoveryChance) {
+      this._affairDiscovered(sr, r);
+      toRemove.push(sr.id);
+      return;
+    }
+
+    // Positive events
+    if (Math.random() < 0.09) {
+      sr.love = Math.min(100, (sr.love || 30) + 5);
+      this.modStat("happiness", 3);
+      const positiveMsgs = [
+        `${sr.partnerName} sent you a secret message. Your heart races.`,
+        `A hidden evening with ${sr.partnerName}. Exhilarating.`,
+        `${sr.partnerName} surprised you at lunch. Risky, but thrilling.`,
+        `Late-night call with ${sr.partnerName}. You smile when no one's watching.`,
+      ];
+      app.toast(positiveMsgs[Math.floor(Math.random() * positiveMsgs.length)], "info");
+    }
+
+    // Fling growing complicated
+    if (sr.type === "fling" && sr.monthsTogether >= 6 && Math.random() < 0.12) {
+      const complicatedMsgs = [
+        `${sr.partnerName} is getting emotionally attached. This fling is getting complicated.`,
+        `${sr.partnerName} asked "What are we?" — harder to keep this casual.`,
+        `${sr.partnerName} wants to meet more often. You're juggling two lives.`,
+      ];
+      app.toast(`⚠️ ${complicatedMsgs[Math.floor(Math.random() * complicatedMsgs.length)]}`, "warning");
+      this.modStat("happiness", -2);
+    }
+
+    // Girlfriend putting pressure
+    if (sr.type === "girlfriend" && sr.monthsTogether >= 3 && Math.random() < 0.08) {
+      const pressureMsgs = [
+        `${sr.partnerName} wants to know why she can never meet your friends.`,
+        `${sr.partnerName} suspects something. You deflect, but she's not convinced.`,
+        `${sr.partnerName} noticed the hidden folder on your phone. Close call.`,
+      ];
+      app.toast(`⚠️ ${pressureMsgs[Math.floor(Math.random() * pressureMsgs.length)]}`, "warning");
+      this.modStat("happiness", -3);
+    }
+  });
+
+  // Remove discovered ones
+  r.sideRelationships = r.sideRelationships.filter((sr) => !toRemove.includes(sr.id));
+  return totalExpenses;
+};
+
+/** Discovery event — main partner finds out about the affair */
+game._affairDiscovered = function (sr, r) {
+  if (r.status === "single") return;
+  const mainName = r.partnerName;
+  const sideName = sr.partnerName;
+
+  const scenarios = [
+    {
+      opener: `${mainName} found flirty messages from ${sideName} on your phone.`,
+      details: `She read everything. Every exchange, every lie by omission. She sat in silence for a long time before the screaming started.`,
+      trustHit: 44, loveHit: 38, happinessHit: 24, divorceChance: 0.32,
+    },
+    {
+      opener: `${mainName}'s friend saw you with ${sideName} at a restaurant.`,
+      details: `Screenshots were sent. By the time you got home the locks were changed and your bags were on the doorstep.`,
+      trustHit: 50, loveHit: 46, happinessHit: 30, divorceChance: 0.50,
+    },
+    {
+      opener: `${sideName} accidentally called ${mainName} after misdailing.`,
+      details: `Twenty seconds of background noise. Enough. ${mainName} is pale when you walk in. She already knows.`,
+      trustHit: 62, loveHit: 56, happinessHit: 36, divorceChance: 0.62,
+    },
+    {
+      opener: `${mainName} found hotel receipts in your jacket pocket.`,
+      details: `Two rooms billed on the same night. Your name on both. She crumpled the receipts and threw them at you.`,
+      trustHit: 46, loveHit: 40, happinessHit: 26, divorceChance: 0.38,
+    },
+    {
+      opener: `${sideName} confronted ${mainName} directly — she's done being hidden.`,
+      details: `They had a full conversation. ${mainName} now knows exactly how long this has been going on. She is devastated.`,
+      trustHit: 68, loveHit: 60, happinessHit: 40, divorceChance: 0.72,
+    },
+    {
+      opener: `${mainName} checked your location — it didn't match your story.`,
+      details: `She drove there. Saw your car. Waited. Watched. Said nothing until you came home, then laid every inconsistency out on the table.`,
+      trustHit: 55, loveHit: 50, happinessHit: 32, divorceChance: 0.48,
+    },
+    {
+      opener: `A mutual friend told ${mainName} they'd seen you with someone.`,
+      details: `Word travels. She'd heard whispers for weeks and dismissed them. Not anymore. She's shaking with a combination of anger and grief.`,
+      trustHit: 40, loveHit: 36, happinessHit: 22, divorceChance: 0.28,
+    },
+    {
+      opener: `${mainName} saw a photo of you and ${sideName} together on social media.`,
+      details: `Someone tagged you both without thinking. Notifications lit up. ${mainName} saw it before you could do anything. Her DMs are already full of condolences from people she didn't even know were watching.`,
+      trustHit: 58, loveHit: 52, happinessHit: 34, divorceChance: 0.55,
+    },
+  ];
+
+  const sc = scenarios[Math.floor(Math.random() * scenarios.length)];
+  r.trust = Math.max(0, r.trust - sc.trustHit);
+  r.love  = Math.max(0, r.love  - sc.loveHit);
+  this.modStat("happiness", -sc.happinessHit);
+  this.state.life.chronicStress = Math.min(200, this.state.life.chronicStress + 25);
+  this.state.relationship.fights++;
+
+  FX.screenFlash("loss");
+  FX.screenShake("md");
+
+  app.toast(`💔 ${sc.opener}`, "error");
+  setTimeout(() => app.toast(`😔 ${sc.details}`, "warning"), 1600);
+
+  const divorces = Math.random() < sc.divorceChance;
+
+  if (divorces) {
+    if (r.status === "married") {
+      setTimeout(() => {
+        app.toast(
+          `⚖️ ${mainName} has contacted a lawyer. She's filing for divorce.`,
+          "error",
+        );
+        FX.screenFlash("jail");
+        this._processDivorce(true);
+        this.renderAll();
+      }, 3500);
+    } else {
+      setTimeout(() => {
+        app.toast(`${mainName} ended the relationship. She cannot trust you.`, "error");
+        r.status = "single";
+        r.partner = null;
+        r.partnerName = "";
+        r.love = 0;
+        r.trust = 0;
+        this.modStat("happiness", -20);
+        FX.screenFlash("loss");
+        this.renderAll();
+      }, 3500);
+    }
+  } else {
+    // Stays but with lingering consequences
+    const stayConsequences = [
+      `${mainName} is staying — for the kids, she says. But she sleeps in the other room now.`,
+      `${mainName} demands couples therapy and full transparency. Every password, every account.`,
+      `${mainName} called her mother. Her whole family knows. You're not welcome at gatherings for a long time.`,
+      `${mainName} stays, but the warmth in her eyes is gone. She functions. She mothers. She does not forgive.`,
+      `${mainName} is humiliated. She tells you if it ever happens again, she won't hesitate. You believe her.`,
+    ];
+    const conseqIdx = Math.floor(Math.random() * stayConsequences.length);
+    setTimeout(() => {
+      app.toast(`😶 ${stayConsequences[conseqIdx]}`, "warning");
+      if (conseqIdx === 1) {
+        // Therapy demanded — costs money
+        const therapyCost = 800 + Math.floor(Math.random() * 600);
+        this.modCash(-therapyCost);
+        app.toast(`Couples therapy bills: -$${shortNumber(therapyCost)}`, "error");
+      }
+      this.renderAll();
+    }, 3200);
+  }
+
+  this.renderAll();
+};
+
+/** Jealousy / tension events for known polygamous arrangements */
+game._wifeJealousyEvent = function (sr, r) {
+  const mainName = r.partnerName;
+  const sideName  = sr.partnerName;
+
+  const events = [
+    {
+      msg: `${mainName} demands you spend more time with her and less with ${sideName}. You promise a special evening to smooth things over.`,
+      cost: 0, loveDrainMain: 4, happinessHit: 5,
+    },
+    {
+      msg: `${mainName} refuses to be in the same room as ${sideName}. A family dinner ends in tense silence.`,
+      cost: 0, loveDrainMain: 6, happinessHit: 9,
+    },
+    {
+      msg: `${mainName} demands an expensive gift to feel valued. You comply, quietly. (-$600)`,
+      cost: 600, loveDrainMain: 0, happinessHit: 4,
+    },
+    {
+      msg: `${sideName} wants her own apartment — the shared living arrangement is unbearable. (-$900/mo extra)`,
+      cost: 900, loveDrainMain: 2, happinessHit: 7,
+    },
+    {
+      msg: `Your children ask why they have two mothers at home. You fumble an explanation. Everyone is tense for days.`,
+      cost: 0, loveDrainMain: 5, happinessHit: 11,
+    },
+    {
+      msg: `${mainName} threatens to return to her parents' home unless you set clearer boundaries with ${sideName}.`,
+      cost: 0, loveDrainMain: 9, happinessHit: 14,
+    },
+    {
+      msg: `Word has spread in the neighbourhood about your arrangement. Some people stare, others whisper. Social discomfort follows.`,
+      cost: 0, loveDrainMain: 1, happinessHit: 6,
+    },
+    {
+      msg: `${sideName} is expecting a child. ${mainName} is silent for a long time. Even in a legal arrangement, this hits hard.`,
+      cost: 0, loveDrainMain: 18, happinessHit: 16,
+    },
+    {
+      msg: `${mainName} and ${sideName} argued loudly in the house. You had to mediate. No one won. You all lost something.`,
+      cost: 0, loveDrainMain: 7, happinessHit: 10,
+    },
+    {
+      msg: `${sideName} complains you spend more time with ${mainName}. Both feel neglected. The household is a powder keg.`,
+      cost: 0, loveDrainMain: 4, happinessHit: 8,
+    },
+    {
+      msg: `${mainName} discovers ${sideName} gave you a gift she couldn't afford — and feels inadequate. Quiet crying behind closed doors.`,
+      cost: 0, loveDrainMain: 5, happinessHit: 7,
+    },
+    {
+      msg: `You forgot ${mainName}'s birthday while focused on ${sideName}. The hurt is real and immediate. -$400 damage control.`,
+      cost: 400, loveDrainMain: 12, happinessHit: 12,
+    },
+  ];
+
+  // Suppress pregnancy event to ~8% chance
+  const filtered = events.filter(
+    (e) => !e.msg.includes("expecting") || Math.random() < 0.08,
+  );
+  const evt = filtered[Math.floor(Math.random() * filtered.length)];
+
+  if (evt.cost > 0) this.modCash(-evt.cost);
+  r.love = Math.max(0, r.love - evt.loveDrainMain);
+  this.modStat("happiness", -evt.happinessHit);
+  this.state.life.chronicStress = Math.min(200, this.state.life.chronicStress + 4);
+
+  app.toast(`⚠️ ${evt.msg}`, "warning");
+
+  // Critical threshold  — first wife may demand divorce
+  if (r.love < 18 && r.status === "married" && Math.random() < 0.18) {
+    setTimeout(() => {
+      app.toast(
+        `${mainName} has reached her limit. She wants you to choose — or she leaves.`,
+        "error",
+      );
+      FX.screenShake("lg");
+      FX.screenFlash("loss");
+    }, 2000);
+  }
+
+  this.renderAll();
+};
+
 game.processRelationshipMonthly = function () {
   const r = this.state.relationship;
   if (r.status === "single") {
@@ -10819,22 +11939,22 @@ game.renderRelationships = function () {
     }
   }
   const datingPool = document.getElementById("dating-pool");
-  if (datingPool) {
-    if (r.status === "single") {
-      const available = this.getAvailablePartners();
-      datingPool.innerHTML = available
-        .map(
-          (p) => `<div class="card">
+    if (datingPool) {
+      if (r.status === "single") {
+        const available = this.getAvailablePartners();
+        datingPool.innerHTML = available
+          .map(
+            (p) => `<div class="card">
           <div class="card-header"><h3>${p.name}</h3><span class="tag">${p.trait}</span></div>
           <p style="opacity:0.7;font-size:0.8rem">Income: $${shortNumber(p.income)}/mo \u2022 Loyalty: ${Math.round(p.loyalty * 100)}%</p>
           <div style="display:flex;gap:6px;margin-top:4px"><span style="font-size:0.75rem">Looks: ${"\u2B50".repeat(Math.round(p.looks / 2))}</span><span style="font-size:0.75rem">Humor: ${"\u{1F604}".repeat(Math.round(p.humor / 2))}</span></div>
           <button class="btn btn-primary" style="margin-top:10px" onclick="game.startDating('${p.id}')"><i class="fa-solid fa-heart"></i> Ask Out ($150)</button></div>`,
-        )
-        .join("");
-    } else {
-      datingPool.innerHTML = "";
+          )
+          .join("");
+      } else {
+        datingPool.innerHTML = "";
+      }
     }
-  }
   const childList = document.getElementById("children-list");
   if (childList) {
     if (r.children.length === 0) {
@@ -10876,15 +11996,103 @@ game.renderRelationships = function () {
     }
   }
   this.renderPets();
+
+  /* ── Side Relationships ── */
+  const sideHeader = document.getElementById("side-rel-header-card");
+  const sideList   = document.getElementById("side-relationships-list");
+
+  if (sideHeader && sideList) {
+    const poly = this.isPolygamyAllowed();
+    const countryName = this.state.country || "your current country";
+
+    if (r.status === "single") {
+      sideHeader.style.display = "none";
+      sideList.innerHTML =
+        '<div class="card"><p style="opacity:0.5;text-align:center">Enter a relationship first to unlock this section.</p></div>';
+    } else {
+      sideHeader.style.display = "";
+      const polyBadge = poly
+        ? `<span class="tag safe" style="font-size:0.7rem">⚖️ Polygamy Legal</span>`
+        : `<span class="tag" style="font-size:0.7rem;background:var(--amber);color:#000">⚠️ Secret — High Risk</span>`;
+
+      const warnText = poly
+        ? `In ${countryName}, taking additional partners is permitted by law. Your main partner will know and <em>may react with jealousy</em>. Financial and emotional costs apply.`
+        : `Affairs are illegal or socially devastating in ${countryName}. Discovery risk grows every month. If found out, your relationship may never recover.`;
+
+      sideHeader.innerHTML = `
+        <div class="card-header" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+          <h3 style="margin:0">💔 Side Relationships</h3>
+          ${polyBadge}
+        </div>
+        <p style="opacity:0.75;font-size:0.82rem;margin:8px 0">${warnText}</p>
+        <button class="btn btn-primary" onclick="game.openSideRelationshipMenu()" style="margin-top:6px">
+          <i class="fa-solid fa-plus"></i> Start a Side Affair
+        </button>`;
+
+      if (!r.sideRelationships || r.sideRelationships.length === 0) {
+        sideList.innerHTML =
+          '<div class="card"><p style="opacity:0.45;text-align:center;font-size:0.85rem">No active side relationships.</p></div>';
+      } else {
+        sideList.innerHTML = r.sideRelationships.map((sr) => {
+          const sp = CONFIG.SIDE_PARTNERS.find((x) => x.id === sr.partnerId) || {};
+          const loveColor = sr.love >= 60 ? "var(--green)" : sr.love >= 35 ? "var(--amber)" : "var(--red)";
+          const typeLabel  = sr.type === "fling" ? "💋 Fling" : sr.type === "girlfriend" ? "❤️ Girlfriend" : "💍 2nd Wife";
+          const typeClass  = sr.type === "second_wife" ? "safe" : "";
+
+          let discInfo = "";
+          if (sr.type !== "second_wife" || !poly) {
+            const base = sr.type === "fling" ? 0.014 : sr.type === "girlfriend" ? 0.024 : 0.034;
+            const growth = sr.type === "fling" ? 0.0008 : 0.0015;
+            const risk = Math.min(28, Math.round((base + sr.monthsTogether * growth) * 100));
+            const riskColor = risk < 8 ? "var(--green)" : risk < 18 ? "var(--amber)" : "var(--red)";
+            discInfo = `<p style="font-size:0.75rem;margin:4px 0">
+              <span style="opacity:0.6">DISCOVERY RISK / MO</span>
+              <span style="color:${riskColor};font-weight:700;margin-left:6px">${risk}%</span>
+            </p>`;
+          } else {
+            discInfo = `<p style="font-size:0.75rem;margin:4px 0;opacity:0.6">Known arrangement — jealousy events possible</p>`;
+          }
+
+          return `<div class="card">
+            <div class="card-header">
+              <h3>${sr.partnerName}</h3>
+              <span class="tag ${typeClass}">${typeLabel}</span>
+            </div>
+            <p style="opacity:0.65;font-size:0.78rem">${sp.trait || ""} • Together ${Math.floor(sr.monthsTogether / 12)}yr ${sr.monthsTogether % 12}mo</p>
+            <div style="margin:8px 0">
+              <span style="font-size:0.72rem;opacity:0.6">LOVE</span>
+              <div class="progress-bg" style="margin-top:3px">
+                <div class="progress-fill" style="width:${sr.love}%;background:${loveColor}"></div>
+              </div>
+              <span style="font-size:0.72rem">${Math.round(sr.love)}%</span>
+            </div>
+            ${discInfo}
+            <p style="font-size:0.75rem;margin:4px 0;opacity:0.7">Cost: <b>$${shortNumber(sr.monthlyExpense)}/mo</b></p>
+            <button class="btn btn-danger" style="margin-top:8px;font-size:0.8rem" onclick="game.endSideRelationship('${sr.id}')">
+              <i class="fa-solid fa-heart-crack"></i> End It
+            </button>
+          </div>`;
+        }).join("");
+      }
+    }
+  }
 };
 
 game.renderPets = function () {
+  const PET_IMGS = {
+    dog:     'https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=700&h=240&fit=crop&auto=format',
+    cat:     'https://images.unsplash.com/photo-1574158622682-e40e69881006?w=700&h=240&fit=crop&auto=format',
+    fish:    'https://images.unsplash.com/photo-1520990614490-d2b2c93b19ac?w=700&h=240&fit=crop&auto=format',
+    bird:    'https://images.unsplash.com/photo-1552728089-57bdde30beb3?w=700&h=240&fit=crop&auto=format',
+    reptile: 'https://images.unsplash.com/photo-1597645587822-e99fa5d0d3fa?w=700&h=240&fit=crop&auto=format',
+  };
   const petShop = document.getElementById("pet-shop");
   if (petShop) {
     petShop.innerHTML =
       '<h4 style="grid-column:1/-1;opacity:0.6;font-size:0.8rem;margin:0">ADOPT A PET</h4>' +
       CONFIG.PETS.map(
         (p) => `<div class="card">
+          <img class="card-img" src="${PET_IMGS[p.id] || PET_IMGS.dog}" alt="${p.name}" loading="lazy">
           <div class="card-header"><h3>${p.emoji} ${p.name}</h3><span class="tag">$${shortNumber(p.cost)}</span></div>
           <p style="opacity:0.7;font-size:0.8rem">Monthly: $${p.monthlyCost}/mo \u2022 Happiness +${p.happinessBonus} \u2022 Lifespan ${p.lifespan[0]}-${p.lifespan[1]}yr</p>
           <button class="btn btn-primary" style="margin-top:8px" onclick="game.adoptPet('${p.id}')"><i class="fa-solid fa-paw"></i> Adopt</button></div>`,
@@ -10907,8 +12115,8 @@ game.renderPets = function () {
               : pet.happiness >= 40
                 ? "\u{1F610}"
                 : "\u{1F622}";
-          return `<div class="card"><div class="card-header"><h3>${pet.emoji} ${pet.name}</h3><span class="tag">${moodEmoji} ${Math.round(pet.happiness)}%</span></div>
-          <p style="opacity:0.7;font-size:0.8rem">Age: ${ageYrs}yr ${ageMo}mo \u2022 Cost: $${config ? config.monthlyCost : 0}/mo</p></div>`;
+          return `<div class="card"><img class="card-img" src="${PET_IMGS[pet.type] || PET_IMGS.dog}" alt="${pet.name}" loading="lazy"><div class="card-header"><h3>${pet.emoji} ${pet.name}</h3><span class="tag">${moodEmoji} ${Math.round(pet.happiness)}%</span></div>
+          <p style="opacity:0.7;font-size:0.8rem">Age: ${ageYrs}yr ${ageMo}mo \u2022 Cost: $${config ? config.monthlyCost : 0}/mo</p></img>`;
         })
         .join("");
     }
@@ -10927,7 +12135,8 @@ game.renderPrison = function () {
     const protectedTag = p.gangProtection
       ? '<span class="tag safe">Protected</span>'
       : '<span class="tag danger">Unprotected</span>';
-    statusCard.innerHTML = `<div class="card-header"><h3>\u26D3\uFE0F Federal Prison</h3>${protectedTag}</div>
+    statusCard.innerHTML = `<img class="card-img" src="https://images.unsplash.com/photo-1415887360947-cd83e450c4b9?w=700&h=300&fit=crop&auto=format" alt="Prison" loading="lazy" style="border-radius:10px 10px 0 0;">
+      <div class="card-header"><h3>\u26D3\uFE0F Federal Prison</h3>${protectedTag}</div>
       <div style="margin:12px 0">
         <div style="display:flex;justify-content:space-between;font-size:0.8rem;opacity:0.7;margin-bottom:4px"><span>Time Served: ${timeServed} months</span><span>${this.state.jail} months remaining</span></div>
         <div class="progress-bg"><div class="progress-fill fill-health" style="width:${pct}%;background:linear-gradient(90deg,#ef4444,#f97316)"></div></div>
@@ -11078,6 +12287,32 @@ const galleryScroll = (() => {
         this.modCash(-(relExpenses + petExpenses));
     }
     if (this.state.jail > 0) app.setView("prison");
+  };
+})();
+
+/* ── Patch nextMonth to process side relationships monthly ── */
+(function () {
+  const origNextMonthSide = game.nextMonth.bind(game);
+  game.nextMonth = function () {
+    origNextMonthSide();
+    if (this.state.jail <= 0 && !this.state.life.dead && !this.state.life.retired) {
+      const sideExpenses = this.processSideRelationshipsMonthly();
+      if (sideExpenses > 0) this.modCash(-sideExpenses);
+      // Drug empire monthly tick
+      this.processDrugEmpireMonthly();
+      // Standalone lawyer retainer (when no drug empire active — drug empire already handles it)
+      if (!this.state.crime.drugEmpire.tier && this.state.crime.lawyer) {
+        const lDef = CONFIG.LAWYERS.find(l => l.id === this.state.crime.lawyer);
+        if (lDef && lDef.monthlyCost > 0) {
+          if (this.state.cash >= lDef.monthlyCost) {
+            this.modCash(-lDef.monthlyCost);
+          } else {
+            this.state.crime.lawyer = null;
+            app.toast("Couldn't afford lawyer retainer — you're on your own.", "error");
+          }
+        }
+      }
+    }
   };
 })();
 

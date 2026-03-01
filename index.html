@@ -80,15 +80,28 @@
     <!-- ═══════════════ CINEMATIC TITLE SCREEN ═══════════════ -->
     <div id="title-screen" class="title-screen">
       <canvas id="title-particles"></canvas>
-      <div class="title-vignette"></div>
-      <div class="title-scanlines"></div>
 
-      <!-- Ambient glow orbs -->
-      <div class="title-orb orb-1"></div>
-      <div class="title-orb orb-2"></div>
-      <div class="title-orb orb-3"></div>
+      <!-- Full-bleed city background -->
+      <div class="ts-bg">
+        <img
+          class="ts-bg-img"
+          src="https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=1920&h=1080&fit=crop&auto=format"
+          alt=""
+        />
+        <div class="ts-bg-overlay"></div>
+      </div>
+
+      <!-- Vignette + atmospheric rays -->
+      <div class="title-vignette"></div>
+      <div class="ts-rays"></div>
 
       <div class="title-content">
+        <!-- Eyebrow badge -->
+        <div class="ts-badge">
+          <i class="fa-solid fa-infinity"></i>
+          <span>FREE TO PLAY &nbsp;·&nbsp; LIFE SIMULATOR</span>
+        </div>
+
         <!-- Logo -->
         <div class="title-logo-wrap">
           <div class="title-logo-container">
@@ -101,62 +114,31 @@
 
         <!-- Title -->
         <h1 class="title-main">
-          <span class="title-word title-word-1">Greedigo</span>
-          <span class="title-word title-word-2">Simulator</span>
+          <span class="title-word title-word-1">GREEDIGO</span>
         </h1>
 
-        <!-- Tagline -->
-        <div class="title-tagline-wrap">
-          <div class="title-tagline-line"></div>
-          <p class="title-tagline" id="title-tagline"></p>
-          <div class="title-tagline-line"></div>
+        <!-- Subtitle -->
+        <div class="ts-sub">LIFE &amp; WEALTH EMPIRE SIMULATOR</div>
+
+        <!-- Divider -->
+        <div class="ts-divider">
+          <span></span>
+          <i class="fa-solid fa-coins"></i>
+          <span></span>
         </div>
 
-        <!-- Animated feature showcase -->
-        <div class="title-showcase" id="title-showcase">
-          <div class="showcase-card sc-wealth">
-            <i class="fa-solid fa-landmark"></i>
-            <span>Build Empires</span>
-          </div>
-          <div class="showcase-card sc-crime">
-            <i class="fa-solid fa-skull"></i>
-            <span>Crime Pays</span>
-          </div>
-          <div class="showcase-card sc-casino">
-            <i class="fa-solid fa-dice"></i>
-            <span>High Stakes</span>
-          </div>
-          <div class="showcase-card sc-bank">
-            <i class="fa-solid fa-building-columns"></i>
-            <span>Banking</span>
-          </div>
-          <div class="showcase-card sc-career">
-            <i class="fa-solid fa-briefcase"></i>
-            <span>Careers</span>
-          </div>
-          <div class="showcase-card sc-market">
-            <i class="fa-solid fa-chart-line"></i>
-            <span>Markets</span>
-          </div>
-          <div class="showcase-card sc-politics">
-            <i class="fa-solid fa-scale-balanced"></i>
-            <span>Politics</span>
-          </div>
-          <div class="showcase-card sc-social">
-            <i class="fa-solid fa-heart"></i>
-            <span>Relationships</span>
-          </div>
-        </div>
+        <!-- Typewriter tagline -->
+        <p class="title-tagline" id="title-tagline"></p>
 
-        <!-- Hook line -->
+        <!-- Hook description -->
         <p class="title-hook" id="title-desc"></p>
 
-        <!-- Menu buttons -->
+        <!-- Menu buttons — side by side -->
         <div class="title-menu" id="title-menu">
           <button class="btn-title-start" onclick="titleScreen.startNewLife()">
             <span class="btn-title-bg"></span>
-            <i class="fa-solid fa-play"></i>
-            <span>START NEW LIFE</span>
+            <i class="fa-solid fa-play-circle"></i>
+            START NEW LIFE
           </button>
           <button
             class="btn-title-continue"
@@ -165,21 +147,41 @@
             style="display: none"
           >
             <i class="fa-solid fa-rotate-right"></i>
-            <span>CONTINUE LIFE</span>
+            CONTINUE LIFE
           </button>
+        </div>
+
+        <!-- Feature showcase pills -->
+        <div class="title-showcase" id="title-showcase">
+          <div class="showcase-card sc-wealth">
+            <i class="fa-solid fa-coins"></i><span>Wealth</span>
+          </div>
+          <div class="showcase-card sc-crime">
+            <i class="fa-solid fa-user-secret"></i><span>Crime</span>
+          </div>
+          <div class="showcase-card sc-casino">
+            <i class="fa-solid fa-dice-d6"></i><span>Casino</span>
+          </div>
+          <div class="showcase-card sc-bank">
+            <i class="fa-solid fa-landmark"></i><span>Banking</span>
+          </div>
+          <div class="showcase-card sc-career">
+            <i class="fa-solid fa-briefcase"></i><span>Career</span>
+          </div>
+          <div class="showcase-card sc-market">
+            <i class="fa-solid fa-chart-line"></i><span>Market</span>
+          </div>
+          <div class="showcase-card sc-politics">
+            <i class="fa-solid fa-landmark-flag"></i><span>Politics</span>
+          </div>
+          <div class="showcase-card sc-social">
+            <i class="fa-solid fa-heart"></i><span>Social</span>
+          </div>
         </div>
 
         <!-- Footer -->
         <div class="title-footer-info">
-          <span class="title-ver"
-            ><i class="fa-solid fa-code-branch"></i> v1.0.0</span
-          >
-          <span class="title-ver"
-            ><i class="fa-solid fa-infinity"></i> Infinite Sandbox</span
-          >
-          <span class="title-ver"
-            ><i class="fa-solid fa-skull"></i> Permadeath</span
-          >
+          v1.0.0 &nbsp;·&nbsp; Infinite Sandbox &nbsp;·&nbsp; Permadeath
         </div>
       </div>
     </div>
@@ -190,35 +192,72 @@
       class="char-creation-screen"
       style="display: none"
     >
+      <!-- Background (same nighttime city as title screen) -->
+      <div class="cc-bg">
+        <img
+          class="cc-bg-img"
+          src="https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=1920&h=1080&fit=crop&auto=format"
+          alt=""
+        />
+        <div class="cc-bg-overlay"></div>
+      </div>
+
       <div class="char-creation-container">
+        <!-- Header -->
         <div class="char-header">
           <img src="logo.png" alt="Greedigo" class="char-logo" />
-          <h1>Create Your Character</h1>
-          <p>
-            Choose your name and the country you'll grow up in. Each country
-            shapes your journey.
-          </p>
+          <div class="char-header-text">
+            <h1>Create Your Character</h1>
+            <p>
+              You start at age 18 with $500. Your country shapes everything.
+            </p>
+          </div>
+        </div>
+
+        <!-- Step indicator -->
+        <div class="cc-steps">
+          <div class="cc-step cc-step-active">
+            <div class="cc-step-dot"><i class="fa-solid fa-user"></i></div>
+            <span>Identity</span>
+          </div>
+          <div class="cc-step-connector"></div>
+          <div class="cc-step">
+            <div class="cc-step-dot"><i class="fa-solid fa-globe"></i></div>
+            <span>Country</span>
+          </div>
+          <div class="cc-step-connector"></div>
+          <div class="cc-step">
+            <div class="cc-step-dot"><i class="fa-solid fa-rocket"></i></div>
+            <span>Begin</span>
+          </div>
         </div>
 
         <div class="char-form">
           <!-- Name Input -->
           <div class="char-field">
             <label for="char-name"
-              ><i class="fa-solid fa-user"></i> Your Name</label
+              ><i class="fa-solid fa-signature"></i> Your Name</label
             >
-            <input
-              type="text"
-              id="char-name"
-              placeholder="Enter your name..."
-              maxlength="24"
-              autocomplete="off"
-              oninput="charCreation.checkReady()"
-            />
+            <div class="cc-name-wrap">
+              <input
+                type="text"
+                id="char-name"
+                placeholder="Who are you?"
+                maxlength="24"
+                autocomplete="off"
+                oninput="charCreation.checkReady()"
+                spellcheck="false"
+              />
+              <div class="cc-name-bar"></div>
+            </div>
           </div>
 
           <!-- Country Selection -->
           <div class="char-field">
-            <label><i class="fa-solid fa-globe"></i> Country</label>
+            <label
+              ><i class="fa-solid fa-earth-americas"></i> Choose Your
+              Country</label
+            >
             <div class="country-search-wrap">
               <i class="fa-solid fa-magnifying-glass country-search-icon"></i>
               <input
@@ -227,13 +266,13 @@
                 placeholder="Search 193 countries..."
                 autocomplete="off"
                 oninput="charCreation.filterCountries(this.value)"
+                spellcheck="false"
               />
               <button
-                class="btn btn-outline btn-sm"
+                class="cc-dice-btn"
                 id="btn-random-country"
-                style="color: red; padding: 15px 8px !important"
                 onclick="charCreation.randomizeCountry()"
-                title="Pick a random country"
+                title="Random country"
               >
                 <i class="fa-solid fa-dice"></i>
               </button>
@@ -243,7 +282,7 @@
             </div>
           </div>
 
-          <!-- Country Details -->
+          <!-- Country Details Panel -->
           <div
             class="country-details"
             id="country-details"
@@ -251,20 +290,26 @@
           ></div>
         </div>
 
+        <!-- Begin button -->
         <button
-          class="btn btn-primary char-begin-btn"
+          class="char-begin-btn"
           id="btn-begin"
           disabled
           onclick="charCreation.start()"
         >
-          <i class="fa-solid fa-play"></i> Begin Life
+          <span class="char-begin-shimmer"></span>
+          <i class="fa-solid fa-play-circle"></i>
+          BEGIN MY LIFE
         </button>
+
+        <p class="cc-disclaimer">Your choices are permanent. Live with them.</p>
       </div>
     </div>
 
     <div class="app-shell" style="display: none" id="app-shell">
       <div class="app-container">
         <aside class="sidebar">
+          <!-- ═══ BRAND ═══ -->
           <div class="brand">
             <img src="logo.png" alt="Greedigo" class="brand-logo" />
             <div>
@@ -273,155 +318,193 @@
             </div>
           </div>
 
-          <div class="player-identity">
-            <div class="player-name-row">
-              <i class="fa-solid fa-user"></i>
-              <span id="hud-player-name">Player</span>
+          <!-- ═══ PLAYER IDENTITY CARD ═══ -->
+          <div class="sb-player-card">
+            <div class="sb-avatar">
+              <i class="fa-solid fa-user-tie"></i>
             </div>
-            <div class="player-country-row">
-              <span id="hud-player-country">Select a country</span>
+            <div class="sb-player-info">
+              <div class="sb-player-name" id="hud-player-name">Player</div>
+              <div class="sb-player-country" id="hud-player-country">
+                &mdash;
+              </div>
             </div>
-            <div class="player-traits" id="hud-country-traits"></div>
+            <div class="sb-age-badge">
+              Age&thinsp;<span id="stat-age">18</span>
+            </div>
           </div>
+          <div class="player-traits" id="hud-country-traits"></div>
+          <!-- compat: stat-player-name referenced by JS -->
+          <span id="stat-player-name" style="display: none"></span>
 
-          <div class="stats-grid">
+          <!-- ═══ WEALTH BLOCK ═══ -->
+          <div class="sb-wealth-block">
             <div class="stat-row hero">
               <span class="label">NET WORTH</span>
               <span class="value">$<span id="stat-networth">0</span></span>
             </div>
-            <div class="stat-row">
-              <span class="label">LIQUID CASH</span>
+            <div class="sb-cash-row">
+              <span class="sb-cash-label"
+                ><i class="fa-solid fa-wallet"></i>&nbsp;Liquid Cash</span
+              >
               <span class="mono-strong">$<span id="stat-cash">0</span></span>
             </div>
-
-            <div class="stat-row">
-              <span class="label">PLAYER</span>
-              <span class="value" id="stat-player-name">Player</span>
-            </div>
-
-            <div class="econ-widget">
-              <div class="stat-row econ-row">
-                <span class="label">INFLATION</span>
-                <span class="value econ-value">2.0%</span>
-              </div>
-              <div class="stat-row econ-row">
-                <span class="label">RATES</span>
-                <span class="value econ-value">5.2%</span>
-              </div>
-            </div>
-
             <button class="btn btn-outline btn-save" onclick="game.saveGame()">
               <i class="fa-solid fa-floppy-disk"></i> Save Game
             </button>
           </div>
 
-          <div class="stat-bars">
-            <div class="bar-group">
-              <div class="bar-label">
-                <span>Health</span><span id="val-health">100%</span>
-              </div>
-              <div class="progress-bg">
-                <div class="progress-fill fill-health" id="bar-health"></div>
-              </div>
+          <!-- ═══ VITALS ═══ -->
+          <div class="sb-section">
+            <div class="sb-section-label">
+              <i class="fa-solid fa-heart-pulse" style="color: #f97316"></i>
+              Vitals
             </div>
-            <div class="bar-group">
-              <div class="bar-label">
-                <span>Energy</span><span id="val-energy">100%</span>
+            <div class="stat-bars">
+              <div class="bar-group">
+                <div class="bar-label">
+                  <span
+                    ><i
+                      class="fa-solid fa-heart-pulse sb-bar-icon"
+                      style="color: #f97316"
+                    ></i
+                    >Health</span
+                  >
+                  <span id="val-health">100</span>
+                </div>
+                <div class="progress-bg">
+                  <div class="progress-fill fill-health" id="bar-health"></div>
+                </div>
               </div>
-              <div class="progress-bg">
-                <div class="progress-fill fill-energy" id="bar-energy"></div>
+              <div class="bar-group">
+                <div class="bar-label">
+                  <span
+                    ><i
+                      class="fa-solid fa-bolt sb-bar-icon"
+                      style="color: #fbbf24"
+                    ></i
+                    >Energy</span
+                  >
+                  <span id="val-energy">100%</span>
+                </div>
+                <div class="progress-bg">
+                  <div class="progress-fill fill-energy" id="bar-energy"></div>
+                </div>
               </div>
-            </div>
-            <div class="bar-group">
-              <div class="bar-label">
-                <span>Happiness</span><span id="val-happiness">50%</span>
+              <div class="bar-group">
+                <div class="bar-label">
+                  <span
+                    ><i
+                      class="fa-solid fa-face-smile sb-bar-icon"
+                      style="color: #38bdf8"
+                    ></i
+                    >Happiness</span
+                  >
+                  <span id="val-happiness">50%</span>
+                </div>
+                <div class="progress-bg">
+                  <div
+                    class="progress-fill fill-happiness"
+                    id="bar-happiness"
+                  ></div>
+                </div>
               </div>
-              <div class="progress-bg">
-                <div
-                  class="progress-fill fill-happiness"
-                  id="bar-happiness"
-                ></div>
+              <div class="bar-group smarts-highlight">
+                <div class="bar-label">
+                  <span
+                    ><i
+                      class="fa-solid fa-brain sb-bar-icon"
+                      style="color: #818cf8"
+                    ></i
+                    >Smarts</span
+                  >
+                  <span id="val-smarts">10</span>
+                </div>
+                <div class="progress-bg">
+                  <div class="progress-fill fill-smarts" id="bar-smarts"></div>
+                </div>
+                <div class="smarts-iq" id="smarts-iq">IQ: ~100</div>
               </div>
-            </div>
-            <div class="bar-group smarts-highlight">
-              <div class="bar-label">
-                <span><i class="fa-solid fa-brain"></i> Smarts</span
-                ><span id="val-smarts">10</span>
-              </div>
-              <div class="progress-bg">
-                <div class="progress-fill fill-smarts" id="bar-smarts"></div>
-              </div>
-              <div class="smarts-iq" id="smarts-iq">IQ: ~100</div>
             </div>
           </div>
 
+          <!-- ═══ RISK MONITOR ═══ -->
           <div class="risk-hud">
             <div class="hud-title">
-              <i class="fa-solid fa-heart-pulse"></i> Life Status
+              <i class="fa-solid fa-circle-radiation"></i> Risk Monitor
             </div>
-            <div class="hud-row metric-major">
-              <span
-                ><i class="fa-solid fa-skull-crossbones"></i> Death Risk</span
-              ><span id="hud-death-risk">0%</span>
-            </div>
-            <div class="hud-row metric-major">
-              <span><i class="fa-solid fa-fire"></i> Burnout</span
-              ><span id="hud-burnout">0%</span>
-            </div>
-            <div class="hud-row">
-              <span><i class="fa-solid fa-gavel"></i> Legal</span
-              ><span id="hud-legal-trend">Clean</span>
-            </div>
-            <div class="hud-row">
-              <span><i class="fa-solid fa-trophy"></i> Legend</span
-              ><span id="hud-legend-score">0</span>
+            <!-- 2-column big-number risk display -->
+            <div class="sb-risk-duo">
+              <div class="sb-risk-cell">
+                <div class="sb-risk-cell-label">
+                  <i class="fa-solid fa-skull-crossbones"></i>&thinsp;Death Risk
+                </div>
+                <div class="sb-risk-cell-val" id="hud-death-risk">0%</div>
+              </div>
+              <div class="sb-risk-cell">
+                <div class="sb-risk-cell-label">
+                  <i class="fa-solid fa-fire"></i>&thinsp;Burnout
+                </div>
+                <div class="sb-risk-cell-val" id="hud-burnout">0%</div>
+              </div>
             </div>
             <div class="hud-row">
-              <span><i class="fa-solid fa-bolt"></i> Streak</span
-              ><span id="hud-action-streak">0</span>
+              <span><i class="fa-solid fa-gavel"></i> Legal</span>
+              <span id="hud-legal-trend">Clean</span>
             </div>
-            <div class="hud-title" style="margin-top: 10px">
+            <div class="hud-row">
+              <span><i class="fa-solid fa-trophy"></i> Legend</span>
+              <span id="hud-legend-score">0</span>
+            </div>
+            <div class="hud-row">
+              <span><i class="fa-solid fa-bolt"></i> Streak</span>
+              <span id="hud-action-streak">0</span>
+            </div>
+          </div>
+
+          <!-- ═══ MONTHLY BUDGET ═══ -->
+          <div class="risk-hud sb-budget-hud">
+            <div class="hud-title">
               <i class="fa-solid fa-receipt"></i> Monthly Budget
             </div>
             <div class="hud-row">
-              <span><i class="fa-solid fa-sack-dollar"></i> Income</span
-              ><span id="hud-monthly-income">$0</span>
+              <span><i class="fa-solid fa-sack-dollar"></i> Income</span>
+              <span id="hud-monthly-income">$0</span>
             </div>
             <div class="hud-row">
-              <span><i class="fa-solid fa-landmark"></i> Taxes</span
-              ><span id="hud-monthly-tax">$0</span>
+              <span><i class="fa-solid fa-landmark"></i> Taxes</span>
+              <span id="hud-monthly-tax">$0</span>
             </div>
             <div class="hud-row">
-              <span><i class="fa-solid fa-house"></i> Living Costs</span
-              ><span id="hud-monthly-living">$0</span>
+              <span><i class="fa-solid fa-house"></i> Living Costs</span>
+              <span id="hud-monthly-living">$0</span>
             </div>
             <div class="hud-row">
-              <span><i class="fa-solid fa-credit-card"></i> Total Expenses</span
-              ><span id="hud-monthly-expenses">$0</span>
+              <span><i class="fa-solid fa-credit-card"></i> Expenses</span>
+              <span id="hud-monthly-expenses">$0</span>
             </div>
             <div class="hud-row metric-major">
-              <span><i class="fa-solid fa-chart-line"></i> Net Cashflow</span
-              ><span id="hud-monthly-net">$0</span>
+              <span><i class="fa-solid fa-chart-line"></i> Cashflow</span>
+              <span id="hud-monthly-net">$0</span>
             </div>
           </div>
 
+          <!-- ═══ LIFE SNAPSHOT ═══ -->
           <div class="life-snapshot" id="life-snapshot">
             <div class="hud-title"><i class="fa-solid fa-users"></i> Life</div>
             <div class="hud-row">
-              <span><i class="fa-solid fa-heart"></i> Partner</span
-              ><span id="hud-partner">Single</span>
+              <span><i class="fa-solid fa-heart"></i> Partner</span>
+              <span id="hud-partner">Single</span>
             </div>
             <div class="hud-row">
-              <span><i class="fa-solid fa-baby"></i> Kids</span
-              ><span id="hud-kids">0</span>
+              <span><i class="fa-solid fa-baby"></i> Kids</span>
+              <span id="hud-kids">0</span>
             </div>
             <div class="hud-row">
-              <span><i class="fa-solid fa-paw"></i> Pets</span
-              ><span id="hud-pets">0</span>
+              <span><i class="fa-solid fa-paw"></i> Pets</span>
+              <span id="hud-pets">0</span>
             </div>
           </div>
-
-          <div class="age-display">Age: <span id="stat-age">18</span></div>
         </aside>
 
         <main class="main-area">
@@ -608,51 +691,113 @@
           </nav>
 
           <div id="view-career" class="view-container active">
-            <div class="section-title">
-              <i class="fa-solid fa-user-tie"></i> Career & Education
+            <div class="view-hero">
+              <img
+                class="view-hero-img"
+                src="https://images.unsplash.com/photo-1541746972996-4e0b0f43e02a?w=1400&h=560&fit=crop&auto=format"
+                alt=""
+                loading="lazy"
+              />
+              <div class="view-hero-overlay"></div>
+              <div class="view-hero-content">
+                <i class="fa-solid fa-user-tie"></i>
+                <div>
+                  <h2>Career & Education</h2>
+                  <div
+                    style="
+                      font-size: 0.88rem;
+                      color: rgba(255, 255, 255, 0.5);
+                      margin-top: 4px;
+                      font-weight: 500;
+                    "
+                  >
+                    Climb the ladder. Earn more. Build your empire.
+                  </div>
+                </div>
+              </div>
             </div>
 
             <div class="card panel-current-job" id="current-job-panel"></div>
 
+            <div class="career-section-label">
+              <i
+                class="fa-solid fa-graduation-cap"
+                style="color: var(--gold)"
+              ></i
+              >Education
+            </div>
             <div class="grid-cards" id="edu-list"></div>
 
-            <h3 class="section-subtitle">Job Listings</h3>
+            <div class="career-section-label" style="margin-top: 32px">
+              <i class="fa-solid fa-briefcase" style="color: var(--gold)"></i
+              >Job Market
+            </div>
             <div class="grid-cards" id="job-list"></div>
           </div>
 
           <div id="view-business" class="view-container">
-            <div class="section-title">
-              <i class="fa-solid fa-rocket"></i> Business Empire
+            <div class="view-hero">
+              <img
+                class="view-hero-img"
+                src="https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=1400&h=560&fit=crop&auto=format"
+                alt=""
+                loading="lazy"
+              />
+              <div class="view-hero-overlay"></div>
+              <div class="view-hero-content">
+                <i class="fa-solid fa-rocket"></i>
+                <h2>Business Empire</h2>
+              </div>
             </div>
 
-            <!-- Business Dashboard -->
-            <div class="biz-overview">
-              <div class="biz-overview-stat">
-                <i class="fa-solid fa-building"></i>
-                <div>
-                  <span class="biz-ov-value" id="biz-count">0</span
-                  ><span class="biz-ov-label">Companies</span>
+            <!-- Business KPI Strip -->
+            <div class="biz-kpi-strip">
+              <div class="biz-kpi-cell">
+                <div
+                  class="biz-kpi-icon"
+                  style="color: #a78bfa; background: rgba(167, 139, 250, 0.1)"
+                >
+                  <i class="fa-solid fa-building"></i>
+                </div>
+                <div class="biz-kpi-body">
+                  <span class="biz-kpi-val" id="biz-count">0</span>
+                  <span class="biz-kpi-label">Companies</span>
                 </div>
               </div>
-              <div class="biz-overview-stat">
-                <i class="fa-solid fa-chart-line"></i>
-                <div>
-                  <span class="biz-ov-value" id="biz-total-val">$0</span
-                  ><span class="biz-ov-label">Total Value</span>
+              <div class="biz-kpi-cell">
+                <div
+                  class="biz-kpi-icon"
+                  style="color: #22d3ee; background: rgba(34, 211, 238, 0.1)"
+                >
+                  <i class="fa-solid fa-chart-line"></i>
+                </div>
+                <div class="biz-kpi-body">
+                  <span class="biz-kpi-val" id="biz-total-val">$0</span>
+                  <span class="biz-kpi-label">Portfolio Value</span>
                 </div>
               </div>
-              <div class="biz-overview-stat">
-                <i class="fa-solid fa-people-group"></i>
-                <div>
-                  <span class="biz-ov-value" id="biz-employees">0</span
-                  ><span class="biz-ov-label">Employees</span>
+              <div class="biz-kpi-cell">
+                <div
+                  class="biz-kpi-icon"
+                  style="color: #34d399; background: rgba(52, 211, 153, 0.1)"
+                >
+                  <i class="fa-solid fa-people-group"></i>
+                </div>
+                <div class="biz-kpi-body">
+                  <span class="biz-kpi-val" id="biz-employees">0</span>
+                  <span class="biz-kpi-label">Employees</span>
                 </div>
               </div>
-              <div class="biz-overview-stat">
-                <i class="fa-solid fa-money-bill-trend-up"></i>
-                <div>
-                  <span class="biz-ov-value" id="biz-net">$0</span
-                  ><span class="biz-ov-label">Monthly P/L</span>
+              <div class="biz-kpi-cell">
+                <div
+                  class="biz-kpi-icon"
+                  style="color: #fbbf24; background: rgba(251, 191, 36, 0.1)"
+                >
+                  <i class="fa-solid fa-money-bill-trend-up"></i>
+                </div>
+                <div class="biz-kpi-body">
+                  <span class="biz-kpi-val" id="biz-net">$0</span>
+                  <span class="biz-kpi-label">Monthly P/L</span>
                 </div>
               </div>
             </div>
@@ -683,8 +828,18 @@
           </div>
 
           <div id="view-hustles" class="view-container">
-            <div class="section-title">
-              <i class="fa-solid fa-bolt"></i> Side Hustles & Creator Economy
+            <div class="view-hero">
+              <img
+                class="view-hero-img"
+                src="https://images.unsplash.com/photo-1432888498266-38ffec3eaf0a?w=1400&h=560&fit=crop&auto=format"
+                alt=""
+                loading="lazy"
+              />
+              <div class="view-hero-overlay"></div>
+              <div class="view-hero-content">
+                <i class="fa-solid fa-bolt"></i>
+                <h2>Side Hustles & Creator Economy</h2>
+              </div>
             </div>
 
             <h3 class="section-subtitle">Active Side Hustle</h3>
@@ -698,8 +853,18 @@
           </div>
 
           <div id="view-market" class="view-container">
-            <div class="section-title">
-              <i class="fa-solid fa-arrow-trend-up"></i> Global Markets
+            <div class="view-hero">
+              <img
+                class="view-hero-img"
+                src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=1400&h=560&fit=crop&auto=format"
+                alt=""
+                loading="lazy"
+              />
+              <div class="view-hero-overlay"></div>
+              <div class="view-hero-content">
+                <i class="fa-solid fa-arrow-trend-up"></i>
+                <h2>Global Markets</h2>
+              </div>
             </div>
 
             <div class="chart-box">
@@ -710,8 +875,18 @@
           </div>
 
           <div id="view-lifestyle" class="view-container">
-            <div class="section-title">
-              <i class="fa-solid fa-cart-shopping"></i> Inventory & Shop
+            <div class="view-hero">
+              <img
+                class="view-hero-img"
+                src="https://images.unsplash.com/photo-1483985988355-763728e1935b?w=1400&h=560&fit=crop&auto=format"
+                alt=""
+                loading="lazy"
+              />
+              <div class="view-hero-overlay"></div>
+              <div class="view-hero-content">
+                <i class="fa-solid fa-cart-shopping"></i>
+                <h2>Inventory & Shop</h2>
+              </div>
             </div>
             <div class="grid-cards inventory-block" id="inventory-list"></div>
 
@@ -720,8 +895,18 @@
           </div>
 
           <div id="view-wellness" class="view-container">
-            <div class="section-title">
-              <i class="fa-solid fa-spa"></i> Health & Wellness
+            <div class="view-hero">
+              <img
+                class="view-hero-img"
+                src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=1400&h=560&fit=crop&auto=format"
+                alt=""
+                loading="lazy"
+              />
+              <div class="view-hero-overlay"></div>
+              <div class="view-hero-content">
+                <i class="fa-solid fa-spa"></i>
+                <h2>Health & Wellness</h2>
+              </div>
             </div>
 
             <div class="card" id="wellness-overview"></div>
@@ -731,15 +916,35 @@
           </div>
 
           <div id="view-travel" class="view-container">
-            <div class="section-title">
-              <i class="fa-solid fa-plane-departure"></i> Travel & Migration
+            <div class="view-hero">
+              <img
+                class="view-hero-img"
+                src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1400&h=560&fit=crop&auto=format"
+                alt=""
+                loading="lazy"
+              />
+              <div class="view-hero-overlay"></div>
+              <div class="view-hero-content">
+                <i class="fa-solid fa-plane-departure"></i>
+                <h2>Travel & Migration</h2>
+              </div>
             </div>
             <div id="travel-panel"></div>
           </div>
 
           <div id="view-wealth" class="view-container">
-            <div class="section-title">
-              <i class="fa-solid fa-landmark"></i> Wealth Engines
+            <div class="view-hero">
+              <img
+                class="view-hero-img"
+                src="https://images.unsplash.com/photo-1560520653-9e0e4c89eb11?w=1400&h=560&fit=crop&auto=format"
+                alt=""
+                loading="lazy"
+              />
+              <div class="view-hero-overlay"></div>
+              <div class="view-hero-content">
+                <i class="fa-solid fa-landmark"></i>
+                <h2>Wealth Engines</h2>
+              </div>
             </div>
 
             <div class="card" id="passive-preview"></div>
@@ -758,119 +963,164 @@
           </div>
 
           <div id="view-bank" class="view-container">
-            <div class="section-title">
-              <i class="fa-solid fa-building-columns"></i> Banking
+            <div class="view-hero">
+              <img
+                class="view-hero-img"
+                src="https://images.unsplash.com/photo-1601597111158-2fceff292cdc?w=1400&h=560&fit=crop&auto=format"
+                alt=""
+                loading="lazy"
+              />
+              <div class="view-hero-overlay"></div>
+              <div class="view-hero-content">
+                <i class="fa-solid fa-building-columns"></i>
+                <h2>Banking</h2>
+              </div>
             </div>
 
-            <div class="card" id="bank-overview"></div>
+            <div id="bank-overview"></div>
 
-            <h3 class="section-subtitle">Your Accounts</h3>
+            <h3 class="section-subtitle">
+              <i class="fa-solid fa-vault"></i> Your Accounts
+            </h3>
             <div class="grid-cards" id="bank-accounts"></div>
 
-            <h3 class="section-subtitle">Credit Card</h3>
+            <h3 class="section-subtitle">
+              <i class="fa-solid fa-credit-card"></i> Credit Card
+            </h3>
             <div class="grid-cards" id="bank-credit"></div>
 
-            <h3 class="section-subtitle">Loans & Savings</h3>
+            <h3 class="section-subtitle">
+              <i class="fa-solid fa-hand-holding-dollar"></i> Loans &amp;
+              Savings
+            </h3>
             <div class="grid-cards" id="bank-loan-offers"></div>
 
             <div class="grid-cards" id="bank-active-loans"></div>
           </div>
 
           <div id="view-crime" class="view-container">
-            <div class="section-title">
-              <i class="fa-solid fa-skull"></i> The Underworld
-            </div>
-
-            <div class="crime-dashboard">
-              <div class="card crime-stat-card">
-                <div class="crime-stat-title">WANTED LEVEL</div>
-                <div class="progress-bg heat-meter">
-                  <div class="progress-fill" id="meter-heat"></div>
-                </div>
-                <div class="heat-actions">
-                  <span id="heat-label">Low Heat</span>
-                  <button
-                    class="btn btn-outline heat-btn"
-                    onclick="game.launderHeat()"
+            <div class="view-hero">
+              <img
+                class="view-hero-img"
+                src="crime.png"
+                alt=""
+                loading="lazy"
+              />
+              <div class="view-hero-overlay"></div>
+              <div class="view-hero-content">
+                <i class="fa-solid fa-skull-crossbones"></i>
+                <div>
+                  <h2>The Underworld</h2>
+                  <div
+                    style="
+                      font-size: 0.88rem;
+                      color: rgba(255, 255, 255, 0.45);
+                      margin-top: 4px;
+                      font-weight: 500;
+                    "
                   >
-                    Launder ($1k)
-                  </button>
-                </div>
-              </div>
-              <div class="card crime-stat-card">
-                <div class="crime-stat-title">STREET REP</div>
-                <div class="rep-value" id="stat-rep">0</div>
-                <div class="rep-subtitle">
-                  Level <span id="rep-level">1</span> Thug
+                    Rise through the ranks. Control the streets. Build your
+                    empire.
+                  </div>
                 </div>
               </div>
             </div>
 
-            <div class="crime-warning">
+            <!-- CRIME HUD -->
+            <div class="crime-hud" id="crime-hud">
+              <!-- injected by JS -->
+            </div>
+
+            <!-- DRUG LORD EMPIRE -->
+            <div class="crime-section-label">
+              <i class="fa-solid fa-flask-vial"></i>Drug Empire
+            </div>
+            <div id="drug-empire-panel" class="grid-cards"></div>
+
+            <!-- CRIMINAL SKILLS -->
+            <div class="crime-section-label">
+              <i class="fa-solid fa-dumbbell"></i>Criminal Skills
+            </div>
+            <div
+              id="crime-skills-list"
+              class="grid-cards crime-skills-grid"
+            ></div>
+
+            <!-- LEGAL DEFENSE -->
+            <div class="crime-section-label">
+              <i class="fa-solid fa-scale-balanced"></i>Legal Defense
+            </div>
+            <div id="lawyer-list" class="grid-cards"></div>
+
+            <!-- CRIMINAL OPERATIONS -->
+            <div class="crime-section-label">
+              <i class="fa-solid fa-mask"></i>Criminal Operations
+            </div>
+            <div class="crime-ops-notice" id="crime-ops-notice">
               <i class="fa-solid fa-triangle-exclamation"></i>
-              <strong>Risk Factor:</strong> Higher Rep unlocks better jobs.
-              Higher Heat increases jail time and bust chance.
+              <span
+                >Heat increases bust chance — train skills &amp; hire a lawyer
+                to tilt the odds.</span
+              >
             </div>
-
-            <h3 class="section-subtitle tight">Criminal Operations</h3>
             <div class="grid-cards" id="crime-list"></div>
           </div>
 
           <div id="view-casino" class="view-container">
-            <div class="section-title">
-              <i class="fa-solid fa-dice"></i> High Stakes Casino
-            </div>
-            <div class="card casino-hero" id="casino-stat-card">
-              <div class="card-header casino-hero-head">
+            <div class="view-hero">
+              <img
+                class="view-hero-img"
+                src="https://images.unsplash.com/photo-1596838132731-3301c3fd4317?w=1400&h=560&fit=crop&auto=format"
+                alt=""
+                loading="lazy"
+              />
+              <div class="view-hero-overlay"></div>
+              <div class="view-hero-content">
+                <i class="fa-solid fa-dice-d6"></i>
                 <div>
-                  <h3>VIP Lounge</h3>
-                  <p class="casino-hero-text">
-                    Professional-grade bankroll control. Read volatility before
-                    placing each hand.
-                  </p>
-                </div>
-                <span class="tag safe" id="casino-lifetime-net">+$0</span>
-              </div>
-
-              <div class="casino-kpi-grid">
-                <div class="casino-kpi-card">
-                  <span class="casino-kpi-label">Total Bets</span>
-                  <span class="casino-kpi-value" id="casino-total-bets">0</span>
-                </div>
-                <div class="casino-kpi-card">
-                  <span class="casino-kpi-label">Win Rate</span>
-                  <span class="casino-kpi-value" id="casino-win-rate">0%</span>
-                </div>
-                <div class="casino-kpi-card">
-                  <span class="casino-kpi-label">Current Streak</span>
-                  <span class="casino-kpi-value" id="casino-streak">Cold</span>
-                </div>
-                <div class="casino-kpi-card">
-                  <span class="casino-kpi-label">Best Payout</span>
-                  <span class="casino-kpi-value" id="casino-best-payout"
-                    >$0</span
+                  <h2>The Casino Floor</h2>
+                  <div
+                    style="
+                      font-size: 0.88rem;
+                      color: rgba(255, 255, 255, 0.6);
+                      margin-top: 4px;
+                    "
                   >
+                    High-stakes gambling. Read the odds. Manage your bankroll.
+                  </div>
                 </div>
               </div>
             </div>
 
-            <div class="casino-meta-grid">
-              <div class="card casino-intel" id="casino-intel-card"></div>
-              <div class="card casino-recent" id="casino-recent-card">
-                <div class="card-header">
-                  <h3>Recent Outcomes</h3>
-                  <span class="tag" id="casino-last-outcome">No hands yet</span>
-                </div>
-                <div class="casino-recent-list" id="casino-recent-list"></div>
-              </div>
-            </div>
+            <!-- Live HUD — populated by JS -->
+            <div id="casino-hud" class="casino-hud"></div>
 
+            <div class="casino-section-label">
+              <i class="fa-solid fa-table-cells" style="color: var(--gold)"></i>
+              Game Tables
+            </div>
             <div class="grid-cards" id="casino-games-list"></div>
+
+            <div class="casino-section-label" style="margin-top: 20px">
+              <i class="fa-solid fa-scroll" style="color: var(--gold)"></i>
+              Session History
+            </div>
+            <div id="casino-session-log"></div>
           </div>
 
           <div id="view-relationships" class="view-container">
-            <div class="section-title">
-              <i class="fa-solid fa-heart"></i> Relationships & Family
+            <div class="view-hero">
+              <img
+                class="view-hero-img"
+                src="https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?w=1400&h=560&fit=crop&auto=format"
+                alt=""
+                loading="lazy"
+              />
+              <div class="view-hero-overlay"></div>
+              <div class="view-hero-content">
+                <i class="fa-solid fa-heart"></i>
+                <h2>Relationships & Family</h2>
+              </div>
             </div>
 
             <div class="card" id="relationship-status-card"></div>
@@ -884,6 +1134,16 @@
             <div class="grid-cards" id="children-list"></div>
 
             <h3 class="section-subtitle">
+              <i class="fa-solid fa-mask"></i> Side Relationships
+            </h3>
+            <div
+              id="side-rel-header-card"
+              class="card"
+              style="display: none"
+            ></div>
+            <div class="grid-cards" id="side-relationships-list"></div>
+
+            <h3 class="section-subtitle">
               <i class="fa-solid fa-paw"></i> Pets
             </h3>
             <div class="grid-cards" id="pet-list"></div>
@@ -891,8 +1151,18 @@
           </div>
 
           <div id="view-prison" class="view-container">
-            <div class="section-title">
-              <i class="fa-solid fa-handcuffs"></i> Federal Prison
+            <div class="view-hero">
+              <img
+                class="view-hero-img"
+                src="prison.png"
+                alt=""
+                loading="lazy"
+              />
+              <div class="view-hero-overlay"></div>
+              <div class="view-hero-content">
+                <i class="fa-solid fa-handcuffs"></i>
+                <h2>Federal Prison</h2>
+              </div>
             </div>
 
             <div class="card" id="prison-status-card"></div>
@@ -902,38 +1172,99 @@
           </div>
 
           <div id="view-politics" class="view-container">
-            <div class="section-title">
-              <i class="fa-solid fa-scale-balanced"></i> Political Career
+            <div class="view-hero">
+              <img
+                class="view-hero-img"
+                src="https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?w=1400&h=560&fit=crop&auto=format"
+                alt=""
+                loading="lazy"
+              />
+              <div class="view-hero-overlay"></div>
+              <div class="view-hero-content">
+                <i class="fa-solid fa-landmark"></i>
+                <div>
+                  <h2>The Political Arena</h2>
+                  <div
+                    style="
+                      font-size: 0.88rem;
+                      color: rgba(255, 255, 255, 0.6);
+                      margin-top: 4px;
+                    "
+                  >
+                    Build influence, win elections, shape your city. Power has a
+                    price.
+                  </div>
+                </div>
+              </div>
             </div>
-            <div
-              class="card"
-              id="politics-dashboard"
-              style="margin-bottom: 20px"
-            ></div>
-            <h3 class="section-subtitle">Campaign Trail</h3>
+
+            <!-- Live HUD -->
+            <div id="politics-hud" class="politics-hud"></div>
+
+            <!-- Office actions or grassroots panel -->
+            <div id="politics-action-panel"></div>
+
+            <div class="politics-section-label">
+              <i class="fa-solid fa-person-booth" style="color: #818cf8"></i>
+              Campaign Trail
+            </div>
             <div class="grid-cards" id="politics-roles-list"></div>
           </div>
 
           <div id="view-pastlives" class="view-container">
-            <div class="section-title">
-              <i class="fa-solid fa-skull"></i> Past Lives
+            <div class="view-hero">
+              <img
+                class="view-hero-img"
+                src="https://images.unsplash.com/photo-1502657877623-f66bf489d236?w=1400&h=560&fit=crop&auto=format"
+                alt=""
+                loading="lazy"
+              />
+              <div class="view-hero-overlay"></div>
+              <div class="view-hero-content">
+                <i class="fa-solid fa-skull"></i>
+                <h2>Past Lives</h2>
+              </div>
             </div>
-            <p
+            <div
               style="
-                color: var(--text-muted);
-                font-size: 0.88rem;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
                 margin-bottom: 16px;
+                gap: 12px;
+                flex-wrap: wrap;
               "
             >
-              A record of all your previous lives — how you lived, and how you
-              died.
-            </p>
+              <p
+                style="color: var(--text-muted); font-size: 0.88rem; margin: 0"
+              >
+                A record of all your previous lives — how you lived, and how you
+                died.
+              </p>
+              <button
+                class="btn death-new-btn"
+                style="flex-shrink: 0"
+                onclick="game.startNewTimeline()"
+              >
+                <i class="fa-solid fa-rotate"></i>&nbsp;Begin New Life
+              </button>
+            </div>
             <div id="past-lives-list"></div>
           </div>
 
           <div id="view-ending" class="view-container">
-            <div class="section-title">
-              <i class="fa-solid fa-hourglass-end"></i> Timeline Ending
+            <div class="view-hero">
+              <img
+                class="view-hero-img"
+                src="https://images.unsplash.com/photo-1519681393784-d120267933ba?w=1400&h=560&fit=crop&auto=format"
+                alt=""
+                loading="lazy"
+              />
+              <div class="view-hero-overlay"></div>
+              <div class="view-hero-content">
+                <i class="fa-solid fa-hourglass-end"></i>
+                <h2>Timeline Ending</h2>
+              </div>
             </div>
             <div class="ending-panel" id="ending-panel"></div>
           </div>
@@ -983,6 +1314,62 @@
               </button>
             </div>
           </div>
+
+          <!-- ═══ Mobile Bottom Navigation Bar ═══ -->
+          <nav class="mob-bottom-nav" id="mob-bottom-nav">
+            <button
+              class="mbn-tab"
+              data-view="career"
+              onclick="app.setView('career')"
+            >
+              <i class="fa-solid fa-briefcase"></i><span>Career</span>
+            </button>
+            <button
+              class="mbn-tab"
+              data-view="hustles"
+              onclick="app.setView('hustles')"
+            >
+              <i class="fa-solid fa-bolt"></i><span>Hustle</span>
+            </button>
+            <button
+              class="mbn-tab"
+              data-view="business"
+              onclick="app.setView('business')"
+            >
+              <i class="fa-solid fa-building"></i><span>Biz</span>
+            </button>
+            <button
+              class="mbn-tab"
+              data-view="market"
+              onclick="app.setView('market')"
+            >
+              <i class="fa-solid fa-chart-line"></i><span>Market</span>
+            </button>
+            <button
+              class="mbn-tab"
+              data-view="bank"
+              onclick="app.setView('bank')"
+            >
+              <i class="fa-solid fa-building-columns"></i><span>Bank</span>
+            </button>
+            <button
+              class="mbn-tab"
+              data-view="lifestyle"
+              onclick="app.setView('lifestyle')"
+            >
+              <i class="fa-solid fa-house-chimney"></i><span>Life</span>
+            </button>
+            <button
+              class="mbn-tab"
+              data-view="casino"
+              onclick="app.setView('casino')"
+            >
+              <i class="fa-solid fa-dice"></i><span>Casino</span>
+            </button>
+            <button class="mbn-tab mbn-more" onclick="app.toggleMobileNav()">
+              <i class="fa-solid fa-bars"></i><span>More</span>
+            </button>
+          </nav>
         </main>
       </div>
     </div>
@@ -994,6 +1381,64 @@
         </div>
         <p id="modal-desc" class="modal-desc">Description...</p>
         <div id="modal-actions"></div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         DEATH OVERLAY — shown when the player dies
+         ═══════════════════════════════════════════════════════════ -->
+    <div id="death-overlay" class="death-overlay">
+      <div class="death-bg"></div>
+      <div class="death-content">
+        <div class="death-skull-wrap">
+          <div class="death-skull-ring"></div>
+          <i class="fa-solid fa-skull death-skull-icon"></i>
+        </div>
+        <div class="death-title-text">YOU DIED</div>
+        <div class="death-cause-wrap">
+          <div class="death-cause-label">CAUSE OF DEATH</div>
+          <div class="death-cause-text" id="death-cause-text">Unknown</div>
+        </div>
+        <div class="death-stats-grid">
+          <div class="death-stat-box">
+            <div class="death-stat-label">Age at Death</div>
+            <div class="death-stat-val" id="death-stat-age">&mdash;</div>
+          </div>
+          <div class="death-stat-box">
+            <div class="death-stat-label">Net Worth</div>
+            <div class="death-stat-val" id="death-stat-nw">&mdash;</div>
+          </div>
+          <div class="death-stat-box">
+            <div class="death-stat-label">Greed Score</div>
+            <div class="death-stat-val" id="death-stat-greed">&mdash;</div>
+          </div>
+          <div class="death-stat-box">
+            <div class="death-stat-label">Legend Score</div>
+            <div class="death-stat-val" id="death-stat-legacy">&mdash;</div>
+          </div>
+        </div>
+        <div class="death-mourning" id="death-mourning"></div>
+        <div class="death-epitaph" id="death-epitaph"></div>
+        <div class="death-actions">
+          <button
+            class="btn death-new-btn"
+            onclick="
+              game._closeDeath();
+              game.startNewTimeline();
+            "
+          >
+            <i class="fa-solid fa-rotate"></i>&nbsp;Begin New Life
+          </button>
+          <button
+            class="btn btn-outline death-hist-btn"
+            onclick="
+              game._closeDeath();
+              app.setView('pastlives');
+            "
+          >
+            <i class="fa-solid fa-clock-rotate-left"></i>&nbsp;Past Lives
+          </button>
+        </div>
       </div>
     </div>
 
