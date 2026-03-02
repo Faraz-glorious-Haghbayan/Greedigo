@@ -246,55 +246,397 @@ const CONFIG = {
   // REFACTORED CRIME SCHEMA
   CRIMES: [
     // ── PETTY ──────────────────────────────────────────────────────────
-    { id:"shoplift",    name:"Shoplift",            type:"Petty",        reqRep:0,    baseChance:0.88, risk:0.10, heatAdd:5,   reward:[60,220],        jail:1,   skill:"stealth",       desc:"Pocket high-value items. Quick and low risk." },
-    { id:"pickpocket",  name:"Pickpocket",          type:"Petty",        reqRep:10,   baseChance:0.80, risk:0.18, heatAdd:8,   reward:[120,500],       jail:2,   skill:"stealth",       desc:"Lift wallets from crowds. All fingers, no traces." },
-    { id:"mug",         name:"Strong-Arm Robbery",  type:"Street",       reqRep:25,   baseChance:0.75, risk:0.28, heatAdd:15,  reward:[300,1200],      jail:4,   skill:"intimidation",  desc:"Take what you want. Speed is everything." },
+    {
+      id: "shoplift",
+      name: "Shoplift",
+      type: "Petty",
+      reqRep: 0,
+      baseChance: 0.88,
+      risk: 0.1,
+      heatAdd: 5,
+      reward: [60, 220],
+      jail: 1,
+      skill: "stealth",
+      desc: "Pocket high-value items. Quick and low risk.",
+    },
+    {
+      id: "pickpocket",
+      name: "Pickpocket",
+      type: "Petty",
+      reqRep: 10,
+      baseChance: 0.8,
+      risk: 0.18,
+      heatAdd: 8,
+      reward: [120, 500],
+      jail: 2,
+      skill: "stealth",
+      desc: "Lift wallets from crowds. All fingers, no traces.",
+    },
+    {
+      id: "mug",
+      name: "Strong-Arm Robbery",
+      type: "Street",
+      reqRep: 25,
+      baseChance: 0.75,
+      risk: 0.28,
+      heatAdd: 15,
+      reward: [300, 1200],
+      jail: 4,
+      skill: "intimidation",
+      desc: "Take what you want. Speed is everything.",
+    },
     // ── FELONY ─────────────────────────────────────────────────────────
-    { id:"carjack",     name:"Carjack & Strip",     type:"Felony",       reqRep:80,   baseChance:0.65, risk:0.35, heatAdd:22,  reward:[1200,5500],     jail:8,   skill:"street_smarts", desc:"Strip a luxury car for parts. Sell through a chop shop." },
-    { id:"burglary",    name:"House Burglary",      type:"Felony",       reqRep:120,  baseChance:0.60, risk:0.40, heatAdd:28,  reward:[2500,9000],     jail:14,  skill:"stealth",       desc:"Break & enter a wealthy home. Don't wake the dog." },
-    { id:"robbery",     name:"Armed Robbery",       type:"Felony",       reqRep:200,  baseChance:0.58, risk:0.50, heatAdd:38,  reward:[5000,20000],    jail:24,  skill:"intimidation",  desc:"Hit a store at gunpoint. High adrenaline, high risk." },
+    {
+      id: "carjack",
+      name: "Carjack & Strip",
+      type: "Felony",
+      reqRep: 80,
+      baseChance: 0.65,
+      risk: 0.35,
+      heatAdd: 22,
+      reward: [1200, 5500],
+      jail: 8,
+      skill: "street_smarts",
+      desc: "Strip a luxury car for parts. Sell through a chop shop.",
+    },
+    {
+      id: "burglary",
+      name: "House Burglary",
+      type: "Felony",
+      reqRep: 120,
+      baseChance: 0.6,
+      risk: 0.4,
+      heatAdd: 28,
+      reward: [2500, 9000],
+      jail: 14,
+      skill: "stealth",
+      desc: "Break & enter a wealthy home. Don't wake the dog.",
+    },
+    {
+      id: "robbery",
+      name: "Armed Robbery",
+      type: "Felony",
+      reqRep: 200,
+      baseChance: 0.58,
+      risk: 0.5,
+      heatAdd: 38,
+      reward: [5000, 20000],
+      jail: 24,
+      skill: "intimidation",
+      desc: "Hit a store at gunpoint. High adrenaline, high risk.",
+    },
     // ── CYBER / FRAUD ──────────────────────────────────────────────────
-    { id:"phishing",    name:"Phishing Campaign",   type:"Cyber",        reqRep:45,   baseChance:0.72, risk:0.18, heatAdd:14,  reward:[800,6000],      jail:12,  skill:"hacking",       desc:"Mass phishing emails, steal credentials and drain accounts." },
-    { id:"scam",        name:"Crypto Rugpull",       type:"Cyber",        reqRep:150,  baseChance:0.60, risk:0.25, heatAdd:24,  reward:[8000,40000],    jail:30,  skill:"hacking",       desc:"Launch a fake coin, hype it, pull the liquidity. Gone." },
-    { id:"corp_hack",   name:"Corporate Hack",      type:"Cyber",        reqRep:350,  baseChance:0.50, risk:0.35, heatAdd:32,  reward:[40000,180000],  jail:48,  skill:"hacking",       desc:"Breach a corp network. Steal secrets or deploy ransomware." },
+    {
+      id: "phishing",
+      name: "Phishing Campaign",
+      type: "Cyber",
+      reqRep: 45,
+      baseChance: 0.72,
+      risk: 0.18,
+      heatAdd: 14,
+      reward: [800, 6000],
+      jail: 12,
+      skill: "hacking",
+      desc: "Mass phishing emails, steal credentials and drain accounts.",
+    },
+    {
+      id: "scam",
+      name: "Crypto Rugpull",
+      type: "Cyber",
+      reqRep: 150,
+      baseChance: 0.6,
+      risk: 0.25,
+      heatAdd: 24,
+      reward: [8000, 40000],
+      jail: 30,
+      skill: "hacking",
+      desc: "Launch a fake coin, hype it, pull the liquidity. Gone.",
+    },
+    {
+      id: "corp_hack",
+      name: "Corporate Hack",
+      type: "Cyber",
+      reqRep: 350,
+      baseChance: 0.5,
+      risk: 0.35,
+      heatAdd: 32,
+      reward: [40000, 180000],
+      jail: 48,
+      skill: "hacking",
+      desc: "Breach a corp network. Steal secrets or deploy ransomware.",
+    },
     // ── ORGANIZED ──────────────────────────────────────────────────────
-    { id:"protection",  name:"Protection Racket",   type:"Organized",    reqRep:250,  baseChance:0.68, risk:0.42, heatAdd:30,  reward:[3000,12000],    jail:36,  skill:"intimidation",  desc:"Make local businesses pay for 'security'. Monthly tribute." },
-    { id:"arms_deal",   name:"Arms Deal",            type:"Organized",    reqRep:500,  baseChance:0.52, risk:0.58, heatAdd:50,  reward:[30000,120000],  jail:60,  skill:"planning",      desc:"Broker illegal weapons. One wrong buyer ends everything." },
+    {
+      id: "protection",
+      name: "Protection Racket",
+      type: "Organized",
+      reqRep: 250,
+      baseChance: 0.68,
+      risk: 0.42,
+      heatAdd: 30,
+      reward: [3000, 12000],
+      jail: 36,
+      skill: "intimidation",
+      desc: "Make local businesses pay for 'security'. Monthly tribute.",
+    },
+    {
+      id: "arms_deal",
+      name: "Arms Deal",
+      type: "Organized",
+      reqRep: 500,
+      baseChance: 0.52,
+      risk: 0.58,
+      heatAdd: 50,
+      reward: [30000, 120000],
+      jail: 60,
+      skill: "planning",
+      desc: "Broker illegal weapons. One wrong buyer ends everything.",
+    },
     // ── DRUG TRADE ─────────────────────────────────────────────────────
-    { id:"street_deal", name:"Street Deal",         type:"Drug Trade",   reqRep:15,   baseChance:0.78, risk:0.22, heatAdd:12,  reward:[400,1800],      jail:6,   skill:"street_smarts", desc:"Move small product on the corner. Stay off the radar." },
-    { id:"cook_sell",   name:"Cook & Sell",         type:"Drug Trade",   reqRep:200,  baseChance:0.62, risk:0.40, heatAdd:30,  reward:[8000,35000],    jail:36,  skill:"chemistry",     desc:"Run a home lab. Quality product commands premium prices." },
-    { id:"distribution",name:"Distribution Run",   type:"Drug Trade",   reqRep:500,  baseChance:0.55, risk:0.52, heatAdd:45,  reward:[50000,180000],  jail:72,  skill:"planning",      desc:"Supply whole city blocks. Kilos, not grams." },
+    {
+      id: "street_deal",
+      name: "Street Deal",
+      type: "Drug Trade",
+      reqRep: 15,
+      baseChance: 0.78,
+      risk: 0.22,
+      heatAdd: 12,
+      reward: [400, 1800],
+      jail: 6,
+      skill: "street_smarts",
+      desc: "Move small product on the corner. Stay off the radar.",
+    },
+    {
+      id: "cook_sell",
+      name: "Cook & Sell",
+      type: "Drug Trade",
+      reqRep: 200,
+      baseChance: 0.62,
+      risk: 0.4,
+      heatAdd: 30,
+      reward: [8000, 35000],
+      jail: 36,
+      skill: "chemistry",
+      desc: "Run a home lab. Quality product commands premium prices.",
+    },
+    {
+      id: "distribution",
+      name: "Distribution Run",
+      type: "Drug Trade",
+      reqRep: 500,
+      baseChance: 0.55,
+      risk: 0.52,
+      heatAdd: 45,
+      reward: [50000, 180000],
+      jail: 72,
+      skill: "planning",
+      desc: "Supply whole city blocks. Kilos, not grams.",
+    },
     // ── ELITE ──────────────────────────────────────────────────────────
-    { id:"heist",       name:"Bank Heist",          type:"Elite",        reqRep:700,  baseChance:0.32, risk:0.85, heatAdd:90,  reward:[200000,700000], jail:120, skill:"planning",      desc:"The big one. Crew required. All-or-nothing." },
-    { id:"insider",     name:"Insider Trading",     type:"White Collar", reqRep:800,  baseChance:0.68, risk:0.50, heatAdd:38,  reward:[300000,1500000],jail:60,  skill:"hacking",       desc:"Exploit non-public corporate secrets. Paper trails are fatal." },
-    { id:"extortion",   name:"Political Extortion", type:"Elite",        reqRep:1200, baseChance:0.45, risk:0.65, heatAdd:55,  reward:[80000,500000],  jail:84,  skill:"planning",      desc:"Blackmail powerful figures. They pay — or they burn." },
+    {
+      id: "heist",
+      name: "Bank Heist",
+      type: "Elite",
+      reqRep: 700,
+      baseChance: 0.32,
+      risk: 0.85,
+      heatAdd: 90,
+      reward: [200000, 700000],
+      jail: 120,
+      skill: "planning",
+      desc: "The big one. Crew required. All-or-nothing.",
+    },
+    {
+      id: "insider",
+      name: "Insider Trading",
+      type: "White Collar",
+      reqRep: 800,
+      baseChance: 0.68,
+      risk: 0.5,
+      heatAdd: 38,
+      reward: [300000, 1500000],
+      jail: 60,
+      skill: "hacking",
+      desc: "Exploit non-public corporate secrets. Paper trails are fatal.",
+    },
+    {
+      id: "extortion",
+      name: "Political Extortion",
+      type: "Elite",
+      reqRep: 1200,
+      baseChance: 0.45,
+      risk: 0.65,
+      heatAdd: 55,
+      reward: [80000, 500000],
+      jail: 84,
+      skill: "planning",
+      desc: "Blackmail powerful figures. They pay — or they burn.",
+    },
   ],
 
   /* ═══ CRIME SKILLS ═══ */
   CRIME_SKILLS: [
-    { id:"stealth",       name:"Stealth",        icon:"fa-user-ninja",     desc:"Reduces detection on B&E, pickpocket & shoplift. Train in darkness.",     trainCost:500,   energyCost:20, xpGain:35 },
-    { id:"intimidation",  name:"Intimidation",   icon:"fa-hand-fist",      desc:"Boosts mugging, robbery & protection racket success. Hit the gym.",        trainCost:400,   energyCost:25, xpGain:30 },
-    { id:"hacking",       name:"Hacking",        icon:"fa-terminal",       desc:"Powers phishing, crypto scams & corp hacks. Study systems.",               trainCost:800,   energyCost:15, xpGain:28 },
-    { id:"street_smarts", name:"Street Smarts",  icon:"fa-eye",            desc:"General underworld awareness. Lowers heat gain on all street crimes.",      trainCost:300,   energyCost:20, xpGain:40 },
-    { id:"chemistry",     name:"Chemistry",      icon:"fa-flask",          desc:"Drug lab quality & yield — higher purity = more money per batch.",         trainCost:1000,  energyCost:15, xpGain:25 },
-    { id:"planning",      name:"Tactical Planning",icon:"fa-chess",        desc:"Heist & organized crime success. Think three steps ahead.",                 trainCost:600,   energyCost:15, xpGain:30 },
+    {
+      id: "stealth",
+      name: "Stealth",
+      icon: "fa-user-ninja",
+      desc: "Reduces detection on B&E, pickpocket & shoplift. Train in darkness.",
+      trainCost: 500,
+      energyCost: 20,
+      xpGain: 35,
+    },
+    {
+      id: "intimidation",
+      name: "Intimidation",
+      icon: "fa-hand-fist",
+      desc: "Boosts mugging, robbery & protection racket success. Hit the gym.",
+      trainCost: 400,
+      energyCost: 25,
+      xpGain: 30,
+    },
+    {
+      id: "hacking",
+      name: "Hacking",
+      icon: "fa-terminal",
+      desc: "Powers phishing, crypto scams & corp hacks. Study systems.",
+      trainCost: 800,
+      energyCost: 15,
+      xpGain: 28,
+    },
+    {
+      id: "street_smarts",
+      name: "Street Smarts",
+      icon: "fa-eye",
+      desc: "General underworld awareness. Lowers heat gain on all street crimes.",
+      trainCost: 300,
+      energyCost: 20,
+      xpGain: 40,
+    },
+    {
+      id: "chemistry",
+      name: "Chemistry",
+      icon: "fa-flask",
+      desc: "Drug lab quality & yield — higher purity = more money per batch.",
+      trainCost: 1000,
+      energyCost: 15,
+      xpGain: 25,
+    },
+    {
+      id: "planning",
+      name: "Tactical Planning",
+      icon: "fa-chess",
+      desc: "Heist & organized crime success. Think three steps ahead.",
+      trainCost: 600,
+      energyCost: 15,
+      xpGain: 30,
+    },
   ],
 
   /* ═══ LAWYERS ═══ */
   LAWYERS: [
-    { id:"public_defender", name:"Public Defender",     tier:0, monthlyCost:0,      caseFee:0,      jailReduction:0.08, dismissChance:0.04, desc:"Court-appointed. Better than nothing. Barely." },
-    { id:"local_attorney",  name:"Local Attorney",      tier:1, monthlyCost:3000,   caseFee:5000,   jailReduction:0.35, dismissChance:0.22, desc:"Knows the local DA. Can cut real deals." },
-    { id:"experienced",     name:"Experienced Counsel", tier:2, monthlyCost:12000,  caseFee:20000,  jailReduction:0.58, dismissChance:0.45, desc:"Former prosecutor. Knows every loophole." },
-    { id:"top_firm",        name:"Elite Law Firm",      tier:3, monthlyCost:45000,  caseFee:80000,  jailReduction:0.78, dismissChance:0.68, desc:"The best money can buy. Evidence? What evidence?" },
-    { id:"cartel_attorney", name:"Cartel Attorney",     tier:4, monthlyCost:200000, caseFee:300000, jailReduction:0.92, dismissChance:0.88, desc:"Makes prosecutors disappear. Drug empire only.", reqDrugTier:"network" },
+    {
+      id: "public_defender",
+      name: "Public Defender",
+      tier: 0,
+      monthlyCost: 0,
+      caseFee: 0,
+      jailReduction: 0.08,
+      dismissChance: 0.04,
+      desc: "Court-appointed. Better than nothing. Barely.",
+    },
+    {
+      id: "local_attorney",
+      name: "Local Attorney",
+      tier: 1,
+      monthlyCost: 3000,
+      caseFee: 5000,
+      jailReduction: 0.35,
+      dismissChance: 0.22,
+      desc: "Knows the local DA. Can cut real deals.",
+    },
+    {
+      id: "experienced",
+      name: "Experienced Counsel",
+      tier: 2,
+      monthlyCost: 12000,
+      caseFee: 20000,
+      jailReduction: 0.58,
+      dismissChance: 0.45,
+      desc: "Former prosecutor. Knows every loophole.",
+    },
+    {
+      id: "top_firm",
+      name: "Elite Law Firm",
+      tier: 3,
+      monthlyCost: 45000,
+      caseFee: 80000,
+      jailReduction: 0.78,
+      dismissChance: 0.68,
+      desc: "The best money can buy. Evidence? What evidence?",
+    },
+    {
+      id: "cartel_attorney",
+      name: "Cartel Attorney",
+      tier: 4,
+      monthlyCost: 200000,
+      caseFee: 300000,
+      jailReduction: 0.92,
+      dismissChance: 0.88,
+      desc: "Makes prosecutors disappear. Drug empire only.",
+      reqDrugTier: "network",
+    },
   ],
 
   /* ═══ DRUG EMPIRE TIERS ═══ */
   DRUG_TIERS: [
-    { id:"dealer",  name:"Street Dealer",        icon:"fa-person",         setupCost:8000,    income:[800,2200],    arrestRisk:0.06, heatPerMonth:4,  reqRep:30,  reqChem:0,   desc:"You and a burner phone. Small product, fast cash." },
-    { id:"lab",     name:"Home Cook Lab",        icon:"fa-flask-vial",     setupCost:40000,   income:[5000,15000],  arrestRisk:0.08, heatPerMonth:8,  reqRep:200, reqChem:150, desc:"Your own lab. Quality purity commands premium street prices." },
-    { id:"network", name:"Distribution Network",icon:"fa-network-wired",  setupCost:200000,  income:[25000,80000], arrestRisk:0.10, heatPerMonth:15, reqRep:500, reqChem:300, desc:"You supply the dealers. Kilos, not grams. City-wide operation." },
-    { id:"cartel",  name:"Cartel Operations",   icon:"fa-crown",          setupCost:1500000, income:[150000,600000],arrestRisk:0.13,heatPerMonth:25, reqRep:1000,reqChem:500, desc:"International supply chain. Near limitless money. DEA hunts you daily." },
+    {
+      id: "dealer",
+      name: "Street Dealer",
+      icon: "fa-person",
+      setupCost: 8000,
+      income: [800, 2200],
+      arrestRisk: 0.06,
+      heatPerMonth: 4,
+      reqRep: 30,
+      reqChem: 0,
+      desc: "You and a burner phone. Small product, fast cash.",
+    },
+    {
+      id: "lab",
+      name: "Home Cook Lab",
+      icon: "fa-flask-vial",
+      setupCost: 40000,
+      income: [5000, 15000],
+      arrestRisk: 0.08,
+      heatPerMonth: 8,
+      reqRep: 200,
+      reqChem: 150,
+      desc: "Your own lab. Quality purity commands premium street prices.",
+    },
+    {
+      id: "network",
+      name: "Distribution Network",
+      icon: "fa-network-wired",
+      setupCost: 200000,
+      income: [25000, 80000],
+      arrestRisk: 0.1,
+      heatPerMonth: 15,
+      reqRep: 500,
+      reqChem: 300,
+      desc: "You supply the dealers. Kilos, not grams. City-wide operation.",
+    },
+    {
+      id: "cartel",
+      name: "Cartel Operations",
+      icon: "fa-crown",
+      setupCost: 1500000,
+      income: [150000, 600000],
+      arrestRisk: 0.13,
+      heatPerMonth: 25,
+      reqRep: 1000,
+      reqChem: 500,
+      desc: "International supply chain. Near limitless money. DEA hunts you daily.",
+    },
   ],
 
   ASSETS: [
@@ -1196,59 +1538,135 @@ const CONFIG = {
   /* ═══ POLYGAMY / SIDE RELATIONSHIPS ═══ */
   // Countries where polygamous marriage is legally permitted
   POLYGAMY_ALLOWED_CODES: new Set([
-    "AF","DZ","BH","BD","BJ","BF","CM","CF","KM","CI","DJ","EG","ER","ET",
-    "GM","GN","GW","ID","IR","IQ","JO","KE","KW","LY","MY","ML","MR","MA",
-    "NE","NG","OM","PK","QA","SA","SN","SL","SO","TD","TZ","TG","TN","AE","YE","SD"
+    "AF",
+    "DZ",
+    "BH",
+    "BD",
+    "BJ",
+    "BF",
+    "CM",
+    "CF",
+    "KM",
+    "CI",
+    "DJ",
+    "EG",
+    "ER",
+    "ET",
+    "GM",
+    "GN",
+    "GW",
+    "ID",
+    "IR",
+    "IQ",
+    "JO",
+    "KE",
+    "KW",
+    "LY",
+    "MY",
+    "ML",
+    "MR",
+    "MA",
+    "NE",
+    "NG",
+    "OM",
+    "PK",
+    "QA",
+    "SA",
+    "SN",
+    "SL",
+    "SO",
+    "TD",
+    "TZ",
+    "TG",
+    "TN",
+    "AE",
+    "YE",
+    "SD",
   ]),
 
   SIDE_PARTNERS: [
     {
-      id: "s_yasmine", name: "Yasmine", trait: "Seductive",
-      looks: 9, humor: 5, loyalty: 0.28,
+      id: "s_yasmine",
+      name: "Yasmine",
+      trait: "Seductive",
+      looks: 9,
+      humor: 5,
+      loyalty: 0.28,
       monthlyExpense: { fling: 220, girlfriend: 420, second_wife: 680 },
       compatibility: () => 0.62,
     },
     {
-      id: "s_bianca", name: "Bianca", trait: "Thrill-seeking",
-      looks: 8, humor: 7, loyalty: 0.22,
+      id: "s_bianca",
+      name: "Bianca",
+      trait: "Thrill-seeking",
+      looks: 8,
+      humor: 7,
+      loyalty: 0.22,
       monthlyExpense: { fling: 260, girlfriend: 460, second_wife: 740 },
       compatibility: () => 0.56,
     },
     {
-      id: "s_nina",   name: "Nina",   trait: "Passionate",
-      looks: 7, humor: 8, loyalty: 0.38,
+      id: "s_nina",
+      name: "Nina",
+      trait: "Passionate",
+      looks: 7,
+      humor: 8,
+      loyalty: 0.38,
       monthlyExpense: { fling: 200, girlfriend: 400, second_wife: 640 },
       compatibility: () => 0.52,
     },
     {
-      id: "s_layla",  name: "Layla",  trait: "Devoted",
-      looks: 8, humor: 6, loyalty: 0.55,
+      id: "s_layla",
+      name: "Layla",
+      trait: "Devoted",
+      looks: 8,
+      humor: 6,
+      loyalty: 0.55,
       monthlyExpense: { fling: 180, girlfriend: 380, second_wife: 600 },
       compatibility: () => 0.68,
     },
     {
-      id: "s_zara",   name: "Zara",   trait: "Charismatic",
-      looks: 9, humor: 7, loyalty: 0.32,
+      id: "s_zara",
+      name: "Zara",
+      trait: "Charismatic",
+      looks: 9,
+      humor: 7,
+      loyalty: 0.32,
       monthlyExpense: { fling: 300, girlfriend: 560, second_wife: 820 },
-      compatibility: () => (typeof game !== "undefined" && game.getNetWorth() > 100000 ? 0.72 : 0.38),
+      compatibility: () =>
+        typeof game !== "undefined" && game.getNetWorth() > 100000
+          ? 0.72
+          : 0.38,
     },
     {
-      id: "s_priya",  name: "Priya",  trait: "Alluring",
-      looks: 8, humor: 7, loyalty: 0.44,
+      id: "s_priya",
+      name: "Priya",
+      trait: "Alluring",
+      looks: 8,
+      humor: 7,
+      loyalty: 0.44,
       monthlyExpense: { fling: 240, girlfriend: 440, second_wife: 700 },
       compatibility: () => 0.58,
     },
     {
-      id: "s_camille",name: "Camille",trait: "Playful",
-      looks: 7, humor: 9, loyalty: 0.3,
+      id: "s_camille",
+      name: "Camille",
+      trait: "Playful",
+      looks: 7,
+      humor: 9,
+      loyalty: 0.3,
       monthlyExpense: { fling: 210, girlfriend: 410, second_wife: 660 },
       compatibility: () => 0.55,
     },
     {
-      id: "s_diana",  name: "Diana",  trait: "Mysterious",
-      looks: 9, humor: 5, loyalty: 0.25,
+      id: "s_diana",
+      name: "Diana",
+      trait: "Mysterious",
+      looks: 9,
+      humor: 5,
+      loyalty: 0.25,
       monthlyExpense: { fling: 280, girlfriend: 500, second_wife: 760 },
-      compatibility: () => 0.50,
+      compatibility: () => 0.5,
     },
   ],
 
@@ -1596,17 +2014,24 @@ const game = {
       rep: 0,
       heat: 0,
       history: [],
-      skills: { stealth:0, intimidation:0, hacking:0, street_smarts:0, chemistry:0, planning:0 },
-      lawyer: null,       // retained lawyer id
+      skills: {
+        stealth: 0,
+        intimidation: 0,
+        hacking: 0,
+        street_smarts: 0,
+        chemistry: 0,
+        planning: 0,
+      },
+      lawyer: null, // retained lawyer id
       lawyerMonthsLeft: 0,
       drugEmpire: {
-        tier: null,         // null | 'dealer' | 'lab' | 'network' | 'cartel'
+        tier: null, // null | 'dealer' | 'lab' | 'network' | 'cartel'
         income: 0,
         territory: 0,
         turfWars: 0,
         monthsActive: 0,
-        bribed: false,      // paid off local cops this month
-        deaHeat: 0,         // 0-100 DEA investigation level
+        bribed: false, // paid off local cops this month
+        deaHeat: 0, // 0-100 DEA investigation level
       },
     },
     // Wellness
@@ -2068,12 +2493,33 @@ const game = {
         }
         if (!this.state.pets) this.state.pets = [];
         // Migration: crime skills/lawyer/drugEmpire
-        if (!this.state.crime) this.state.crime = { rep:0, heat:0, history:[] };
-        if (!this.state.crime.skills) this.state.crime.skills = { stealth:0, intimidation:0, hacking:0, street_smarts:0, chemistry:0, planning:0 };
-        if (this.state.crime.lawyer === undefined) this.state.crime.lawyer = null;
-        if (this.state.crime.lawyerMonthsLeft === undefined) this.state.crime.lawyerMonthsLeft = 0;
-        if (!this.state.crime.drugEmpire) this.state.crime.drugEmpire = { tier:null, income:0, territory:0, turfWars:0, monthsActive:0, bribed:false, deaHeat:0 };
-        if (this.state.crime.drugEmpire.deaHeat === undefined) this.state.crime.drugEmpire.deaHeat = 0;
+        if (!this.state.crime)
+          this.state.crime = { rep: 0, heat: 0, history: [] };
+        if (!this.state.crime.skills)
+          this.state.crime.skills = {
+            stealth: 0,
+            intimidation: 0,
+            hacking: 0,
+            street_smarts: 0,
+            chemistry: 0,
+            planning: 0,
+          };
+        if (this.state.crime.lawyer === undefined)
+          this.state.crime.lawyer = null;
+        if (this.state.crime.lawyerMonthsLeft === undefined)
+          this.state.crime.lawyerMonthsLeft = 0;
+        if (!this.state.crime.drugEmpire)
+          this.state.crime.drugEmpire = {
+            tier: null,
+            income: 0,
+            territory: 0,
+            turfWars: 0,
+            monthsActive: 0,
+            bribed: false,
+            deaHeat: 0,
+          };
+        if (this.state.crime.drugEmpire.deaHeat === undefined)
+          this.state.crime.drugEmpire.deaHeat = 0;
         if (!this.state.prison) {
           this.state.prison = {
             monthsServed: 0,
@@ -2102,6 +2548,22 @@ const game = {
           this.state.gameplay.wasBankrupt ?? false;
         this.state.gameplay.lastNetWorth =
           this.state.gameplay.lastNetWorth ?? CONFIG.STARTING_CASH;
+        /* Addiction Engine v2 migrations */
+        this.state.gameplay.monthlyChallenges =
+          this.state.gameplay.monthlyChallenges ?? [];
+        this.state.gameplay.challengeSnapshot =
+          this.state.gameplay.challengeSnapshot ?? {};
+        this.state.gameplay.challengesCompleted =
+          this.state.gameplay.challengesCompleted ?? 0;
+        this.state.gameplay.challengeStreak =
+          this.state.gameplay.challengeStreak ?? 0;
+        this.state.gameplay.bestChallengeStreak =
+          this.state.gameplay.bestChallengeStreak ?? 0;
+        this.state.gameplay.prestigeRun = this.state.gameplay.prestigeRun ?? 0;
+        if (!this.state.prestige) this.state.prestige = {};
+        if (!this.state.rival) this.state.rival = null;
+        this.state.life.flashEventsAccepted =
+          this.state.life.flashEventsAccepted ?? 0;
       } catch (e) {
         this.resetState();
       }
@@ -2157,10 +2619,28 @@ const game = {
         countryWarningShown: 0,
       },
       crime: {
-        rep: 0, heat: 0, history: [],
-        skills: { stealth:0, intimidation:0, hacking:0, street_smarts:0, chemistry:0, planning:0 },
-        lawyer: null, lawyerMonthsLeft: 0,
-        drugEmpire: { tier:null, income:0, territory:0, turfWars:0, monthsActive:0, bribed:false, deaHeat:0 },
+        rep: 0,
+        heat: 0,
+        history: [],
+        skills: {
+          stealth: 0,
+          intimidation: 0,
+          hacking: 0,
+          street_smarts: 0,
+          chemistry: 0,
+          planning: 0,
+        },
+        lawyer: null,
+        lawyerMonthsLeft: 0,
+        drugEmpire: {
+          tier: null,
+          income: 0,
+          territory: 0,
+          turfWars: 0,
+          monthsActive: 0,
+          bribed: false,
+          deaHeat: 0,
+        },
       },
       wellness: { cooldowns: {}, totalSessions: 0 },
       relationship: {
@@ -2311,7 +2791,15 @@ const game = {
         achievements: {},
         wasBankrupt: false,
         lastNetWorth: CONFIG.STARTING_CASH,
+        monthlyChallenges: [],
+        challengeSnapshot: {},
+        challengesCompleted: 0,
+        challengeStreak: 0,
+        bestChallengeStreak: 0,
+        prestigeRun: 0,
       },
+      prestige: {},
+      rival: null,
     };
     this.initializeAssets();
     this.addNews("Market opens. Analysts predict volatility.");
@@ -2599,7 +3087,7 @@ const game = {
     const life = this.state.life;
     const riskExposure = this.getRiskExposure();
     let deathRisk = 0;
-    if (health < 30) deathRisk += (30 - health) * 0.0012;   // scaled down
+    if (health < 30) deathRisk += (30 - health) * 0.0012; // scaled down
     if (ageYears > 58) deathRisk += (ageYears - 58) * 0.0006;
     deathRisk += life.chronicStress * 0.0002;
     deathRisk += life.riskDebt * 0.0002;
@@ -2710,7 +3198,7 @@ const game = {
       o.completed = true;
       return;
     }
-    this.showOnboardingStep(0);
+    TUT.show(0);
   },
 
   maybeAdvanceOnboarding() {
@@ -2719,102 +3207,18 @@ const game = {
     if (o.month > CONFIG.ONBOARDING_MONTHS) {
       o.active = false;
       o.completed = true;
-      app.toast("Onboarding complete. You're on your own now.", "success");
+      TUT.complete();
       return;
     }
-
-    const milestones = [2, 4, 6, 8, 10];
-    if (milestones.includes(o.month)) {
-      this.showOnboardingStep(Math.min(5, milestones.indexOf(o.month) + 1));
-    }
+    // milestones: months 1-8 map to steps 1-8
+    const milestones = [1, 2, 3, 4, 5, 6, 8, 10];
+    const idx = milestones.indexOf(o.month);
+    if (idx !== -1) TUT.show(idx + 1);
   },
 
   showOnboardingStep(stepIndex) {
-    const o = this.state.onboarding;
-    if (!o || o.skipped || o.completed || o.seenSteps.includes(stepIndex))
-      return;
-    o.seenSteps.push(stepIndex);
-    o.step = stepIndex;
-
-    const steps = [
-      {
-        title: "Guided Run (10 Minutes)",
-        body: "Goal: survive 10 months without spiraling risk. Start by taking a job in Career.",
-        actions: [
-          {
-            text: "Open Career",
-            cb: () => {
-              app.activateView("career");
-              app.closeModal();
-            },
-          },
-          {
-            text: "Skip Tutorial",
-            cb: () => {
-              o.skipped = true;
-              o.active = false;
-              app.closeModal();
-            },
-          },
-        ],
-      },
-      {
-        title: "Month 2: Budget Reality",
-        body: "Advance month and watch expenses. Keep cash positive to avoid debt pressure.",
-        actions: [{ text: "Got it", cb: () => app.closeModal() }],
-      },
-      {
-        title: "Month 4: Learn Market Risk",
-        body: "Make 1 small market trade to see volatility and fees without overexposure.",
-        actions: [
-          {
-            text: "Open Market",
-            cb: () => {
-              app.activateView("market");
-              app.closeModal();
-            },
-          },
-          { text: "Stay Here", cb: () => app.closeModal() },
-        ],
-      },
-      {
-        title: "Month 6: Startup Discipline",
-        body: "Only launch a startup if you can afford burn. Over-hiring now can end your run later.",
-        actions: [
-          {
-            text: "Open Business",
-            cb: () => {
-              app.activateView("business");
-              app.closeModal();
-            },
-          },
-          { text: "Skip", cb: () => app.closeModal() },
-        ],
-      },
-      {
-        title: "Month 8: Crime Is Not Free",
-        body: "Crime spikes heat and legal record. Even successful runs can end in sudden death.",
-        actions: [
-          {
-            text: "Open Crime",
-            cb: () => {
-              app.activateView("crime");
-              app.closeModal();
-            },
-          },
-          { text: "Avoid Crime", cb: () => app.closeModal() },
-        ],
-      },
-      {
-        title: "Month 10 Complete",
-        body: "Tutorial done. Use the Risk HUD to decide when to stop before greed kills the run.",
-        actions: [{ text: "Finish", cb: () => app.closeModal() }],
-      },
-    ];
-
-    const step = steps[stepIndex];
-    if (!step) return;
-    app.modal(step.title, step.body, step.actions);
+    // Delegated to TUT — kept for backwards compat
+    TUT.show(stepIndex);
   },
 
   getNetWorth() {
@@ -3076,23 +3480,24 @@ const game = {
 
     if (overlay) {
       // ── Populate overlay ──
-      const causeEl    = document.getElementById("death-cause-text");
-      const ageEl      = document.getElementById("death-stat-age");
-      const nwEl       = document.getElementById("death-stat-nw");
-      const greedEl    = document.getElementById("death-stat-greed");
-      const legacyEl   = document.getElementById("death-stat-legacy");
-      const epitaphEl  = document.getElementById("death-epitaph");
+      const causeEl = document.getElementById("death-cause-text");
+      const ageEl = document.getElementById("death-stat-age");
+      const nwEl = document.getElementById("death-stat-nw");
+      const greedEl = document.getElementById("death-stat-greed");
+      const legacyEl = document.getElementById("death-stat-legacy");
+      const epitaphEl = document.getElementById("death-epitaph");
       const mourningEl = document.getElementById("death-mourning");
 
-      if (causeEl)  causeEl.innerText  = reason;
-      if (ageEl)    ageEl.innerText    = `${ageYrs} yrs`;
+      if (causeEl) causeEl.innerText = reason;
+      if (ageEl) ageEl.innerText = `${ageYrs} yrs`;
       if (nwEl) {
         const sign = nw < 0 ? "\u2212" : "+";
         nwEl.innerText = `${sign}$${shortNumber(Math.abs(Math.floor(nw)))}`;
         nwEl.style.color = nw >= 0 ? "#4ade80" : "#f87171";
       }
-      if (greedEl)  greedEl.innerText  = Math.round(this.state.life.greed || 0);
-      if (legacyEl) legacyEl.innerText = Math.round(this.state.gameplay?.legendScore || 0);
+      if (greedEl) greedEl.innerText = Math.round(this.state.life.greed || 0);
+      if (legacyEl)
+        legacyEl.innerText = Math.round(this.state.gameplay?.legendScore || 0);
 
       // Epitaph
       const epitaphs = [
@@ -3114,9 +3519,11 @@ const game = {
       // Mourning
       if (mourningEl) {
         const parts = [];
-        if (rel && rel.status === "married") parts.push(`${rel.partnerName} mourns your passing.`);
+        if (rel && rel.status === "married")
+          parts.push(`${rel.partnerName} mourns your passing.`);
         const kids = rel?.children?.length || 0;
-        if (kids > 0) parts.push(`${kids} child${kids > 1 ? "ren" : ""} left behind.`);
+        if (kids > 0)
+          parts.push(`${kids} child${kids > 1 ? "ren" : ""} left behind.`);
         mourningEl.innerText = parts.join("  ");
       }
 
@@ -3127,7 +3534,8 @@ const game = {
     } else {
       // Fallback modal
       let deathDesc = `You died at age ${ageYrs}.\n\nCause: ${reason}\nNet worth: $${shortNumber(Math.floor(nw))}`;
-      if (rel && rel.status === "married") deathDesc += `\n\n${rel.partnerName} mourns your loss.`;
+      if (rel && rel.status === "married")
+        deathDesc += `\n\n${rel.partnerName} mourns your loss.`;
       if (rel && rel.children?.length > 0)
         deathDesc += `\n${rel.children.length} child${rel.children.length > 1 ? "ren" : ""} left behind.`;
       app.modal("\u{1F480} Death", deathDesc, [
@@ -3141,7 +3549,9 @@ const game = {
     const overlay = document.getElementById("death-overlay");
     if (!overlay) return;
     overlay.classList.remove("death-visible");
-    setTimeout(() => { overlay.style.display = "none"; }, 650);
+    setTimeout(() => {
+      overlay.style.display = "none";
+    }, 650);
   },
 
   startNewTimeline() {
@@ -3156,6 +3566,7 @@ const game = {
       step: 0,
       seenSteps: [],
     };
+    if (typeof TUT !== "undefined") TUT.reset();
 
     // Reset advance button to original state
     const nextBtn = document.getElementById("main-advance-btn");
@@ -3217,11 +3628,11 @@ const game = {
 
     // --- Build death risk ---
     let deathRisk = 0;
-    if (health < 30) deathRisk += (30 - health) * 0.0006;   // was 0.002
+    if (health < 30) deathRisk += (30 - health) * 0.0006; // was 0.002
     if (ageYears > 58) deathRisk += (ageYears - 58) * 0.0003; // was 0.001
-    deathRisk += life.chronicStress * 0.00008;               // was 0.0004
-    deathRisk += life.riskDebt * 0.00008;                    // was 0.0003
-    deathRisk += riskExposure * 0.0015;                      // was 0.005
+    deathRisk += life.chronicStress * 0.00008; // was 0.0004
+    deathRisk += life.riskDebt * 0.00008; // was 0.0003
+    deathRisk += riskExposure * 0.0015; // was 0.005
 
     // Country safety/stability modifier
     if (cp) {
@@ -4167,8 +4578,10 @@ const game = {
 
   launderHeat() {
     if (!this.canAct()) return;
-    if (this.state.cash < 1000) return app.toast("Need $1k to launder", "error");
-    if (this.state.crime.heat <= 0) return app.toast("No heat to clean", "info");
+    if (this.state.cash < 1000)
+      return app.toast("Need $1k to launder", "error");
+    if (this.state.crime.heat <= 0)
+      return app.toast("No heat to clean", "info");
     this.modCash(-1000);
     this.state.crime.heat = Math.max(0, this.state.crime.heat - 20);
     app.toast("Money laundered — heat cooled off.", "success");
@@ -4178,10 +4591,12 @@ const game = {
   // ── CRIME SKILL TRAINING ──────────────────────────────────────────────────
   trainCrimeSkill(skillId) {
     if (!this.canAct()) return;
-    const s = CONFIG.CRIME_SKILLS.find(x => x.id === skillId);
+    const s = CONFIG.CRIME_SKILLS.find((x) => x.id === skillId);
     if (!s) return;
-    if (this.state.cash < s.trainCost) return app.toast(`Need $${shortNumber(s.trainCost)} to train`, "error");
-    if (this.state.stats.energy < s.energyCost) return app.toast("Too tired to train", "error");
+    if (this.state.cash < s.trainCost)
+      return app.toast(`Need $${shortNumber(s.trainCost)} to train`, "error");
+    if (this.state.stats.energy < s.energyCost)
+      return app.toast("Too tired to train", "error");
     this.modCash(-s.trainCost);
     this.modStat("energy", -s.energyCost);
     const prev = this.state.crime.skills[skillId] || 0;
@@ -4194,71 +4609,104 @@ const game = {
   _crimeSkillLevel(xp) {
     if (xp >= 2500) return "👑 Master";
     if (xp >= 1500) return "💀 Expert";
-    if (xp >= 700)  return "🔥 Advanced";
-    if (xp >= 250)  return "⚡ Skilled";
-    if (xp >= 80)   return "🌱 Novice";
+    if (xp >= 700) return "🔥 Advanced";
+    if (xp >= 250) return "⚡ Skilled";
+    if (xp >= 80) return "🌱 Novice";
     return "🔒 Untrained";
   },
 
   // ── LAWYER MANAGEMENT ─────────────────────────────────────────────────────
   hireLawyer(lawyerId) {
     if (!this.canAct()) return;
-    const l = CONFIG.LAWYERS.find(x => x.id === lawyerId);
+    const l = CONFIG.LAWYERS.find((x) => x.id === lawyerId);
     if (!l) return;
-    if (l.reqDrugTier && (!this.state.crime.drugEmpire.tier || this._drugTierIndex(this.state.crime.drugEmpire.tier) < this._drugTierIndex(l.reqDrugTier))) {
-      return app.toast("You need a drug empire at Network tier to access this attorney.", "error");
+    if (
+      l.reqDrugTier &&
+      (!this.state.crime.drugEmpire.tier ||
+        this._drugTierIndex(this.state.crime.drugEmpire.tier) <
+          this._drugTierIndex(l.reqDrugTier))
+    ) {
+      return app.toast(
+        "You need a drug empire at Network tier to access this attorney.",
+        "error",
+      );
     }
-    if (l.monthlyCost > 0 && this.state.cash < l.monthlyCost) return app.toast(`Need $${shortNumber(l.monthlyCost)} first month retainer`, "error");
+    if (l.monthlyCost > 0 && this.state.cash < l.monthlyCost)
+      return app.toast(
+        `Need $${shortNumber(l.monthlyCost)} first month retainer`,
+        "error",
+      );
     if (l.monthlyCost > 0) this.modCash(-l.monthlyCost);
     this.state.crime.lawyer = lawyerId;
-    app.toast(`Retained: ${l.name}. Monthly retainer: $${shortNumber(l.monthlyCost)}`, "success");
+    app.toast(
+      `Retained: ${l.name}. Monthly retainer: $${shortNumber(l.monthlyCost)}`,
+      "success",
+    );
     this.renderAll();
   },
 
   fireLawyer() {
     if (!this.state.crime.lawyer) return;
-    const l = CONFIG.LAWYERS.find(x => x.id === this.state.crime.lawyer);
+    const l = CONFIG.LAWYERS.find((x) => x.id === this.state.crime.lawyer);
     this.state.crime.lawyer = null;
-    app.toast(`Dismissed ${l ? l.name : 'attorney'}. You are exposed.`, "warning");
+    app.toast(
+      `Dismissed ${l ? l.name : "attorney"}. You are exposed.`,
+      "warning",
+    );
     this.renderAll();
   },
 
   // ── DRUG EMPIRE ───────────────────────────────────────────────────────────
   _drugTierIndex(tierId) {
-    const order = ["dealer","lab","network","cartel"];
+    const order = ["dealer", "lab", "network", "cartel"];
     return order.indexOf(tierId);
   },
 
   startDrugOperation(tierId) {
     if (!this.canAct()) return;
-    const tier = CONFIG.DRUG_TIERS.find(t => t.id === tierId);
+    const tier = CONFIG.DRUG_TIERS.find((t) => t.id === tierId);
     if (!tier) return;
 
     const currentIdx = this._drugTierIndex(this.state.crime.drugEmpire.tier);
-    const newIdx     = this._drugTierIndex(tierId);
+    const newIdx = this._drugTierIndex(tierId);
 
-    if (newIdx <= currentIdx) return app.toast("Already at or above this tier", "error");
-    if (newIdx > currentIdx + 1 && currentIdx >= 0) return app.toast("Must upgrade one tier at a time", "error");
-    if (this.state.crime.rep < tier.reqRep) return app.toast(`Need ${tier.reqRep} Street Rep`, "error");
-    if (tier.reqChem > 0 && (this.state.crime.skills.chemistry || 0) < tier.reqChem) return app.toast(`Need ${tier.reqChem} Chemistry XP`, "error");
-    if (this.state.cash < tier.setupCost) return app.toast(`Need $${shortNumber(tier.setupCost)} setup cash`, "error");
+    if (newIdx <= currentIdx)
+      return app.toast("Already at or above this tier", "error");
+    if (newIdx > currentIdx + 1 && currentIdx >= 0)
+      return app.toast("Must upgrade one tier at a time", "error");
+    if (this.state.crime.rep < tier.reqRep)
+      return app.toast(`Need ${tier.reqRep} Street Rep`, "error");
+    if (
+      tier.reqChem > 0 &&
+      (this.state.crime.skills.chemistry || 0) < tier.reqChem
+    )
+      return app.toast(`Need ${tier.reqChem} Chemistry XP`, "error");
+    if (this.state.cash < tier.setupCost)
+      return app.toast(
+        `Need $${shortNumber(tier.setupCost)} setup cash`,
+        "error",
+      );
 
     this.modCash(-tier.setupCost);
     this.state.crime.drugEmpire.tier = tierId;
     this.state.crime.drugEmpire.monthsActive = 0;
     this.state.crime.drugEmpire.bribed = false;
-    if (tierId === "dealer")  this.state.crime.drugEmpire.income = 1200;
-    if (tierId === "lab")     this.state.crime.drugEmpire.income = 9000;
+    if (tierId === "dealer") this.state.crime.drugEmpire.income = 1200;
+    if (tierId === "lab") this.state.crime.drugEmpire.income = 9000;
     if (tierId === "network") this.state.crime.drugEmpire.income = 45000;
-    if (tierId === "cartel")  this.state.crime.drugEmpire.income = 300000;
+    if (tierId === "cartel") this.state.crime.drugEmpire.income = 300000;
 
     FX.screenFlash("gain");
-    app.toast(`🏴 ${tier.name} launched. Passive income: $${shortNumber(this.state.crime.drugEmpire.income)}/mo`, "epic");
+    app.toast(
+      `🏴 ${tier.name} launched. Passive income: $${shortNumber(this.state.crime.drugEmpire.income)}/mo`,
+      "epic",
+    );
     this.renderAll();
   },
 
   shutDownDrugOp() {
-    if (!this.state.crime.drugEmpire.tier) return app.toast("No operation running", "info");
+    if (!this.state.crime.drugEmpire.tier)
+      return app.toast("No operation running", "info");
     this.state.crime.drugEmpire.tier = null;
     this.state.crime.drugEmpire.income = 0;
     this.state.crime.drugEmpire.deaHeat = 0;
@@ -4270,14 +4718,18 @@ const game = {
     if (!this.canAct()) return;
     const de = this.state.crime.drugEmpire;
     if (!de.tier) return app.toast("No active operation to protect", "error");
-    const tierDef = CONFIG.DRUG_TIERS.find(t => t.id === de.tier);
+    const tierDef = CONFIG.DRUG_TIERS.find((t) => t.id === de.tier);
     const bribeCost = Math.round((de.income || 1000) * 0.18);
-    if (this.state.cash < bribeCost) return app.toast(`Need $${shortNumber(bribeCost)} for bribes`, "error");
+    if (this.state.cash < bribeCost)
+      return app.toast(`Need $${shortNumber(bribeCost)} for bribes`, "error");
     this.modCash(-bribeCost);
     de.bribed = true;
     de.deaHeat = Math.max(0, de.deaHeat - 20);
     this.state.crime.heat = Math.max(0, this.state.crime.heat - 15);
-    app.toast(`💵 Local cops paid off. Operation protected this month. ($${shortNumber(bribeCost)})`, "success");
+    app.toast(
+      `💵 Local cops paid off. Operation protected this month. ($${shortNumber(bribeCost)})`,
+      "success",
+    );
     this.renderAll();
   },
 
@@ -4286,47 +4738,57 @@ const game = {
     const de = this.state.crime.drugEmpire;
     if (!de.tier) return app.toast("No operation to expand", "error");
     const cost = Math.round((de.income || 1000) * 0.5);
-    if (this.state.cash < cost) return app.toast(`Need $${shortNumber(cost)} to muscle in`, "error");
+    if (this.state.cash < cost)
+      return app.toast(`Need $${shortNumber(cost)} to muscle in`, "error");
     this.modCash(-cost);
     de.territory = Math.min(100, (de.territory || 0) + 15);
     de.income = Math.round(de.income * 1.15);
     de.turfWars = (de.turfWars || 0) + 1;
     this.state.crime.heat += 20;
-    app.toast(`Territory expanded +15%. Income now $${shortNumber(de.income)}/mo. Rivals are angry.`, "warning");
+    app.toast(
+      `Territory expanded +15%. Income now $${shortNumber(de.income)}/mo. Rivals are angry.`,
+      "warning",
+    );
     this.renderAll();
   },
 
   processDrugEmpireMonthly() {
     const de = this.state.crime.drugEmpire;
     if (!de.tier) return;
-    const tierDef = CONFIG.DRUG_TIERS.find(t => t.id === de.tier);
+    const tierDef = CONFIG.DRUG_TIERS.find((t) => t.id === de.tier);
     if (!tierDef) return;
 
     de.monthsActive = (de.monthsActive || 0) + 1;
 
     // Chemistry skill bonus to income (up to +40%)
-    const chemBonus = 1 + Math.min(0.4, (this.state.crime.skills.chemistry || 0) / 3000 * 1.2);
+    const chemBonus =
+      1 +
+      Math.min(0.4, ((this.state.crime.skills.chemistry || 0) / 3000) * 1.2);
     const actualIncome = Math.round(
-      (tierDef.income[0] + Math.random() * (tierDef.income[1] - tierDef.income[0])) *
-      chemBonus *
-      (1 + (de.territory || 0) * 0.005)
+      (tierDef.income[0] +
+        Math.random() * (tierDef.income[1] - tierDef.income[0])) *
+        chemBonus *
+        (1 + (de.territory || 0) * 0.005),
     );
     de.income = actualIncome;
     this.modCash(actualIncome);
-    this.state.runStats.crimeActions = (this.state.runStats.crimeActions || 0);
+    this.state.runStats.crimeActions = this.state.runStats.crimeActions || 0;
     this.state.crime.heat += tierDef.heatPerMonth;
     de.deaHeat = Math.min(100, (de.deaHeat || 0) + tierDef.heatPerMonth * 0.6);
     this.state.crime.rep += Math.ceil(tierDef.heatPerMonth * 0.5);
 
     // Lawyer costs paid monthly
     if (this.state.crime.lawyer) {
-      const lDef = CONFIG.LAWYERS.find(l => l.id === this.state.crime.lawyer);
+      const lDef = CONFIG.LAWYERS.find((l) => l.id === this.state.crime.lawyer);
       if (lDef && lDef.monthlyCost > 0) {
         if (this.state.cash >= lDef.monthlyCost) {
           this.modCash(-lDef.monthlyCost);
         } else {
           this.state.crime.lawyer = null;
-          app.toast("Couldn't afford lawyer retainer — contract terminated.", "error");
+          app.toast(
+            "Couldn't afford lawyer retainer — contract terminated.",
+            "error",
+          );
         }
       }
     }
@@ -4337,22 +4799,39 @@ const game = {
       this.modCash(-loss);
       this.modStat("health", -5);
       this.state.crime.heat += 15;
-      app.toast(`🔫 Rival gang hit one of your spots. Lost $${shortNumber(loss)} and took hits.`, "error");
+      app.toast(
+        `🔫 Rival gang hit one of your spots. Lost $${shortNumber(loss)} and took hits.`,
+        "error",
+      );
     }
 
     // DEA raid chance
     if (!de.bribed) {
       const raidChance = tierDef.arrestRisk + (de.deaHeat / 100) * 0.22;
       if (Math.random() < raidChance) {
-        const sentence = de.tier === "cartel" ? 120 : de.tier === "network" ? 72 : de.tier === "lab" ? 36 : 10;
-        const lawyer = this.state.crime.lawyer ? CONFIG.LAWYERS.find(l => l.id === this.state.crime.lawyer) : CONFIG.LAWYERS[0];
-        const reducedSentence = lawyer ? Math.max(1, Math.round(sentence * (1 - lawyer.jailReduction))) : sentence;
+        const sentence =
+          de.tier === "cartel"
+            ? 120
+            : de.tier === "network"
+              ? 72
+              : de.tier === "lab"
+                ? 36
+                : 10;
+        const lawyer = this.state.crime.lawyer
+          ? CONFIG.LAWYERS.find((l) => l.id === this.state.crime.lawyer)
+          : CONFIG.LAWYERS[0];
+        const reducedSentence = lawyer
+          ? Math.max(1, Math.round(sentence * (1 - lawyer.jailReduction)))
+          : sentence;
 
         // Dismiss charges?
         if (lawyer && Math.random() < lawyer.dismissChance) {
           if (lawyer.caseFee) this.modCash(-lawyer.caseFee);
           de.deaHeat = Math.max(0, de.deaHeat - 30);
-          app.toast(`🚨 DEA Raid! ${lawyer.name} got it dismissed. Case fee: $${shortNumber(lawyer.caseFee)}`, "success");
+          app.toast(
+            `🚨 DEA Raid! ${lawyer.name} got it dismissed. Case fee: $${shortNumber(lawyer.caseFee)}`,
+            "success",
+          );
         } else {
           this.state.crime.drugEmpire.tier = null;
           this.state.crime.drugEmpire.income = 0;
@@ -4360,13 +4839,17 @@ const game = {
           this.state.jail = reducedSentence;
           this.state.prison.monthsServed = 0;
           this.state.prison.totalSentence = reducedSentence;
-          this.state.prison.prisonJob = null; this.state.prison.gangProtection = false;
-          this.state.prison.solitary = 0; this.state.prison.infractions = 0;
+          this.state.prison.prisonJob = null;
+          this.state.prison.gangProtection = false;
+          this.state.prison.solitary = 0;
+          this.state.prison.infractions = 0;
           this.state.life.legalRecord += Math.max(3, sentence / 12);
           FX.screenFlash("jail");
-          app.modal("🚨 DEA RAID!", `Your operation was busted. ${lawyer && lawyer.tier > 0 ? `${lawyer.name} negotiated ${sentence} → ${reducedSentence} months.` : `${reducedSentence} months federal.`}`, [
-            { text: "It's over", cb: () => app.closeModal() }
-          ]);
+          app.modal(
+            "🚨 DEA RAID!",
+            `Your operation was busted. ${lawyer && lawyer.tier > 0 ? `${lawyer.name} negotiated ${sentence} → ${reducedSentence} months.` : `${reducedSentence} months federal.`}`,
+            [{ text: "It's over", cb: () => app.closeModal() }],
+          );
         }
         return;
       }
@@ -4376,69 +4859,95 @@ const game = {
 
   commitCrime(id) {
     if (!this.canAct()) return;
-    if (this.state.stats.energy < 30) return app.toast("Too exhausted", "error");
+    if (this.state.stats.energy < 30)
+      return app.toast("Too exhausted", "error");
 
     const c = CONFIG.CRIMES.find((x) => x.id === id);
     if (!c) return;
-    if (this.state.crime.rep < c.reqRep) return app.toast(`Need ${c.reqRep} Street Rep`, "error");
+    if (this.state.crime.rep < c.reqRep)
+      return app.toast(`Need ${c.reqRep} Street Rep`, "error");
 
     this.state.runStats.crimeActions += 1;
     this.modStat("energy", -30);
 
     // ── Skill bonus (relevant skill XP → up to +30% success) ──────────────────
-    const skillXp  = (this.state.crime.skills[c.skill] || 0);
-    const skillBonus = Math.min(0.30, skillXp / 3000);
+    const skillXp = this.state.crime.skills[c.skill] || 0;
+    const skillBonus = Math.min(0.3, skillXp / 3000);
 
     // ── Other modifiers ────────────────────────────────────────────────────────
-    const heatPenalty   = this.state.crime.heat * 0.005;
-    const smartsBonus   = this.state.stats.smarts * 0.002;
-    const legalPenalty  = this.state.life.legalRecord * 0.012;
+    const heatPenalty = this.state.crime.heat * 0.005;
+    const smartsBonus = this.state.stats.smarts * 0.002;
+    const legalPenalty = this.state.life.legalRecord * 0.012;
 
-    let netChance = c.baseChance + skillBonus - heatPenalty - legalPenalty + smartsBonus;
+    let netChance =
+      c.baseChance + skillBonus - heatPenalty - legalPenalty + smartsBonus;
     netChance = Math.max(0.05, Math.min(0.97, netChance));
 
     // ── Gain XP in relevant skill regardless of outcome ───────────────────────
-    const skillDef = CONFIG.CRIME_SKILLS.find(s => s.id === c.skill);
-    if (skillDef) this.state.crime.skills[c.skill] = Math.min(3000, (this.state.crime.skills[c.skill]||0) + 10);
+    const skillDef = CONFIG.CRIME_SKILLS.find((s) => s.id === c.skill);
+    if (skillDef)
+      this.state.crime.skills[c.skill] = Math.min(
+        3000,
+        (this.state.crime.skills[c.skill] || 0) + 10,
+      );
 
     if (Math.random() < netChance) {
       // ── SUCCESS ───────────────────────────────────────────────────────────────
       let reward = c.reward[0] + Math.random() * (c.reward[1] - c.reward[0]);
       // Chemistry skill multiplies drug crime rewards
-      if (c.type === "Drug Trade") reward *= (1 + Math.min(0.5, (this.state.crime.skills.chemistry||0)/3000));
+      if (c.type === "Drug Trade")
+        reward *=
+          1 + Math.min(0.5, (this.state.crime.skills.chemistry || 0) / 3000);
       reward *= Math.max(0.55, 1 - this.state.crime.heat * 0.003);
       this.modCash(reward);
       this.state.crime.rep += Math.ceil(c.heatAdd * 0.6);
       this.state.crime.heat += c.heatAdd;
       this.recordGreed(c.heatAdd * 0.45, `${c.name} payout`);
-      this.state.life.riskDebt = Math.min(300, this.state.life.riskDebt + c.risk * 4);
+      this.state.life.riskDebt = Math.min(
+        300,
+        this.state.life.riskDebt + c.risk * 4,
+      );
 
       const cleanGetaway = Math.random() > 0.88;
       if (cleanGetaway) {
         this.state.crime.heat = Math.max(0, this.state.crime.heat - c.heatAdd);
-        app.toast(`CLEAN GETAWAY! +$${shortNumber(reward)} — no traces left`, "epic");
+        app.toast(
+          `CLEAN GETAWAY! +$${shortNumber(reward)} — no traces left`,
+          "epic",
+        );
         FX.screenFlash("gain");
       } else {
-        app.toast(`${c.name} success! +$${shortNumber(reward)} 🔥 heat rising`, "warning");
+        app.toast(
+          `${c.name} success! +$${shortNumber(reward)} 🔥 heat rising`,
+          "warning",
+        );
       }
       this.registerAction(5);
 
-      const successDeathRisk = c.risk * 0.012 + Math.max(0, this.state.crime.heat - 60) * 0.0007;
-      if (this.checkSuddenDeath(`Crime: ${c.name}`, successDeathRisk, "Killed during the getaway")) return;
-
+      const successDeathRisk =
+        c.risk * 0.012 + Math.max(0, this.state.crime.heat - 60) * 0.0007;
+      if (
+        this.checkSuddenDeath(
+          `Crime: ${c.name}`,
+          successDeathRisk,
+          "Killed during the getaway",
+        )
+      )
+        return;
     } else {
       // ── FAILURE ───────────────────────────────────────────────────────────────
-      const jailChance = Math.min(0.96,
+      const jailChance = Math.min(
+        0.96,
         c.risk +
-        this.state.crime.heat * 0.01 +
-        this.state.life.legalRecord * 0.03 +
-        this.state.life.greed * 0.0007
+          this.state.crime.heat * 0.01 +
+          this.state.life.legalRecord * 0.03 +
+          this.state.life.greed * 0.0007,
       );
 
       if (Math.random() < jailChance) {
         // ── BUSTED — check lawyer ──────────────────────────────────────────────
         const lawyer = this.state.crime.lawyer
-          ? CONFIG.LAWYERS.find(l => l.id === this.state.crime.lawyer)
+          ? CONFIG.LAWYERS.find((l) => l.id === this.state.crime.lawyer)
           : CONFIG.LAWYERS[0]; // public defender by default
 
         // Try to dismiss charges outright
@@ -4446,13 +4955,20 @@ const game = {
           const caseFee = lawyer.caseFee || 0;
           if (caseFee > 0) this.modCash(-caseFee);
           this.state.crime.heat += c.heatAdd * 0.5;
-          app.toast(`Your ${lawyer.name} got the charges DROPPED. Cost: $${shortNumber(caseFee)}`, "success");
+          app.toast(
+            `Your ${lawyer.name} got the charges DROPPED. Cost: $${shortNumber(caseFee)}`,
+            "success",
+          );
           FX.screenFlash("gain");
         } else {
           // Serve reduced sentence
           let sentenceMonths = c.jail;
-          if (lawyer) sentenceMonths = Math.max(1, Math.round(c.jail * (1 - lawyer.jailReduction)));
-          const caseFee = lawyer ? (lawyer.caseFee || 0) : 0;
+          if (lawyer)
+            sentenceMonths = Math.max(
+              1,
+              Math.round(c.jail * (1 - lawyer.jailReduction)),
+            );
+          const caseFee = lawyer ? lawyer.caseFee || 0 : 0;
           if (caseFee > 0) this.modCash(-caseFee);
 
           this.state.jail = sentenceMonths;
@@ -4463,34 +4979,69 @@ const game = {
           this.state.prison.solitary = 0;
           this.state.prison.infractions = 0;
           this.state.life.legalRecord += Math.max(1, sentenceMonths / 18);
-          this.state.life.opportunitiesLost += Math.max(1, Math.floor(sentenceMonths / 24));
-          this.state.life.maxHealth = Math.max(30, this.state.life.maxHealth - sentenceMonths * 0.05);
+          this.state.life.opportunitiesLost += Math.max(
+            1,
+            Math.floor(sentenceMonths / 24),
+          );
+          this.state.life.maxHealth = Math.max(
+            30,
+            this.state.life.maxHealth - sentenceMonths * 0.05,
+          );
           this.state.crime.heat = 0;
 
-          const lawyerMsg = lawyer && lawyer.tier > 0
-            ? ` ${lawyer.name} reduced your sentence from ${c.jail} → ${sentenceMonths} months.`
-            : "";
+          const lawyerMsg =
+            lawyer && lawyer.tier > 0
+              ? ` ${lawyer.name} reduced your sentence from ${c.jail} → ${sentenceMonths} months.`
+              : "";
 
           FX.screenFlash("jail");
           FX.screenShake("lg");
-          app.modal("🚔 BUSTED!", `Police caught you.${lawyerMsg} ${sentenceMonths} months in federal prison.`, [
-            { text: "Damn", cb: () => app.closeModal() },
-          ]);
+          app.modal(
+            "🚔 BUSTED!",
+            `Police caught you.${lawyerMsg} ${sentenceMonths} months in federal prison.`,
+            [{ text: "Damn", cb: () => app.closeModal() }],
+          );
 
-          const arrestDeathRisk = c.risk * 0.04 + this.state.crime.heat * 0.0015 + this.state.life.legalRecord * 0.008;
-          if (this.checkSuddenDeath(`Arrested: ${c.name}`, arrestDeathRisk, "Lethal force incident during arrest")) return;
+          const arrestDeathRisk =
+            c.risk * 0.04 +
+            this.state.crime.heat * 0.0015 +
+            this.state.life.legalRecord * 0.008;
+          if (
+            this.checkSuddenDeath(
+              `Arrested: ${c.name}`,
+              arrestDeathRisk,
+              "Lethal force incident during arrest",
+            )
+          )
+            return;
         }
       } else {
         // Escaped but botched
-        app.toast("Botched — escaped by the skin of your teeth. Heat explodes.", "text-loss");
+        app.toast(
+          "Botched — escaped by the skin of your teeth. Heat explodes.",
+          "text-loss",
+        );
         this.state.crime.heat += c.heatAdd * 1.8;
-        this.state.life.riskDebt = Math.min(300, this.state.life.riskDebt + c.heatAdd * 0.7);
+        this.state.life.riskDebt = Math.min(
+          300,
+          this.state.life.riskDebt + c.heatAdd * 0.7,
+        );
         const botchedDeathRisk = c.risk * 0.03 + this.state.crime.heat * 0.0012;
-        if (this.checkSuddenDeath(`Botched: ${c.name}`, botchedDeathRisk, "Killed during a botched operation")) return;
+        if (
+          this.checkSuddenDeath(
+            `Botched: ${c.name}`,
+            botchedDeathRisk,
+            "Killed during a botched operation",
+          )
+        )
+          return;
       }
     }
 
-    if (this.state.crime.heat > 70) { this.modStat("health", -1.5); this.modStat("happiness", -2); }
+    if (this.state.crime.heat > 70) {
+      this.modStat("health", -1.5);
+      this.modStat("happiness", -2);
+    }
     this.renderAll();
   },
 
@@ -6751,7 +7302,7 @@ const game = {
                 </div>
                 ${
                   !isCurrent
-                    ? `<button class="btn ${locked ? 'btn-outline' : 'btn-primary'}" onclick="game.applyJob('${track.id}', ${idx})" ${locked ? "disabled" : ""}>
+                    ? `<button class="btn ${locked ? "btn-outline" : "btn-primary"}" onclick="game.applyJob('${track.id}', ${idx})" ${locked ? "disabled" : ""}>
                         ${locked ? '<i class="fa-solid fa-lock" style="margin-right:5px;"></i>Locked' : '<i class="fa-solid fa-paper-plane" style="margin-right:6px;"></i>Apply Now'}
                        </button>`
                     : '<div style="margin-top:auto;"><span class="tag safe" style="width:100%; display:block; text-align:center; padding:8px; font-size:0.75rem; letter-spacing:1px;"><i class="fa-solid fa-check" style="margin-right:5px;"></i>CURRENT ROLE</span></div>'
@@ -6795,14 +7346,43 @@ const game = {
       // ── CRIME HUD ─────────────────────────────────────────────────────────
       const hudEl = document.getElementById("crime-hud");
       if (hudEl) {
-        const heatPct  = Math.min(100, cr.heat);
-        const heatColor = cr.heat > 80 ? "#ef4444" : cr.heat > 50 ? "#f97316" : cr.heat > 20 ? "#f59e0b" : "#4ade80";
-        const heatLabel = cr.heat > 80 ? "🚨 MANHUNT" : cr.heat > 50 ? "🔥 HOT" : cr.heat > 20 ? "⚠️ SUSPICIOUS" : "✅ CLEAR";
-        const repLevel  = Math.floor(cr.rep / 100) + 1;
-        const repTitle  = repLevel >= 13 ? "Kingpin" : repLevel >= 10 ? "Boss" : repLevel >= 7 ? "Made Man" : repLevel >= 4 ? "Soldier" : repLevel >= 2 ? "Street Thug" : "Small-Timer";
-        const lDef      = cr.lawyer ? CONFIG.LAWYERS.find(l => l.id === cr.lawyer) : null;
+        const heatPct = Math.min(100, cr.heat);
+        const heatColor =
+          cr.heat > 80
+            ? "#ef4444"
+            : cr.heat > 50
+              ? "#f97316"
+              : cr.heat > 20
+                ? "#f59e0b"
+                : "#4ade80";
+        const heatLabel =
+          cr.heat > 80
+            ? "🚨 MANHUNT"
+            : cr.heat > 50
+              ? "🔥 HOT"
+              : cr.heat > 20
+                ? "⚠️ SUSPICIOUS"
+                : "✅ CLEAR";
+        const repLevel = Math.floor(cr.rep / 100) + 1;
+        const repTitle =
+          repLevel >= 13
+            ? "Kingpin"
+            : repLevel >= 10
+              ? "Boss"
+              : repLevel >= 7
+                ? "Made Man"
+                : repLevel >= 4
+                  ? "Soldier"
+                  : repLevel >= 2
+                    ? "Street Thug"
+                    : "Small-Timer";
+        const lDef = cr.lawyer
+          ? CONFIG.LAWYERS.find((l) => l.id === cr.lawyer)
+          : null;
         const drugActive = de && de.tier;
-        const drugTDef   = drugActive ? CONFIG.DRUG_TIERS.find(t => t.id === de.tier) : null;
+        const drugTDef = drugActive
+          ? CONFIG.DRUG_TIERS.find((t) => t.id === de.tier)
+          : null;
 
         hudEl.innerHTML = `
           <div class="crime-hud-card">
@@ -6821,13 +7401,13 @@ const game = {
           </div>
           <div class="crime-hud-card">
             <div class="crime-hud-label">Legal Defense</div>
-            <div class="crime-hud-value" style="font-size:0.95rem;color:${lDef?'#4ade80':'var(--text-muted)'};">${lDef ? lDef.name : 'None'}</div>
-            <div class="crime-hud-sub">${lDef ? `−${Math.round(lDef.jailReduction*100)}% sentence · ${Math.round(lDef.dismissChance*100)}% dismiss` : 'No attorney retained'}</div>
+            <div class="crime-hud-value" style="font-size:0.95rem;color:${lDef ? "#4ade80" : "var(--text-muted)"};">${lDef ? lDef.name : "None"}</div>
+            <div class="crime-hud-sub">${lDef ? `−${Math.round(lDef.jailReduction * 100)}% sentence · ${Math.round(lDef.dismissChance * 100)}% dismiss` : "No attorney retained"}</div>
           </div>
-          <div class="crime-hud-card" style="${drugActive ? '' : 'opacity:0.55;'}">
+          <div class="crime-hud-card" style="${drugActive ? "" : "opacity:0.55;"}">
             <div class="crime-hud-label">Drug Empire</div>
-            <div class="crime-hud-value" style="font-size:0.95rem;color:${drugActive?'#f87171':'var(--text-muted)'};">${drugActive ? drugTDef.name : 'None'}</div>
-            <div class="crime-hud-sub">${drugActive ? `$${shortNumber(de.income)}/mo · DEA: ${Math.round(de.deaHeat||0)}%` : 'Not running operations'}</div>
+            <div class="crime-hud-value" style="font-size:0.95rem;color:${drugActive ? "#f87171" : "var(--text-muted)"};">${drugActive ? drugTDef.name : "None"}</div>
+            <div class="crime-hud-sub">${drugActive ? `$${shortNumber(de.income)}/mo · DEA: ${Math.round(de.deaHeat || 0)}%` : "Not running operations"}</div>
           </div>`;
       }
 
@@ -6835,25 +7415,30 @@ const game = {
       const drugPanel = document.getElementById("drug-empire-panel");
       if (drugPanel) {
         const DRUG_IMGS = {
-          dealer:  'https://images.unsplash.com/photo-1587590741732-db3f6ccf99ea?w=800&h=400&fit=crop&auto=format',
-          lab:     'https://images.unsplash.com/photo-1614924308600-fc72e1b0dce4?w=800&h=400&fit=crop&auto=format',
-          network: 'https://images.unsplash.com/photo-1494438639946-1ebd1d20bf85?w=800&h=400&fit=crop&auto=format',
-          cartel:  'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800&h=400&fit=crop&auto=format',
+          dealer:
+            "https://images.unsplash.com/photo-1587590741732-db3f6ccf99ea?w=800&h=400&fit=crop&auto=format",
+          lab: "https://images.unsplash.com/photo-1614924308600-fc72e1b0dce4?w=800&h=400&fit=crop&auto=format",
+          network:
+            "https://images.unsplash.com/photo-1494438639946-1ebd1d20bf85?w=800&h=400&fit=crop&auto=format",
+          cartel:
+            "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800&h=400&fit=crop&auto=format",
         };
         const currentIdx = this._drugTierIndex(de.tier);
 
         if (!de.tier) {
           // Tier progression cards
-          drugPanel.innerHTML = `<div style="grid-column:1/-1;font-size:0.8rem;color:var(--text-muted);margin-bottom:12px;padding:10px 14px;border-radius:10px;border:1px solid rgba(239,68,68,0.15);background:rgba(239,68,68,0.04);">
+          drugPanel.innerHTML =
+            `<div style="grid-column:1/-1;font-size:0.8rem;color:var(--text-muted);margin-bottom:12px;padding:10px 14px;border-radius:10px;border:1px solid rgba(239,68,68,0.15);background:rgba(239,68,68,0.04);">
             <i class="fa-solid fa-circle-info" style="margin-right:7px;color:#f87171;"></i>
             Build a drug empire to earn passive income. Start as a Street Dealer, then upgrade to dominate the city. Requires <strong>Rep + Chemistry skill</strong>.
-          </div>` + CONFIG.DRUG_TIERS.map((t, idx) => {
-            const repOk  = cr.rep >= t.reqRep;
-            const chemOk = (cr.skills.chemistry || 0) >= t.reqChem;
-            const cashOk = this.state.cash >= t.setupCost;
-            const canStart = idx === 0 && repOk && chemOk && cashOk;
-            const isLocked = !repOk || !chemOk;
-            return `<div class="drug-tier-card${isLocked ? ' locked-tier' : ''}">
+          </div>` +
+            CONFIG.DRUG_TIERS.map((t, idx) => {
+              const repOk = cr.rep >= t.reqRep;
+              const chemOk = (cr.skills.chemistry || 0) >= t.reqChem;
+              const cashOk = this.state.cash >= t.setupCost;
+              const canStart = idx === 0 && repOk && chemOk && cashOk;
+              const isLocked = !repOk || !chemOk;
+              return `<div class="drug-tier-card${isLocked ? " locked-tier" : ""}">
               <img class="drug-tier-img" src="${DRUG_IMGS[t.id]}" alt="${t.name}" loading="lazy">
               <div class="drug-tier-overlay">
                 <div class="drug-tier-icon"><i class="fa-solid ${t.icon}"></i></div>
@@ -6871,31 +7456,36 @@ const game = {
                   </div>
                   <div class="drug-stat-box">
                     <div class="drug-stat-label">Arrest Risk</div>
-                    <div class="drug-stat-val" style="color:#f87171;">${(t.arrestRisk*100).toFixed(0)}%/mo</div>
+                    <div class="drug-stat-val" style="color:#f87171;">${(t.arrestRisk * 100).toFixed(0)}%/mo</div>
                   </div>
                   <div class="drug-stat-box">
                     <div class="drug-stat-label">Req Rep</div>
-                    <div class="drug-stat-val" style="color:${repOk?'#4ade80':'#f87171'};">${t.reqRep}</div>
+                    <div class="drug-stat-val" style="color:${repOk ? "#4ade80" : "#f87171"};">${t.reqRep}</div>
                   </div>
                   <div class="drug-stat-box">
                     <div class="drug-stat-label">Req Chem XP</div>
-                    <div class="drug-stat-val" style="color:${chemOk?'#4ade80':'#f87171'};">${t.reqChem || '—'}</div>
+                    <div class="drug-stat-val" style="color:${chemOk ? "#4ade80" : "#f87171"};">${t.reqChem || "—"}</div>
                   </div>
                 </div>
-                ${idx === 0 ? `<button class="btn ${canStart ? 'btn-danger' : 'btn-outline'}" onclick="game.startDrugOperation('${t.id}')" ${canStart ?'':'disabled'}>
-                  <i class="fa-solid fa-flask" style="margin-right:6px;"></i>${cashOk?(repOk&&chemOk?'Launch Operation':'Skill Req Not Met'):'Need More Cash'}
-                </button>` : `<div style="font-size:0.75rem;opacity:0.45;text-align:center;padding:6px;border:1px dashed rgba(255,255,255,0.08);border-radius:8px;"><i class="fa-solid fa-lock" style="margin-right:5px;"></i>Upgrade from Street Dealer first</div>`}
+                ${
+                  idx === 0
+                    ? `<button class="btn ${canStart ? "btn-danger" : "btn-outline"}" onclick="game.startDrugOperation('${t.id}')" ${canStart ? "" : "disabled"}>
+                  <i class="fa-solid fa-flask" style="margin-right:6px;"></i>${cashOk ? (repOk && chemOk ? "Launch Operation" : "Skill Req Not Met") : "Need More Cash"}
+                </button>`
+                    : `<div style="font-size:0.75rem;opacity:0.45;text-align:center;padding:6px;border:1px dashed rgba(255,255,255,0.08);border-radius:8px;"><i class="fa-solid fa-lock" style="margin-right:5px;"></i>Upgrade from Street Dealer first</div>`
+                }
               </div>
             </div>`;
-          }).join("");
+            }).join("");
         } else {
           // Active empire — full status card
-          const tDef      = CONFIG.DRUG_TIERS.find(t => t.id === de.tier);
-          const nextTier  = CONFIG.DRUG_TIERS[currentIdx + 1] || null;
-          const deaPct    = Math.round(de.deaHeat || 0);
-          const deaColor  = deaPct > 70 ? "#ef4444" : deaPct > 40 ? "#f97316" : "#f59e0b";
+          const tDef = CONFIG.DRUG_TIERS.find((t) => t.id === de.tier);
+          const nextTier = CONFIG.DRUG_TIERS[currentIdx + 1] || null;
+          const deaPct = Math.round(de.deaHeat || 0);
+          const deaColor =
+            deaPct > 70 ? "#ef4444" : deaPct > 40 ? "#f97316" : "#f59e0b";
           const bribeCost = Math.round((de.income || 1000) * 0.18);
-          const terrCost  = Math.round((de.income || 1000) * 0.5);
+          const terrCost = Math.round((de.income || 1000) * 0.5);
           drugPanel.innerHTML = `
             <div class="card drug-empire-active">
               <div class="drug-empire-hero">
@@ -6916,7 +7506,7 @@ const game = {
                   <div class="drug-empire-kpi"><div class="drug-empire-kpi-label">Territory</div><div class="drug-empire-kpi-val">${de.territory || 0}%</div></div>
                   <div class="drug-empire-kpi"><div class="drug-empire-kpi-label">DEA Heat</div><div class="drug-empire-kpi-val" style="color:${deaColor};">${deaPct}%</div></div>
                   <div class="drug-empire-kpi"><div class="drug-empire-kpi-label">Turf Wars</div><div class="drug-empire-kpi-val">${de.turfWars || 0}</div></div>
-                  <div class="drug-empire-kpi"><div class="drug-empire-kpi-label">Police Bribed</div><div class="drug-empire-kpi-val" style="color:${de.bribed?'#4ade80':'var(--text-muted)'};">${de.bribed?'Yes':'No'}</div></div>
+                  <div class="drug-empire-kpi"><div class="drug-empire-kpi-label">Police Bribed</div><div class="drug-empire-kpi-val" style="color:${de.bribed ? "#4ade80" : "var(--text-muted)"};">${de.bribed ? "Yes" : "No"}</div></div>
                 </div>
                 <div class="drug-empire-dea-row">
                   <div class="drug-empire-dea-header">
@@ -6928,9 +7518,9 @@ const game = {
                   </div>
                 </div>
                 <div class="drug-empire-actions">
-                  <button class="btn btn-outline" onclick="game.bribeLocalCops()" ${de.bribed?'disabled':''}><i class="fa-solid fa-hand-holding-dollar" style="margin-right:6px;"></i>Bribe Cops ($${shortNumber(bribeCost)})</button>
+                  <button class="btn btn-outline" onclick="game.bribeLocalCops()" ${de.bribed ? "disabled" : ""}><i class="fa-solid fa-hand-holding-dollar" style="margin-right:6px;"></i>Bribe Cops ($${shortNumber(bribeCost)})</button>
                   <button class="btn btn-outline" onclick="game.expandTerritory()"><i class="fa-solid fa-map-location-dot" style="margin-right:6px;"></i>Expand Territory ($${shortNumber(terrCost)})</button>
-                  ${nextTier ? `<button class="btn btn-primary" onclick="game.startDrugOperation('${nextTier.id}')"><i class="fa-solid fa-arrow-trend-up" style="margin-right:6px;"></i>Upgrade to ${nextTier.name}</button>` : ''}
+                  ${nextTier ? `<button class="btn btn-primary" onclick="game.startDrugOperation('${nextTier.id}')"><i class="fa-solid fa-arrow-trend-up" style="margin-right:6px;"></i>Upgrade to ${nextTier.name}</button>` : ""}
                   <button class="btn btn-danger" onclick="app.modal('Shut Down Empire?','Destroy all evidence and dissolve operations. All passive income stops permanently.',[{text:'Confirm Shutdown',cb:()=>{app.closeModal();game.shutDownDrugOp();}},{text:'Cancel',cb:()=>app.closeModal()}])"><i class="fa-solid fa-power-off" style="margin-right:6px;"></i>Shut Down</button>
                 </div>
               </div>
@@ -6942,19 +7532,27 @@ const game = {
       const skillsList = document.getElementById("crime-skills-list");
       if (skillsList) {
         const SKILL_IMGS = {
-          stealth:       'https://images.unsplash.com/photo-1550399105-c4db5fb85c18?w=700&h=300&fit=crop&auto=format',
-          intimidation:  'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=700&h=300&fit=crop&auto=format',
-          hacking:       'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=700&h=300&fit=crop&auto=format',
-          street_smarts: 'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=700&h=300&fit=crop&auto=format',
-          chemistry:     'https://images.unsplash.com/photo-1554475901-4538ddfbccc2?w=700&h=300&fit=crop&auto=format',
-          planning:      'https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?w=700&h=300&fit=crop&auto=format',
+          stealth:
+            "https://images.unsplash.com/photo-1550399105-c4db5fb85c18?w=700&h=300&fit=crop&auto=format",
+          intimidation:
+            "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=700&h=300&fit=crop&auto=format",
+          hacking:
+            "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=700&h=300&fit=crop&auto=format",
+          street_smarts:
+            "https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=700&h=300&fit=crop&auto=format",
+          chemistry:
+            "https://images.unsplash.com/photo-1554475901-4538ddfbccc2?w=700&h=300&fit=crop&auto=format",
+          planning:
+            "https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?w=700&h=300&fit=crop&auto=format",
         };
-        skillsList.innerHTML = CONFIG.CRIME_SKILLS.map(s => {
-          const xp      = cr.skills[s.id] || 0;
-          const xpPct   = Math.min(100, Math.round(xp / 3000 * 100));
-          const bonus   = Math.round(Math.min(0.30, xp / 3000) * 100);
-          const lvlLabel= this._crimeSkillLevel(xp);
-          const canTrain= this.state.cash >= s.trainCost && this.state.stats.energy >= s.energyCost;
+        skillsList.innerHTML = CONFIG.CRIME_SKILLS.map((s) => {
+          const xp = cr.skills[s.id] || 0;
+          const xpPct = Math.min(100, Math.round((xp / 3000) * 100));
+          const bonus = Math.round(Math.min(0.3, xp / 3000) * 100);
+          const lvlLabel = this._crimeSkillLevel(xp);
+          const canTrain =
+            this.state.cash >= s.trainCost &&
+            this.state.stats.energy >= s.energyCost;
           return `<div class="card crime-skill-card">
             <img class="card-img" src="${SKILL_IMGS[s.id]}" alt="${s.name}" loading="lazy">
             <div style="margin-bottom:10px;">
@@ -6969,7 +7567,7 @@ const game = {
             </div>
             <div class="crime-skill-xp-row"><span>XP Progress</span><span>${xp.toLocaleString()} / 3,000</span></div>
             <div class="crime-skill-bar"><div class="crime-skill-bar-fill" style="width:${xpPct}%;"></div></div>
-            <button class="btn ${canTrain?'btn-primary':'btn-outline'}" onclick="game.trainCrimeSkill('${s.id}')" ${canTrain?'':'disabled'}>
+            <button class="btn ${canTrain ? "btn-primary" : "btn-outline"}" onclick="game.trainCrimeSkill('${s.id}')" ${canTrain ? "" : "disabled"}>
               <i class="fa-solid fa-dumbbell" style="margin-right:6px;"></i>Train (+${s.xpGain} XP) — <span style="font-family:var(--font-mono);">$${shortNumber(s.trainCost)}</span> / <span style="opacity:0.7;">${s.energyCost}⚡</span>
             </button>
           </div>`;
@@ -6980,22 +7578,24 @@ const game = {
       const lawyerList = document.getElementById("lawyer-list");
       if (lawyerList) {
         const LAW_IMGS = [
-          'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=700&h=300&fit=crop&auto=format',
-          'https://images.unsplash.com/photo-1575505586569-646b2ca898fc?w=700&h=300&fit=crop&auto=format',
-          'https://images.unsplash.com/photo-1521587760476-6c12a4b040da?w=700&h=300&fit=crop&auto=format',
-          'https://images.unsplash.com/photo-1607703703520-bb638e84caf2?w=700&h=300&fit=crop&auto=format',
-          'https://images.unsplash.com/photo-1453728013993-6d66e9c9123a?w=700&h=300&fit=crop&auto=format',
+          "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=700&h=300&fit=crop&auto=format",
+          "https://images.unsplash.com/photo-1575505586569-646b2ca898fc?w=700&h=300&fit=crop&auto=format",
+          "https://images.unsplash.com/photo-1521587760476-6c12a4b040da?w=700&h=300&fit=crop&auto=format",
+          "https://images.unsplash.com/photo-1607703703520-bb638e84caf2?w=700&h=300&fit=crop&auto=format",
+          "https://images.unsplash.com/photo-1453728013993-6d66e9c9123a?w=700&h=300&fit=crop&auto=format",
         ];
         lawyerList.innerHTML = CONFIG.LAWYERS.map((l, i) => {
           const isCurrent = cr.lawyer === l.id;
           const canAfford = this.state.cash >= l.monthlyCost;
-          const locked    = l.reqDrugTier && this._drugTierIndex(de.tier) < this._drugTierIndex(l.reqDrugTier);
-          return `<div class="card${locked?' crime-op-locked':''}" style="${isCurrent?'border:1px solid rgba(74,222,128,0.35);box-shadow:0 0 0 1px rgba(74,222,128,0.08) inset;':''}">
+          const locked =
+            l.reqDrugTier &&
+            this._drugTierIndex(de.tier) < this._drugTierIndex(l.reqDrugTier);
+          return `<div class="card${locked ? " crime-op-locked" : ""}" style="${isCurrent ? "border:1px solid rgba(74,222,128,0.35);box-shadow:0 0 0 1px rgba(74,222,128,0.08) inset;" : ""}">
             <img class="card-img" src="${LAW_IMGS[i]}" alt="${l.name}" loading="lazy">
             <div style="margin-bottom:4px;">
               <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:3px;">
                 <h3 style="margin:0;">${l.name}</h3>
-                <span class="tag ${isCurrent?'safe':''}" style="flex-shrink:0;">${l.monthlyCost>0?`$${shortNumber(l.monthlyCost)}/mo`:'Free'}</span>
+                <span class="tag ${isCurrent ? "safe" : ""}" style="flex-shrink:0;">${l.monthlyCost > 0 ? `$${shortNumber(l.monthlyCost)}/mo` : "Free"}</span>
               </div>
               <span class="lawyer-card-tier">Tier ${l.tier} Attorney</span>
             </div>
@@ -7003,17 +7603,20 @@ const game = {
             <div class="lawyer-card-stats">
               <div class="lawyer-stat-box">
                 <div class="lawyer-stat-label">Sentence Cut</div>
-                <div class="lawyer-stat-val" style="color:#fbbf24;">−${Math.round(l.jailReduction*100)}%</div>
+                <div class="lawyer-stat-val" style="color:#fbbf24;">−${Math.round(l.jailReduction * 100)}%</div>
               </div>
               <div class="lawyer-stat-box">
                 <div class="lawyer-stat-label">Dismiss Chance</div>
-                <div class="lawyer-stat-val" style="color:#4ade80;">${Math.round(l.dismissChance*100)}%</div>
+                <div class="lawyer-stat-val" style="color:#4ade80;">${Math.round(l.dismissChance * 100)}%</div>
               </div>
-              ${l.caseFee>0?`<div class="lawyer-stat-box" style="grid-column:span 2;"><div class="lawyer-stat-label">Case Fee</div><div class="lawyer-stat-val">$${shortNumber(l.caseFee)}</div></div>`:''}
+              ${l.caseFee > 0 ? `<div class="lawyer-stat-box" style="grid-column:span 2;"><div class="lawyer-stat-label">Case Fee</div><div class="lawyer-stat-val">$${shortNumber(l.caseFee)}</div></div>` : ""}
             </div>
-            ${locked ? `<div class="crime-op-locked-badge"><i class="fa-solid fa-lock"></i>Requires Drug Empire: ${l.reqDrugTier}</div>` :
-              isCurrent ? `<div style="display:flex;gap:8px;"><button class="btn btn-outline" style="flex:1;" disabled><i class="fa-solid fa-check" style="margin-right:5px;color:#4ade80;"></i>Currently Retained</button><button class="btn btn-danger" onclick="game.fireLawyer()" style="width:auto;padding:0 16px;">Fire</button></div>` :
-              `<button class="btn ${canAfford||l.monthlyCost===0?'btn-primary':'btn-outline'}" onclick="game.hireLawyer('${l.id}')" ${canAfford||l.monthlyCost===0?'':'disabled'}><i class="fa-solid fa-handshake" style="margin-right:6px;"></i>${canAfford||l.monthlyCost===0?'Retain Attorney':'Insufficient Funds'}</button>`
+            ${
+              locked
+                ? `<div class="crime-op-locked-badge"><i class="fa-solid fa-lock"></i>Requires Drug Empire: ${l.reqDrugTier}</div>`
+                : isCurrent
+                  ? `<div style="display:flex;gap:8px;"><button class="btn btn-outline" style="flex:1;" disabled><i class="fa-solid fa-check" style="margin-right:5px;color:#4ade80;"></i>Currently Retained</button><button class="btn btn-danger" onclick="game.fireLawyer()" style="width:auto;padding:0 16px;">Fire</button></div>`
+                  : `<button class="btn ${canAfford || l.monthlyCost === 0 ? "btn-primary" : "btn-outline"}" onclick="game.hireLawyer('${l.id}')" ${canAfford || l.monthlyCost === 0 ? "" : "disabled"}><i class="fa-solid fa-handshake" style="margin-right:6px;"></i>${canAfford || l.monthlyCost === 0 ? "Retain Attorney" : "Insufficient Funds"}</button>`
             }
           </div>`;
         }).join("");
@@ -7021,83 +7624,133 @@ const game = {
 
       // ── CRIME OPERATIONS ──────────────────────────────────────────────────
       const TYPE_COLORS = {
-        "Petty":        { color:"#94a3b8", glow:"rgba(148,163,184,0.3)" },
-        "Street":       { color:"#f97316", glow:"rgba(249,115,22,0.3)" },
-        "Felony":       { color:"#ef4444", glow:"rgba(239,68,68,0.3)" },
-        "Cyber":        { color:"#3b82f6", glow:"rgba(59,130,246,0.3)" },
-        "Drug Trade":   { color:"#a855f7", glow:"rgba(168,85,247,0.3)" },
-        "Organized":    { color:"#dc2626", glow:"rgba(220,38,38,0.3)" },
-        "White Collar": { color:"#38bdf8", glow:"rgba(56,189,248,0.3)" },
-        "Elite":        { color:"#f59e0b", glow:"rgba(245,158,11,0.3)" },
+        Petty: { color: "#94a3b8", glow: "rgba(148,163,184,0.3)" },
+        Street: { color: "#f97316", glow: "rgba(249,115,22,0.3)" },
+        Felony: { color: "#ef4444", glow: "rgba(239,68,68,0.3)" },
+        Cyber: { color: "#3b82f6", glow: "rgba(59,130,246,0.3)" },
+        "Drug Trade": { color: "#a855f7", glow: "rgba(168,85,247,0.3)" },
+        Organized: { color: "#dc2626", glow: "rgba(220,38,38,0.3)" },
+        "White Collar": { color: "#38bdf8", glow: "rgba(56,189,248,0.3)" },
+        Elite: { color: "#f59e0b", glow: "rgba(245,158,11,0.3)" },
       };
       const CRIME_IMGS = {
-        shoplift:    'https://images.unsplash.com/photo-1568702846914-96b305d2aaeb?w=700&h=300&fit=crop&auto=format',
-        pickpocket:  'https://images.unsplash.com/photo-1573408301185-9519f17b9c69?w=700&h=300&fit=crop&auto=format',
-        mug:         'https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=700&h=300&fit=crop&auto=format',
-        carjack:     'https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?w=700&h=300&fit=crop&auto=format',
-        burglary:    'https://images.unsplash.com/photo-1504701954957-2010ec3bcec1?w=700&h=300&fit=crop&auto=format',
-        robbery:     'https://images.unsplash.com/photo-1590556409324-aa1d726e5c3c?w=700&h=300&fit=crop&auto=format',
-        phishing:    'https://images.unsplash.com/photo-1563986768494-4dee2763ff3f?w=700&h=300&fit=crop&auto=format',
-        scam:        'https://images.unsplash.com/photo-1614064641938-3bbee52942c7?w=700&h=300&fit=crop&auto=format',
-        corp_hack:   'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=700&h=300&fit=crop&auto=format',
-        protection:  'https://images.unsplash.com/photo-1453873531674-2151bcd01707?w=700&h=300&fit=crop&auto=format',
-        arms_deal:   'https://images.unsplash.com/photo-1595590424283-b8f17842773f?w=700&h=300&fit=crop&auto=format',
-        street_deal: 'https://images.unsplash.com/photo-1587590741732-db3f6ccf99ea?w=700&h=300&fit=crop&auto=format',
-        cook_sell:   'https://images.unsplash.com/photo-1614924308600-fc72e1b0dce4?w=700&h=300&fit=crop&auto=format',
-        distribution:'https://images.unsplash.com/photo-1494438639946-1ebd1d20bf85?w=700&h=300&fit=crop&auto=format',
-        heist:       'https://images.unsplash.com/photo-1504707748692-419802426bc6?w=700&h=300&fit=crop&auto=format',
-        insider:     'https://images.unsplash.com/photo-1642543492481-44e81e3914a7?w=700&h=300&fit=crop&auto=format',
-        extortion:   'https://images.unsplash.com/photo-1575368127640-c9f3c09b8fca?w=700&h=300&fit=crop&auto=format',
+        shoplift:
+          "https://images.unsplash.com/photo-1568702846914-96b305d2aaeb?w=700&h=300&fit=crop&auto=format",
+        pickpocket:
+          "https://images.unsplash.com/photo-1573408301185-9519f17b9c69?w=700&h=300&fit=crop&auto=format",
+        mug: "https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=700&h=300&fit=crop&auto=format",
+        carjack:
+          "https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?w=700&h=300&fit=crop&auto=format",
+        burglary:
+          "https://images.unsplash.com/photo-1504701954957-2010ec3bcec1?w=700&h=300&fit=crop&auto=format",
+        robbery:
+          "https://images.unsplash.com/photo-1590556409324-aa1d726e5c3c?w=700&h=300&fit=crop&auto=format",
+        phishing:
+          "https://images.unsplash.com/photo-1563986768494-4dee2763ff3f?w=700&h=300&fit=crop&auto=format",
+        scam: "https://images.unsplash.com/photo-1614064641938-3bbee52942c7?w=700&h=300&fit=crop&auto=format",
+        corp_hack:
+          "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=700&h=300&fit=crop&auto=format",
+        protection:
+          "https://images.unsplash.com/photo-1453873531674-2151bcd01707?w=700&h=300&fit=crop&auto=format",
+        arms_deal:
+          "https://images.unsplash.com/photo-1595590424283-b8f17842773f?w=700&h=300&fit=crop&auto=format",
+        street_deal:
+          "https://images.unsplash.com/photo-1587590741732-db3f6ccf99ea?w=700&h=300&fit=crop&auto=format",
+        cook_sell:
+          "https://images.unsplash.com/photo-1614924308600-fc72e1b0dce4?w=700&h=300&fit=crop&auto=format",
+        distribution:
+          "https://images.unsplash.com/photo-1494438639946-1ebd1d20bf85?w=700&h=300&fit=crop&auto=format",
+        heist:
+          "https://images.unsplash.com/photo-1504707748692-419802426bc6?w=700&h=300&fit=crop&auto=format",
+        insider:
+          "https://images.unsplash.com/photo-1642543492481-44e81e3914a7?w=700&h=300&fit=crop&auto=format",
+        extortion:
+          "https://images.unsplash.com/photo-1575368127640-c9f3c09b8fca?w=700&h=300&fit=crop&auto=format",
       };
 
-      const typeOrder = ["Petty","Street","Felony","Cyber","Drug Trade","Organized","White Collar","Elite"];
-      const byType    = {};
-      CONFIG.CRIMES.forEach(c => { (byType[c.type] = byType[c.type]||[]).push(c); });
+      const typeOrder = [
+        "Petty",
+        "Street",
+        "Felony",
+        "Cyber",
+        "Drug Trade",
+        "Organized",
+        "White Collar",
+        "Elite",
+      ];
+      const byType = {};
+      CONFIG.CRIMES.forEach((c) => {
+        (byType[c.type] = byType[c.type] || []).push(c);
+      });
 
       const CRIME_TYPE_ICONS = {
-        "Petty":        "fa-hand",
-        "Street":       "fa-street-view",
-        "Felony":       "fa-handcuffs",
-        "Cyber":        "fa-laptop-code",
-        "Drug Trade":   "fa-tablets",
-        "Organized":    "fa-people-group",
+        Petty: "fa-hand",
+        Street: "fa-street-view",
+        Felony: "fa-handcuffs",
+        Cyber: "fa-laptop-code",
+        "Drug Trade": "fa-tablets",
+        Organized: "fa-people-group",
         "White Collar": "fa-briefcase",
-        "Elite":        "fa-crown",
+        Elite: "fa-crown",
       };
 
       let crimeHTML = "";
-      typeOrder.forEach(type => {
+      typeOrder.forEach((type) => {
         if (!byType[type]) return;
-        const tc = TYPE_COLORS[type] || { color:"#94a3b8", glow:"rgba(148,163,184,0.3)" };
-        const unlockedOps = byType[type].filter(c => cr.rep >= c.reqRep);
+        const tc = TYPE_COLORS[type] || {
+          color: "#94a3b8",
+          glow: "rgba(148,163,184,0.3)",
+        };
+        const unlockedOps = byType[type].filter((c) => cr.rep >= c.reqRep);
         if (!unlockedOps.length) return;
         crimeHTML += `<div class="crime-op-type-header" style="color:${tc.color};"><i class="fa-solid fa-circle-dot" style="font-size:0.5rem;"></i>${type}</div>`;
-        crimeHTML += unlockedOps.map(c => {
-          const skillXp     = cr.skills[c.skill] || 0;
-          const skillBonus  = Math.min(0.30, skillXp / 3000);
-          const successChance = Math.max(0.05, Math.min(0.97,
-            c.baseChance + skillBonus - cr.heat * 0.005
-            - this.state.life.legalRecord * 0.012
-            + this.state.stats.smarts * 0.002
-          ));
-          const successColor = successChance > 0.7 ? "#4ade80" : successChance > 0.4 ? "#fbbf24" : "#f87171";
-          const skillDef  = CONFIG.CRIME_SKILLS.find(sk => sk.id === c.skill);
-          const lawyerDef = cr.lawyer ? CONFIG.LAWYERS.find(l => l.id === cr.lawyer) : null;
-          const reducedJail = lawyerDef ? Math.max(1, Math.round(c.jail * (1 - lawyerDef.jailReduction))) : c.jail;
-          const heatPenalty = cr.heat > 25 ? `<div style="display:flex;align-items:center;gap:6px;padding:6px 10px;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.18);border-radius:8px;font-size:0.74rem;color:#fca5a5;margin-bottom:10px;"><i class="fa-solid fa-fire-flame-curved" style="color:#ef4444;"></i> Heat penalty: −${(cr.heat * 0.5).toFixed(0)}% success</div>` : '';
+        crimeHTML += unlockedOps
+          .map((c) => {
+            const skillXp = cr.skills[c.skill] || 0;
+            const skillBonus = Math.min(0.3, skillXp / 3000);
+            const successChance = Math.max(
+              0.05,
+              Math.min(
+                0.97,
+                c.baseChance +
+                  skillBonus -
+                  cr.heat * 0.005 -
+                  this.state.life.legalRecord * 0.012 +
+                  this.state.stats.smarts * 0.002,
+              ),
+            );
+            const successColor =
+              successChance > 0.7
+                ? "#4ade80"
+                : successChance > 0.4
+                  ? "#fbbf24"
+                  : "#f87171";
+            const skillDef = CONFIG.CRIME_SKILLS.find(
+              (sk) => sk.id === c.skill,
+            );
+            const lawyerDef = cr.lawyer
+              ? CONFIG.LAWYERS.find((l) => l.id === cr.lawyer)
+              : null;
+            const reducedJail = lawyerDef
+              ? Math.max(1, Math.round(c.jail * (1 - lawyerDef.jailReduction)))
+              : c.jail;
+            const heatPenalty =
+              cr.heat > 25
+                ? `<div style="display:flex;align-items:center;gap:6px;padding:6px 10px;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.18);border-radius:8px;font-size:0.74rem;color:#fca5a5;margin-bottom:10px;"><i class="fa-solid fa-fire-flame-curved" style="color:#ef4444;"></i> Heat penalty: −${(cr.heat * 0.5).toFixed(0)}% success</div>`
+                : "";
 
-          return `<div class="card crime-op-card" style="--op-color:${tc.color};">
+            return `<div class="card crime-op-card" style="--op-color:${tc.color};">
             <div class="crime-op-top-bar" style="background:linear-gradient(90deg,${tc.color},${tc.color}44,transparent);"></div>
             <div class="crime-op-head">
               <div class="crime-op-icon" style="color:${tc.color};background:${tc.color}15;border:1px solid ${tc.color}33;">
-                <i class="fa-solid ${CRIME_TYPE_ICONS[c.type]||'fa-skull'}"></i>
+                <i class="fa-solid ${CRIME_TYPE_ICONS[c.type] || "fa-skull"}"></i>
               </div>
               <div style="flex:1;min-width:0;">
                 <div style="font-weight:800;font-size:0.96rem;margin-bottom:3px;">${c.name}</div>
                 <span style="font-family:var(--font-mono);font-size:0.6rem;letter-spacing:1.5px;text-transform:uppercase;color:${tc.color};opacity:0.9;">${c.type}</span>
               </div>
               <div class="crime-op-ring" style="border-color:${successColor}55;">
-                <span style="font-family:var(--font-mono);font-size:1rem;font-weight:900;color:${successColor};line-height:1;">${(successChance*100).toFixed(0)}</span>
+                <span style="font-family:var(--font-mono);font-size:1rem;font-weight:900;color:${successColor};line-height:1;">${(successChance * 100).toFixed(0)}</span>
                 <span style="font-size:0.5rem;letter-spacing:1px;color:var(--text-dim);text-transform:uppercase;">%</span>
               </div>
             </div>
@@ -7109,39 +7762,61 @@ const game = {
               </div>
               <div class="crime-op-meta-box">
                 <div class="crime-op-meta-label">Sentence</div>
-                <div class="crime-op-meta-val" style="color:#f87171;">${reducedJail}${lawyerDef&&reducedJail<c.jail?`<span style="text-decoration:line-through;opacity:0.35;font-size:0.75em;margin-left:3px;">${c.jail}</span>`:""} mo</div>
+                <div class="crime-op-meta-val" style="color:#f87171;">${reducedJail}${lawyerDef && reducedJail < c.jail ? `<span style="text-decoration:line-through;opacity:0.35;font-size:0.75em;margin-left:3px;">${c.jail}</span>` : ""} mo</div>
               </div>
               <div class="crime-op-meta-box">
                 <div class="crime-op-meta-label">Skill</div>
-                <div class="crime-op-meta-val" style="color:#a78bfa;"><i class="fa-solid ${skillDef?skillDef.icon:'fa-bolt'}" style="font-size:0.75em;margin-right:3px;"></i>+${Math.round(skillBonus*100)}%</div>
+                <div class="crime-op-meta-val" style="color:#a78bfa;"><i class="fa-solid ${skillDef ? skillDef.icon : "fa-bolt"}" style="font-size:0.75em;margin-right:3px;"></i>+${Math.round(skillBonus * 100)}%</div>
               </div>
             </div>
-            <div class="crime-op-bar" style="margin-bottom:${cr.heat>25?'8px':'12px'};">
-              <div class="crime-op-bar-fill" style="width:${successChance*100}%;background:linear-gradient(90deg,${successColor}99,${successColor});"></div>
+            <div class="crime-op-bar" style="margin-bottom:${cr.heat > 25 ? "8px" : "12px"};">
+              <div class="crime-op-bar-fill" style="width:${successChance * 100}%;background:linear-gradient(90deg,${successColor}99,${successColor});"></div>
             </div>
             ${heatPenalty}
             <button class="btn crime-execute-btn" style="background:linear-gradient(135deg,${tc.color}dd,${tc.color}88);border:1px solid ${tc.color}55;color:#fff;font-weight:800;" onclick="game.commitCrime('${c.id}')"><i class="fa-solid fa-masks-theater"></i> Run the Job</button>
           </div>`;
-        }).join("");
+          })
+          .join("");
       });
       // Locked operations — compact section
-      const allLockedOps = CONFIG.CRIMES.filter(function(c) { return cr.rep < c.reqRep; });
+      const allLockedOps = CONFIG.CRIMES.filter(function (c) {
+        return cr.rep < c.reqRep;
+      });
       if (allLockedOps.length > 0) {
-        var lockedHtml = '<div class="crime-locked-section" style="grid-column:1/-1;">';
+        var lockedHtml =
+          '<div class="crime-locked-section" style="grid-column:1/-1;">';
         lockedHtml += '<div class="crime-locked-header">';
-        lockedHtml += '<span class="crime-locked-title"><i class="fa-solid fa-lock"></i> Locked Operations <span class="crime-locked-count">' + allLockedOps.length + '</span></span>';
-        lockedHtml += '<span class="crime-locked-hint">Commit crimes to earn Street Rep and unlock more operations</span>';
+        lockedHtml +=
+          '<span class="crime-locked-title"><i class="fa-solid fa-lock"></i> Locked Operations <span class="crime-locked-count">' +
+          allLockedOps.length +
+          "</span></span>";
+        lockedHtml +=
+          '<span class="crime-locked-hint">Commit crimes to earn Street Rep and unlock more operations</span>';
         lockedHtml += '</div><div class="crime-locked-grid">';
-        allLockedOps.forEach(function(lc) {
-          const ltc = TYPE_COLORS[lc.type] || { color:'#94a3b8' };
+        allLockedOps.forEach(function (lc) {
+          const ltc = TYPE_COLORS[lc.type] || { color: "#94a3b8" };
           lockedHtml += '<div class="crime-locked-item">';
-          lockedHtml += '<span class="crime-locked-item-type" style="color:' + ltc.color + ';border-color:' + ltc.color + '33;">' + lc.type + '</span>';
-          lockedHtml += '<span class="crime-locked-item-name">' + lc.name + '</span>';
-          lockedHtml += '<span class="crime-locked-item-pay">$' + shortNumber(lc.reward[1]) + '</span>';
-          lockedHtml += '<span class="crime-locked-item-req"><i class="fa-solid fa-lock"></i> ' + lc.reqRep + ' Rep</span>';
-          lockedHtml += '</div>';
+          lockedHtml +=
+            '<span class="crime-locked-item-type" style="color:' +
+            ltc.color +
+            ";border-color:" +
+            ltc.color +
+            '33;">' +
+            lc.type +
+            "</span>";
+          lockedHtml +=
+            '<span class="crime-locked-item-name">' + lc.name + "</span>";
+          lockedHtml +=
+            '<span class="crime-locked-item-pay">$' +
+            shortNumber(lc.reward[1]) +
+            "</span>";
+          lockedHtml +=
+            '<span class="crime-locked-item-req"><i class="fa-solid fa-lock"></i> ' +
+            lc.reqRep +
+            " Rep</span>";
+          lockedHtml += "</div>";
         });
-        lockedHtml += '</div></div>';
+        lockedHtml += "</div></div>";
         crimeHTML += lockedHtml;
       }
       document.getElementById("crime-list").innerHTML = crimeHTML;
@@ -7406,11 +8081,16 @@ const game = {
       .join("");
 
     const HUSTLE_IMGS = {
-      freelance_code:   'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=700&h=300&fit=crop&auto=format',
-      private_tutor:    'https://images.unsplash.com/photo-1523580494863-6f3031224c94?w=700&h=300&fit=crop&auto=format',
-      flip_items:       'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=700&h=300&fit=crop&auto=format',
-      event_photos:     'https://images.unsplash.com/photo-1452587925148-ce544e77e70d?w=700&h=300&fit=crop&auto=format',
-      luxury_delivery:  'https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?w=700&h=300&fit=crop&auto=format',
+      freelance_code:
+        "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=700&h=300&fit=crop&auto=format",
+      private_tutor:
+        "https://images.unsplash.com/photo-1523580494863-6f3031224c94?w=700&h=300&fit=crop&auto=format",
+      flip_items:
+        "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=700&h=300&fit=crop&auto=format",
+      event_photos:
+        "https://images.unsplash.com/photo-1452587925148-ce544e77e70d?w=700&h=300&fit=crop&auto=format",
+      luxury_delivery:
+        "https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?w=700&h=300&fit=crop&auto=format",
     };
     const hustleList = document.getElementById("hustle-list");
     if (hustleList) {
@@ -7440,10 +8120,14 @@ const game = {
     }
 
     const CONTRACT_IMGS = {
-      cto_advisor:     'https://images.unsplash.com/photo-1535378917042-10a22c95931a?w=700&h=300&fit=crop&auto=format',
-      funnel_consult:  'https://images.unsplash.com/photo-1552664730-d307ca884978?w=700&h=300&fit=crop&auto=format',
-      ai_automation:   'https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=700&h=300&fit=crop&auto=format',
-      exec_coaching:   'https://images.unsplash.com/photo-1521791136064-7986c2920216?w=700&h=300&fit=crop&auto=format',
+      cto_advisor:
+        "https://images.unsplash.com/photo-1535378917042-10a22c95931a?w=700&h=300&fit=crop&auto=format",
+      funnel_consult:
+        "https://images.unsplash.com/photo-1552664730-d307ca884978?w=700&h=300&fit=crop&auto=format",
+      ai_automation:
+        "https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=700&h=300&fit=crop&auto=format",
+      exec_coaching:
+        "https://images.unsplash.com/photo-1521791136064-7986c2920216?w=700&h=300&fit=crop&auto=format",
     };
     const contractList = document.getElementById("contract-list");
     if (contractList) {
@@ -7473,9 +8157,11 @@ const game = {
     }
 
     const CHANNEL_IMGS = {
-      youtube_finance: 'youtube.png',
-      shortform:       'https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=700&h=300&fit=crop&auto=format',
-      newsletter:      'https://images.unsplash.com/photo-1586339949916-3e9457bef6d3?w=700&h=300&fit=crop&auto=format',
+      youtube_finance: "youtube.png",
+      shortform:
+        "https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=700&h=300&fit=crop&auto=format",
+      newsletter:
+        "https://images.unsplash.com/photo-1586339949916-3e9457bef6d3?w=700&h=300&fit=crop&auto=format",
     };
     const creatorList = document.getElementById("creator-list");
     if (creatorList) {
@@ -7563,9 +8249,12 @@ const game = {
     const franchiseList = document.getElementById("franchise-list");
     if (franchiseList) {
       const FRANCH_IMGS = {
-        coffee_chain:  'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=700&h=300&fit=crop&auto=format',
-        gym_studio:    'https://images.unsplash.com/photo-1571902943202-507ec2618e8f?w=700&h=300&fit=crop&auto=format',
-        storage_units: 'https://images.unsplash.com/photo-1600880292089-90a7e086ee0c?w=700&h=300&fit=crop&auto=format',
+        coffee_chain:
+          "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=700&h=300&fit=crop&auto=format",
+        gym_studio:
+          "https://images.unsplash.com/photo-1571902943202-507ec2618e8f?w=700&h=300&fit=crop&auto=format",
+        storage_units:
+          "https://images.unsplash.com/photo-1600880292089-90a7e086ee0c?w=700&h=300&fit=crop&auto=format",
       };
       franchiseList.innerHTML = CONFIG.FRANCHISES.map((f) => {
         const owned = this.state.wealth.franchises?.[f.id] || 0;
@@ -7590,9 +8279,12 @@ const game = {
     const propertyList = document.getElementById("property-list");
     if (propertyList) {
       const PROP_IMGS = {
-        duplex:    'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=700&h=300&fit=crop&auto=format',
-        stripmall: 'https://images.unsplash.com/photo-1486325212027-8081e485255e?w=700&h=300&fit=crop&auto=format',
-        warehouse: 'https://images.unsplash.com/photo-1587293852726-70cdb56c2866?w=700&h=300&fit=crop&auto=format',
+        duplex:
+          "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=700&h=300&fit=crop&auto=format",
+        stripmall:
+          "https://images.unsplash.com/photo-1486325212027-8081e485255e?w=700&h=300&fit=crop&auto=format",
+        warehouse:
+          "https://images.unsplash.com/photo-1587293852726-70cdb56c2866?w=700&h=300&fit=crop&auto=format",
       };
       propertyList.innerHTML = CONFIG.PROPERTIES.map((p) => {
         const owned = this.state.wealth.properties[p.id] || 0;
@@ -7666,9 +8358,12 @@ const game = {
     const dividendList = document.getElementById("dividend-list");
     if (dividendList) {
       const DIV_IMGS = {
-        div_stable: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=700&h=300&fit=crop&auto=format',
-        div_reit:   'https://images.unsplash.com/photo-1560520653-9e0e4c89eb11?w=700&h=300&fit=crop&auto=format',
-        div_energy: 'https://images.unsplash.com/photo-1466611653911-95081537e5b7?w=700&h=300&fit=crop&auto=format',
+        div_stable:
+          "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=700&h=300&fit=crop&auto=format",
+        div_reit:
+          "https://images.unsplash.com/photo-1560520653-9e0e4c89eb11?w=700&h=300&fit=crop&auto=format",
+        div_energy:
+          "https://images.unsplash.com/photo-1466611653911-95081537e5b7?w=700&h=300&fit=crop&auto=format",
       };
       dividendList.innerHTML = CONFIG.DIVIDEND_FUNDS.map((fund) => {
         const units = this.state.wealth.dividends?.[fund.id] || 0;
@@ -7721,7 +8416,14 @@ const game = {
               ? "var(--accent-amber)"
               : "var(--accent-red)";
 
-      const scoreTier = bank.creditScore >= 760 ? "Excellent" : bank.creditScore >= 680 ? "Good" : bank.creditScore >= 620 ? "Fair" : "Poor";
+      const scoreTier =
+        bank.creditScore >= 760
+          ? "Excellent"
+          : bank.creditScore >= 680
+            ? "Good"
+            : bank.creditScore >= 620
+              ? "Fair"
+              : "Poor";
       bankOverview.innerHTML = `
         <div class="bank-hero">
           <div class="bank-score-wrap">
@@ -7734,8 +8436,8 @@ const game = {
           <div class="bank-kpi-grid">
             <div class="bank-kpi"><div class="bank-kpi-icon" style="color:#22d3ee;"><i class="fa-solid fa-arrows-rotate"></i></div><div class="bank-kpi-label">Checking</div><div class="bank-kpi-val">$${shortNumber(Math.floor(bank.checking))}</div></div>
             <div class="bank-kpi"><div class="bank-kpi-icon" style="color:#34d399;"><i class="fa-solid fa-piggy-bank"></i></div><div class="bank-kpi-label">Savings</div><div class="bank-kpi-val">$${shortNumber(Math.floor(bank.savings))}</div></div>
-            <div class="bank-kpi"><div class="bank-kpi-icon" style="color:${debtService>0?'#f87171':'#34d399'};"><i class="fa-solid fa-file-invoice-dollar"></i></div><div class="bank-kpi-label">Monthly Debt</div><div class="bank-kpi-val" style="color:${debtService>0?'#f87171':'#34d399'};">$${shortNumber(Math.floor(debtService))}</div></div>
-            <div class="bank-kpi"><div class="bank-kpi-icon" style="color:${utilization>0.7?'#f87171':'#fbbf24'};"><i class="fa-solid fa-credit-card"></i></div><div class="bank-kpi-label">CC Used</div><div class="bank-kpi-val" style="color:${utilization>0.7?'#f87171':utilization>0.4?'#fbbf24':'#34d399'};"> ${(utilization*100).toFixed(0)}%</div></div>
+            <div class="bank-kpi"><div class="bank-kpi-icon" style="color:${debtService > 0 ? "#f87171" : "#34d399"};"><i class="fa-solid fa-file-invoice-dollar"></i></div><div class="bank-kpi-label">Monthly Debt</div><div class="bank-kpi-val" style="color:${debtService > 0 ? "#f87171" : "#34d399"};">$${shortNumber(Math.floor(debtService))}</div></div>
+            <div class="bank-kpi"><div class="bank-kpi-icon" style="color:${utilization > 0.7 ? "#f87171" : "#fbbf24"};"><i class="fa-solid fa-credit-card"></i></div><div class="bank-kpi-label">CC Used</div><div class="bank-kpi-val" style="color:${utilization > 0.7 ? "#f87171" : utilization > 0.4 ? "#fbbf24" : "#34d399"};"> ${(utilization * 100).toFixed(0)}%</div></div>
           </div>
         </div>`;
 
@@ -7763,7 +8465,7 @@ const game = {
           </div>
           <p style="font-size:0.78rem;color:var(--text-muted);margin:0 0 12px;">Lock cash away for higher guaranteed returns.</p>
           <div style="display:grid;gap:6px;">
-            ${CONFIG.BANK_PRODUCTS.cdOffers.map(offer => `<button class="btn btn-outline bank-cd-btn" onclick="game.openBankCd('${offer.id}')"><span>${offer.name}</span><span style="color:#fbbf24;font-weight:700;">${(offer.apy*100).toFixed(1)}% APY</span><span style="color:var(--text-dim);">Min $${shortNumber(offer.minDeposit)}</span></button>`).join("")}
+            ${CONFIG.BANK_PRODUCTS.cdOffers.map((offer) => `<button class="btn btn-outline bank-cd-btn" onclick="game.openBankCd('${offer.id}')"><span>${offer.name}</span><span style="color:#fbbf24;font-weight:700;">${(offer.apy * 100).toFixed(1)}% APY</span><span style="color:var(--text-dim);">Min $${shortNumber(offer.minDeposit)}</span></button>`).join("")}
           </div>
         </div>`;
 
@@ -7778,13 +8480,13 @@ const game = {
               <span style="font-family:var(--font-mono);font-size:0.62rem;letter-spacing:2px;color:rgba(255,255,255,0.4);">GREEDIGO PREMIUM</span>
               <i class="fa-brands fa-cc-visa" style="font-size:1.6rem;color:rgba(255,255,255,0.3);"></i>
             </div>
-            <div style="font-family:var(--font-mono);font-size:0.9rem;letter-spacing:3px;color:rgba(255,255,255,0.6);margin-bottom:14px;">•••• •••• •••• ${String(Math.round(bank.creditScore*0.0413)).padStart(4,String.fromCharCode(48))}</div>
+            <div style="font-family:var(--font-mono);font-size:0.9rem;letter-spacing:3px;color:rgba(255,255,255,0.6);margin-bottom:14px;">•••• •••• •••• ${String(Math.round(bank.creditScore * 0.0413)).padStart(4, String.fromCharCode(48))}</div>
             <div class="bank-cc-stats-row">
-              <div class="bank-cc-stat"><div class="bank-cc-stat-label">Balance</div><div class="bank-cc-stat-val" style="color:${cc.balance>0?'#f87171':'#34d399'};">$${shortNumber(Math.floor(cc.balance))}</div></div>
+              <div class="bank-cc-stat"><div class="bank-cc-stat-label">Balance</div><div class="bank-cc-stat-val" style="color:${cc.balance > 0 ? "#f87171" : "#34d399"};">$${shortNumber(Math.floor(cc.balance))}</div></div>
               <div class="bank-cc-stat"><div class="bank-cc-stat-label">Limit</div><div class="bank-cc-stat-val">$${shortNumber(Math.floor(cc.limit))}</div></div>
-              <div class="bank-cc-stat"><div class="bank-cc-stat-label">APR</div><div class="bank-cc-stat-val" style="color:#fbbf24;">${(cc.apr*100).toFixed(1)}%</div></div>
+              <div class="bank-cc-stat"><div class="bank-cc-stat-label">APR</div><div class="bank-cc-stat-val" style="color:#fbbf24;">${(cc.apr * 100).toFixed(1)}%</div></div>
             </div>
-            <div class="bank-cc-util-bar"><div style="width:${Math.min(100,utilization*100).toFixed(0)}%;height:100%;background:${utilization>0.8?'#ef4444':utilization>0.5?'#f97316':'#22d3ee'};border-radius:999px;"></div></div>
+            <div class="bank-cc-util-bar"><div style="width:${Math.min(100, utilization * 100).toFixed(0)}%;height:100%;background:${utilization > 0.8 ? "#ef4444" : utilization > 0.5 ? "#f97316" : "#22d3ee"};border-radius:999px;"></div></div>
           </div>
           <div class="bank-btn-grid">
             <button class="btn btn-outline bank-action-btn" onclick="game.takeCreditCashAdvance(500)"><i class="fa-solid fa-plus"></i> Borrow $500</button>
@@ -7799,19 +8501,23 @@ const game = {
           const eligibleScore = bank.creditScore >= offer.minScore;
           const dtiGate = dti <= 0.68;
           const canApply = eligibleScore && dtiGate;
-          const blockReason = !eligibleScore ? `Score too low (need ${offer.minScore}+)` : `DTI too high (${(dti*100).toFixed(0)}%)`;
+          const blockReason = !eligibleScore
+            ? `Score too low (need ${offer.minScore}+)`
+            : `DTI too high (${(dti * 100).toFixed(0)}%)`;
           return `<div class="bank-panel-card bank-loan-card${canApply ? "" : " bank-loan-dim"}">
             <div class="bank-loan-header">
               <div><div class="bank-loan-name">${offer.name}</div><div class="bank-loan-principal">$${shortNumber(offer.principal)}</div></div>
-              <div class="bank-loan-rate-badge">${(offer.baseApr*100).toFixed(1)}<small>% APR</small></div>
+              <div class="bank-loan-rate-badge">${(offer.baseApr * 100).toFixed(1)}<small>% APR</small></div>
             </div>
             <div class="bank-loan-meta">
               <span><i class="fa-solid fa-calendar-days"></i> ${offer.termMonths} months</span>
               <span><i class="fa-solid fa-star-half-stroke"></i> Min ${offer.minScore} score</span>
             </div>
-            ${canApply
-              ? `<button class="btn btn-primary bank-apply-btn" onclick="game.applyBankLoan('${offer.id}')"><i class="fa-solid fa-check-circle"></i> Apply Now</button>`
-              : `<div class="bank-loan-blocked"><i class="fa-solid fa-circle-xmark"></i> ${blockReason}</div>`}
+            ${
+              canApply
+                ? `<button class="btn btn-primary bank-apply-btn" onclick="game.applyBankLoan('${offer.id}')"><i class="fa-solid fa-check-circle"></i> Apply Now</button>`
+                : `<div class="bank-loan-blocked"><i class="fa-solid fa-circle-xmark"></i> ${blockReason}</div>`
+            }
           </div>`;
         })
         .join("");
@@ -7821,13 +8527,13 @@ const game = {
             .map(
               (loan) => `<div class="bank-panel-card bank-active-loan">
               <div class="bank-loan-header">
-                <div><div class="bank-loan-name">${loan.name}</div><div style="font-size:0.72rem;color:var(--text-dim);margin-top:2px;">${loan.termLeft}mo left · ${(loan.apr*100).toFixed(2)}% APR</div></div>
+                <div><div class="bank-loan-name">${loan.name}</div><div style="font-size:0.72rem;color:var(--text-dim);margin-top:2px;">${loan.termLeft}mo left · ${(loan.apr * 100).toFixed(2)}% APR</div></div>
                 <div class="bank-loan-rate-badge" style="background:rgba(248,113,113,0.08);border-color:rgba(248,113,113,0.22);color:#f87171;">$${shortNumber(Math.floor(loan.principal))}</div>
               </div>
-              <div style="margin:10px 0;height:5px;background:rgba(255,255,255,0.07);border-radius:999px;overflow:hidden;"><div style="width:${Math.max(5,100-Math.round(loan.termLeft/Math.max(1,loan.termLeft)*50))}%;height:100%;background:linear-gradient(90deg,#f87171,#f97316);border-radius:999px;"></div></div>
+              <div style="margin:10px 0;height:5px;background:rgba(255,255,255,0.07);border-radius:999px;overflow:hidden;"><div style="width:${Math.max(5, 100 - Math.round((loan.termLeft / Math.max(1, loan.termLeft)) * 50))}%;height:100%;background:linear-gradient(90deg,#f87171,#f97316);border-radius:999px;"></div></div>
               <div class="bank-loan-meta" style="margin-bottom:10px;">
                 <span>$${shortNumber(Math.floor(loan.monthlyPayment))}/mo</span>
-                ${(loan.missedPayments||0)>0?'<span style="color:#f87171;"><i class="fa-solid fa-triangle-exclamation"></i> '+(loan.missedPayments||0)+' missed</span>':'<span style="color:#34d399;"><i class="fa-solid fa-check"></i> On track</span>'}
+                ${(loan.missedPayments || 0) > 0 ? '<span style="color:#f87171;"><i class="fa-solid fa-triangle-exclamation"></i> ' + (loan.missedPayments || 0) + " missed</span>" : '<span style="color:#34d399;"><i class="fa-solid fa-check"></i> On track</span>'}
               </div>
               <div class="bank-btn-grid">
                 <button class="btn btn-success" onclick="game.payLoanExtra('${loan.id}',500)"><i class="fa-solid fa-plus"></i> $500</button>
@@ -7844,7 +8550,7 @@ const game = {
               (cd) => `<div class="bank-panel-card">
               <div class="bank-loan-header">
                 <div><div class="bank-loan-name">${cd.name}</div><div style="font-size:0.72rem;color:var(--text-dim);margin-top:2px;">${cd.termLeft} months remaining</div></div>
-                <div class="bank-loan-rate-badge" style="background:rgba(251,191,36,0.08);border-color:rgba(251,191,36,0.22);color:#fbbf24;">${(cd.apy*100).toFixed(2)}% APY</div>
+                <div class="bank-loan-rate-badge" style="background:rgba(251,191,36,0.08);border-color:rgba(251,191,36,0.22);color:#fbbf24;">${(cd.apy * 100).toFixed(2)}% APY</div>
               </div>
               <div class="bank-loan-meta" style="margin-top:8px;"><span>Balance: $${shortNumber(Math.floor(cd.balance))}</span></div>
             </div>`,
@@ -7855,47 +8561,197 @@ const game = {
       bankActiveLoans.innerHTML = activeLoanCards + cdCards;
     }
 
-    // --- MARKET ---
-    if (document.getElementById("ticker-text"))
-      document.getElementById("ticker-text").innerText = this.state.economy
-        .news[0]
-        ? this.state.economy.news[0].msg
-        : "Market Open.";
-    document.getElementById("market-list").innerHTML = CONFIG.ASSETS.map(
-      (def) => {
-        let asset = this.state.assets[def.id];
-        let colorClass = asset.trend >= 0 ? "text-gain" : "text-loss";
-        return `
-        <div class="card" style="padding:12px;">
-          <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
-            <span style="font-weight:bold; color:#fff;">${def.name}</span>
-            <span style="color:#666; font-size:10px;">${def.id.toUpperCase()}</span>
-          </div>
-          <div style="font-size:1.4rem; font-family:'JetBrains Mono'; color:#fff; margin-bottom:4px;">$${asset.price.toFixed(2)}</div>
-          <div class="${colorClass}" style="font-size:11px; font-family:'JetBrains Mono';">${asset.trend >= 0 ? "▲" : "▼"} ${(asset.trend * 100).toFixed(2)}%</div>
-          <div style="margin-top:12px; font-size:11px; color:#888;">Owned: <span style="color:#fff">${asset.owned}</span></div>
+    // --- MARKET (redesigned) ---
+    const _mktTypeColors = {
+      index: "#60a5fa",
+      stock: "#a78bfa",
+      crypto: "#f59e0b",
+      comm: "#34d399",
+    };
+    const _mktTypeLabels = {
+      index: "INDEX",
+      stock: "STOCK",
+      crypto: "CRYPTO",
+      comm: "COMMOD",
+    };
 
-          <div style="display:flex; gap:8px; align-items:center; margin-top:10px;">
-            <input id="market-qty-${def.id}" type="number" min="1" value="1" step="1" aria-label="Quantity for ${def.id.toUpperCase()}" style="width:84px; padding:6px; border-radius:8px; background:transparent; color:#fff; border:1px solid var(--border-dim);" />
-            <div style="margin-left:auto; display:flex; gap:8px;">
-              <button class="btn btn-ghost" style="padding:6px 8px;" onclick="(function(){const el=document.getElementById('market-qty-${def.id}'); el.value = Math.max(1, parseInt(el.value||1)+1);})()">+1</button>
-              <button class="btn btn-ghost" style="padding:6px 8px;" onclick="(function(){const el=document.getElementById('market-qty-${def.id}'); el.value = Math.max(1, parseInt(el.value||1)-1);})()">-1</button>
-              <button class="btn btn-outline" style="padding:6px 8px;" onclick="game.buyMax('${def.id}')">Buy Max</button>
-              <button class="btn btn-success" style="margin:0; padding:6px;" onclick="game.trade('${def.id}', true, parseInt(document.getElementById('market-qty-${def.id}').value || 1))">BUY</button>
-              <button class="btn btn-danger" style="margin:0; padding:6px;" onclick="game.trade('${def.id}', false, parseInt(document.getElementById('market-qty-${def.id}').value || 1))">SELL</button>
+    // Tape
+    const tapeEl = document.getElementById("mkt-tape-track");
+    if (tapeEl) {
+      const items = [...CONFIG.ASSETS, ...CONFIG.ASSETS]
+        .map((def) => {
+          const a = this.state.assets[def.id];
+          const up = a.trend >= 0;
+          const px = a.price < 100 ? a.price.toFixed(2) : a.price.toFixed(0);
+          return `<span class="mkt-tape-item ${up ? "mkt-up" : "mkt-dn"}">${def.id.toUpperCase()} <b>$${px}</b> <em>${up ? "▲" : "▼"}${Math.abs(a.trend * 100).toFixed(2)}%</em></span><span class="mkt-tape-sep">|</span>`;
+        })
+        .join("");
+      tapeEl.innerHTML = items;
+    }
+
+    // Portfolio card
+    const portCardEl = document.getElementById("mkt-port-card");
+    if (portCardEl) {
+      let totalInvested = 0;
+      const byType = { index: 0, stock: 0, crypto: 0, comm: 0 };
+      CONFIG.ASSETS.forEach((def) => {
+        const a = this.state.assets[def.id];
+        const val = a.price * a.owned;
+        totalInvested += val;
+        byType[def.type] = (byType[def.type] || 0) + val;
+      });
+      const holdingCount = CONFIG.ASSETS.filter(
+        (d) => this.state.assets[d.id].owned > 0,
+      ).length;
+      const breakdownHtml = Object.keys(byType)
+        .map((t) => {
+          if (!byType[t]) return "";
+          const pct = totalInvested > 0 ? (byType[t] / totalInvested) * 100 : 0;
+          return `<div class="mkt-pb-row">
+          <div class="mkt-pb-dot" style="background:${_mktTypeColors[t]}"></div>
+          <span class="mkt-pb-lbl">${{ index: "Indices", stock: "Stocks", crypto: "Crypto", comm: "Commod" }[t]}</span>
+          <span class="mkt-pb-val">$${shortNumber(byType[t])}</span>
+          <div class="mkt-pb-bar-wrap"><div class="mkt-pb-bar" style="width:${pct.toFixed(1)}%;background:${_mktTypeColors[t]}"></div></div>
+        </div>`;
+        })
+        .join("");
+      portCardEl.innerHTML = `
+        <div class="mkt-port-hd"><i class="fa-solid fa-briefcase"></i> Portfolio</div>
+        <div class="mkt-port-total">$${shortNumber(totalInvested)}</div>
+        <div class="mkt-port-sub">Invested Value</div>
+        <div class="mkt-port-metrics">
+          <div class="mkt-pm"><div class="mkt-pm-val">${displayMoney(this.state.cash)}</div><div class="mkt-pm-lbl">Cash</div></div>
+          <div class="mkt-pm"><div class="mkt-pm-val">${holdingCount}</div><div class="mkt-pm-lbl">Holdings</div></div>
+          <div class="mkt-pm"><div class="mkt-pm-val">${CONFIG.ASSETS.length}</div><div class="mkt-pm-lbl">Markets</div></div>
+        </div>
+        <div class="mkt-pb">${breakdownHtml || '<div style="color:var(--text-dim);font-size:0.78rem;padding:8px 0;">No positions yet.</div>'}</div>
+      `;
+    }
+
+    // Asset grid
+    const _activeMktFilter = window._mktFilter || "all";
+    const _activeMktSel = window._mktSelected || "spy";
+    document.getElementById("market-list").innerHTML = CONFIG.ASSETS.filter(
+      (def) => _activeMktFilter === "all" || def.type === _activeMktFilter,
+    )
+      .map((def) => {
+        const a = this.state.assets[def.id];
+        const up = a.trend >= 0;
+        const posVal = a.price * a.owned;
+        const col = _mktTypeColors[def.type] || "#fff";
+        const isSel = _activeMktSel === def.id;
+        const px = a.price < 100 ? a.price.toFixed(2) : a.price.toFixed(0);
+        const chgTxt =
+          (up ? "▲ +" : "▼ ") + Math.abs(a.trend * 100).toFixed(2) + "%";
+        return `<div class="mkt-card${isSel ? " mkt-card-sel" : ""}" data-type="${def.type}" onclick="mktSelect('${def.id}',this)">
+          <div class="mkt-card-l">
+            <div class="mkt-type-pill" style="background:${col}1a;color:${col};border-color:${col}33">${_mktTypeLabels[def.type] || def.type.toUpperCase()}</div>
+            <div class="mkt-card-ticker">${def.id.toUpperCase()}</div>
+            <div class="mkt-card-cname">${def.name}</div>
+            ${
+              a.owned > 0
+                ? `<div class="mkt-card-pos"><i class="fa-solid fa-circle-check" style="color:#34d399"></i> ${a.owned} sh · $${shortNumber(posVal)}</div>`
+                : `<div class="mkt-card-pos" style="opacity:0.38">No position</div>`
+            }
+          </div>
+          <div class="mkt-card-m">
+            <canvas class="mkt-spark" id="spark-${def.id}" width="72" height="30"></canvas>
+          </div>
+          <div class="mkt-card-r">
+            <div class="mkt-card-price" style="color:${col}">$${px}</div>
+            <div class="mkt-card-chg ${up ? "mkt-gain" : "mkt-loss"}">${chgTxt}</div>
+            <div class="mkt-card-actions">
+              <div class="mkt-qty-row">
+                <button class="mkt-qbtn" onclick="event.stopPropagation();mktQtyAdj('${def.id}',-1)">−</button>
+                <input class="mkt-qin" id="mkt-qty-${def.id}" type="number" min="1" value="1" onclick="event.stopPropagation()" />
+                <button class="mkt-qbtn" onclick="event.stopPropagation();mktQtyAdj('${def.id}',1)">+</button>
+              </div>
+              <div class="mkt-trade-row">
+                <button class="mkt-bbtn" onclick="event.stopPropagation();game.trade('${def.id}',true,parseInt(document.getElementById('mkt-qty-${def.id}').value||1))">BUY</button>
+                <button class="mkt-sbtn" onclick="event.stopPropagation();game.trade('${def.id}',false,parseInt(document.getElementById('mkt-qty-${def.id}').value||1))">SELL</button>
+                <button class="mkt-xbtn" onclick="event.stopPropagation();game.buyMax('${def.id}')">MAX</button>
+              </div>
             </div>
           </div>
         </div>`;
-      },
-    ).join("");
+      })
+      .join("");
+
+    // Draw sparklines after DOM is painted
+    requestAnimationFrame(() => {
+      CONFIG.ASSETS.forEach((def) => {
+        const cvs = document.getElementById("spark-" + def.id);
+        if (!cvs) return;
+        const ctx2 = cvs.getContext("2d");
+        const hist = (this.state.assets[def.id].history || []).slice(-24);
+        if (hist.length < 2) return;
+        const sparkUp = hist[hist.length - 1] >= hist[0];
+        const sc = sparkUp ? "#34d399" : "#f87171";
+        const W2 = cvs.width,
+          H2 = cvs.height;
+        const mn2 = Math.min(...hist),
+          mx2 = Math.max(...hist),
+          rng2 = mx2 - mn2 || 1;
+        ctx2.clearRect(0, 0, W2, H2);
+        ctx2.beginPath();
+        hist.forEach((v, i) => {
+          const x = (i / (hist.length - 1)) * W2;
+          const y = H2 - 2 - ((v - mn2) / rng2) * (H2 - 4);
+          i === 0 ? ctx2.moveTo(x, y) : ctx2.lineTo(x, y);
+        });
+        ctx2.strokeStyle = sc;
+        ctx2.lineWidth = 1.5;
+        ctx2.stroke();
+        ctx2.lineTo(W2, H2);
+        ctx2.lineTo(0, H2);
+        ctx2.closePath();
+        const sg = ctx2.createLinearGradient(0, 0, 0, H2);
+        sg.addColorStop(
+          0,
+          sparkUp ? "rgba(52,211,153,0.3)" : "rgba(248,113,113,0.3)",
+        );
+        sg.addColorStop(1, "rgba(0,0,0,0)");
+        ctx2.fillStyle = sg;
+        ctx2.fill();
+      });
+    });
+
+    // Update main chart header
+    const _cDef = CONFIG.ASSETS.find((d) => d.id === _activeMktSel);
+    const _cAsset = this.state.assets[_activeMktSel];
+    if (_cDef && _cAsset) {
+      const _cn = document.getElementById("mkt-chart-name");
+      if (_cn) _cn.textContent = _cDef.name;
+      const _ct = document.getElementById("mkt-chart-ticker");
+      if (_ct) _ct.textContent = _activeMktSel.toUpperCase();
+      const _cp = document.getElementById("mkt-chart-price");
+      if (_cp)
+        _cp.textContent =
+          "$" +
+          (_cAsset.price < 100
+            ? _cAsset.price.toFixed(2)
+            : _cAsset.price.toFixed(0));
+      const _cc = document.getElementById("mkt-chart-chg");
+      if (_cc) {
+        const _cup = _cAsset.trend >= 0;
+        _cc.textContent =
+          (_cup ? "▲ +" : "▼ ") + (_cAsset.trend * 100).toFixed(2) + "%";
+        _cc.className = "mkt-chart-chg " + (_cup ? "gain" : "loss");
+      }
+    }
+    app.drawChart();
 
     const ITEM_IMGS = {
-      bike:    'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=700&h=300&fit=crop&auto=format',
-      civic:   'https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=700&h=300&fit=crop&auto=format',
-      tesla:   'https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=700&h=300&fit=crop&auto=format',
-      porsche: 'https://images.unsplash.com/photo-1580274455191-1c62238fa333?w=700&h=300&fit=crop&auto=format',
-      apt:     'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=700&h=300&fit=crop&auto=format',
-      mansion: 'https://images.unsplash.com/photo-1613977257363-707ba9348227?w=700&h=300&fit=crop&auto=format',
+      bike: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=700&h=300&fit=crop&auto=format",
+      civic:
+        "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=700&h=300&fit=crop&auto=format",
+      tesla:
+        "https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=700&h=300&fit=crop&auto=format",
+      porsche:
+        "https://images.unsplash.com/photo-1580274455191-1c62238fa333?w=700&h=300&fit=crop&auto=format",
+      apt: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=700&h=300&fit=crop&auto=format",
+      mansion:
+        "https://images.unsplash.com/photo-1613977257363-707ba9348227?w=700&h=300&fit=crop&auto=format",
     };
     document.getElementById("shop-list").innerHTML = CONFIG.ITEMS.map(
       (it) => `
@@ -7965,17 +8821,21 @@ const game = {
         </div>`;
     }
     const WELLNESS_IMGS = {
-      gym:     'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=700&h=300&fit=crop&auto=format',
-      yoga:    'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=700&h=300&fit=crop&auto=format',
-      meditate:'https://images.unsplash.com/photo-1545205597-3d9d02c29597?w=700&h=300&fit=crop&auto=format',
-      jog:     'https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=700&h=300&fit=crop&auto=format',
-      read:    'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=700&h=300&fit=crop&auto=format',
-      spa:     'https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=700&h=300&fit=crop&auto=format',
-      haircut: 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=700&h=300&fit=crop&auto=format',
-      therapy: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=700&h=300&fit=crop&auto=format',
-      hike:    'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=700&h=300&fit=crop&auto=format',
-      martial: 'https://images.unsplash.com/photo-1555597673-b21d5c935865?w=700&h=300&fit=crop&auto=format',
-      swim:    'https://images.unsplash.com/photo-1530549387789-4c1017266635?w=700&h=300&fit=crop&auto=format',
+      gym: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=700&h=300&fit=crop&auto=format",
+      yoga: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=700&h=300&fit=crop&auto=format",
+      meditate:
+        "https://images.unsplash.com/photo-1545205597-3d9d02c29597?w=700&h=300&fit=crop&auto=format",
+      jog: "https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=700&h=300&fit=crop&auto=format",
+      read: "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=700&h=300&fit=crop&auto=format",
+      spa: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=700&h=300&fit=crop&auto=format",
+      haircut:
+        "https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=700&h=300&fit=crop&auto=format",
+      therapy:
+        "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=700&h=300&fit=crop&auto=format",
+      hike: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=700&h=300&fit=crop&auto=format",
+      martial:
+        "https://images.unsplash.com/photo-1555597673-b21d5c935865?w=700&h=300&fit=crop&auto=format",
+      swim: "https://images.unsplash.com/photo-1530549387789-4c1017266635?w=700&h=300&fit=crop&auto=format",
     };
     const wellnessActivities = document.getElementById("wellness-activities");
     if (wellnessActivities) {
@@ -8077,9 +8937,9 @@ const game = {
                 <span class="edu-degree-cost">$${shortNumber(d.cost)}<span style="font-size:0.65rem;font-weight:600;opacity:0.5;margin-left:4px;">/ loan</span></span>
                 <div class="edu-degree-meta-row">
                     <span class="edu-chip"><i class="fa-solid fa-clock"></i> ${d.duration} Months</span>
-                    <span class="edu-chip" style="${hasIQ ? '' : 'border-color:rgba(239,68,68,0.3);color:var(--accent-red);'}"><i class="fa-solid fa-brain"></i> ${d.iqReq} IQ</span>
+                    <span class="edu-chip" style="${hasIQ ? "" : "border-color:rgba(239,68,68,0.3);color:var(--accent-red);"}"><i class="fa-solid fa-brain"></i> ${d.iqReq} IQ</span>
                 </div>
-                <button class="btn ${canAfford && hasIQ ? 'btn-primary' : 'btn-outline'}" onclick="game.enroll('${d.id}')" ${!hasIQ ? 'disabled' : ''} style="margin-top:auto;">
+                <button class="btn ${canAfford && hasIQ ? "btn-primary" : "btn-outline"}" onclick="game.enroll('${d.id}')" ${!hasIQ ? "disabled" : ""} style="margin-top:auto;">
                     ${!hasIQ ? '<i class="fa-solid fa-lock" style="margin-right:5px;"></i>IQ Too Low' : '<i class="fa-solid fa-graduation-cap" style="margin-right:6px;"></i>Enroll Now'}
                 </button>
             </div>`;
@@ -8300,36 +9160,42 @@ const game = {
     }
 
     // ── CASINO SECTION ────────────────────────────────────────────
-    const casinoHud  = document.getElementById("casino-hud");
+    const casinoHud = document.getElementById("casino-hud");
     const casinoList = document.getElementById("casino-games-list");
     const sessionLog = document.getElementById("casino-session-log");
 
     if (casinoHud || casinoList || sessionLog) {
-      const casino    = this.state.casino;
+      const casino = this.state.casino;
       const totalBets = casino.wins + casino.losses;
-      const winRate   = totalBets ? Math.round((casino.wins / totalBets) * 100) : 0;
-      const netColor  = casino.net > 0 ? "#4ade80" : casino.net < 0 ? "#f87171" : "#94a3b8";
+      const winRate = totalBets
+        ? Math.round((casino.wins / totalBets) * 100)
+        : 0;
+      const netColor =
+        casino.net > 0 ? "#4ade80" : casino.net < 0 ? "#f87171" : "#94a3b8";
       const streakLabel =
-        casino.streak > 0 ? `🔥 Hot +${casino.streak}` :
-        casino.streak < 0 ? `❄️ Cold ${casino.streak}` : "Neutral";
+        casino.streak > 0
+          ? `🔥 Hot +${casino.streak}`
+          : casino.streak < 0
+            ? `❄️ Cold ${casino.streak}`
+            : "Neutral";
 
       // HUD cards
       if (casinoHud) {
         casinoHud.innerHTML = `
           <div class="casino-hud-card">
             <div class="casino-hud-label">Session P&amp;L</div>
-            <div class="casino-hud-value" style="color:${netColor};">${casino.net >= 0 ? '+' : ''}$${shortNumber(casino.net)}</div>
+            <div class="casino-hud-value" style="color:${netColor};">${casino.net >= 0 ? "+" : ""}$${shortNumber(casino.net)}</div>
             <div class="casino-hud-sub">${totalBets} hands played total</div>
           </div>
           <div class="casino-hud-card">
             <div class="casino-hud-label">Win Rate</div>
-            <div class="casino-hud-value" style="color:${winRate >= 50 ? '#4ade80' : '#f87171'};">${winRate}%</div>
+            <div class="casino-hud-value" style="color:${winRate >= 50 ? "#4ade80" : "#f87171"};">${winRate}%</div>
             <div class="casino-hud-sub">${casino.wins}W / ${casino.losses}L</div>
           </div>
           <div class="casino-hud-card">
             <div class="casino-hud-label">Hot Streak</div>
             <div class="casino-hud-value" style="font-size:0.95rem;">${streakLabel}</div>
-            <div class="casino-hud-sub">Last: ${casino.lastGame || 'No hands yet'}</div>
+            <div class="casino-hud-sub">Last: ${casino.lastGame || "No hands yet"}</div>
           </div>
           <div class="casino-hud-card">
             <div class="casino-hud-label">Best Payout</div>
@@ -8341,18 +9207,44 @@ const game = {
       // Game cards
       if (casinoList) {
         const GAME_IMGS = {
-          slots:     'https://images.unsplash.com/photo-1596838132731-3301c3fd4317?w=800&h=400&fit=crop&auto=format',
-          blackjack: 'blackjack.png',
-          horse:     'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=400&fit=crop&auto=format',
+          slots:
+            "https://images.unsplash.com/photo-1596838132731-3301c3fd4317?w=800&h=400&fit=crop&auto=format",
+          blackjack: "blackjack.png",
+          horse:
+            "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=400&fit=crop&auto=format",
         };
         const GAME_META = {
-          slots:     { edge:'5%',   rtp:'95%',  volatility:'High',    grad:'linear-gradient(135deg,#d946ef,#9333ea)', desc:'3-reel spin. 8% jackpot at 15× payout. 35% double-up chance.' },
-          blackjack: { edge:'1–3%', rtp:'97%+', volatility:'Medium',  grad:'linear-gradient(135deg,#10b981,#14b8a6)', desc:'Beat the dealer. Best odds in the house with disciplined play.' },
-          horse:     { edge:'12%',  rtp:'88%',  volatility:'Extreme', grad:'linear-gradient(135deg,#fbbf24,#f97316)', desc:'Track betting on live odds. 15% chance for 6× payout.' },
+          slots: {
+            edge: "5%",
+            rtp: "95%",
+            volatility: "High",
+            grad: "linear-gradient(135deg,#d946ef,#9333ea)",
+            desc: "3-reel spin. 8% jackpot at 15× payout. 35% double-up chance.",
+          },
+          blackjack: {
+            edge: "1–3%",
+            rtp: "97%+",
+            volatility: "Medium",
+            grad: "linear-gradient(135deg,#10b981,#14b8a6)",
+            desc: "Beat the dealer. Best odds in the house with disciplined play.",
+          },
+          horse: {
+            edge: "12%",
+            rtp: "88%",
+            volatility: "Extreme",
+            grad: "linear-gradient(135deg,#fbbf24,#f97316)",
+            desc: "Track betting on live odds. 15% chance for 6× payout.",
+          },
         };
-        casinoList.innerHTML = CONFIG.CASINO_GAMES.map(g => {
-          const meta = GAME_META[g.id] || { edge:'N/A', rtp:'N/A', volatility:'Unknown', grad:'linear-gradient(135deg,#64748b,#475569)', desc: g.desc };
-          const img  = GAME_IMGS[g.id] || '';
+        casinoList.innerHTML = CONFIG.CASINO_GAMES.map((g) => {
+          const meta = GAME_META[g.id] || {
+            edge: "N/A",
+            rtp: "N/A",
+            volatility: "Unknown",
+            grad: "linear-gradient(135deg,#64748b,#475569)",
+            desc: g.desc,
+          };
+          const img = GAME_IMGS[g.id] || "";
           const bets = [g.minBet, Math.round(g.minBet * 5), g.maxBet];
           return `<div class="card casino-game-card game-${g.id}">
             <div class="casino-game-bg" style="background-image:url('${img}');">
@@ -8368,12 +9260,12 @@ const game = {
                 <div class="casino-meta-box"><span>Limits</span><strong>$${shortNumber(g.minBet)}–$${shortNumber(g.maxBet)}</strong></div>
               </div>
               <div class="casino-bet-row">
-                ${bets.map(b => `<button class="btn btn-outline casino-bet-btn" onclick="game.playCasino('${g.id}',${b})">$${shortNumber(b)}</button>`).join('')}
+                ${bets.map((b) => `<button class="btn btn-outline casino-bet-btn" onclick="game.playCasino('${g.id}',${b})">$${shortNumber(b)}</button>`).join("")}
                 <button class="btn btn-primary casino-bet-main" onclick="game.playCasino('${g.id}')"><i class="fa-solid fa-dice"></i> Bet…</button>
               </div>
             </div>
           </div>`;
-        }).join('');
+        }).join("");
       }
 
       // Session log
@@ -8381,36 +9273,58 @@ const game = {
         if (!casino.history || !casino.history.length) {
           sessionLog.innerHTML = `<div style="text-align:center;padding:24px;color:var(--text-dim);font-size:0.82rem;font-family:var(--font-mono);">No hands played yet — hit the tables to populate history.</div>`;
         } else {
-          sessionLog.innerHTML = `<div class="casino-log-grid">` +
-            casino.history.slice().reverse().map(entry => `
-              <div class="casino-log-row ${entry.net >= 0 ? 'log-win' : 'log-loss'}">
-                <div class="casino-log-icon">${entry.result === 'Jackpot' ? '🎰' : entry.net >= 0 ? '✅' : '❌'}</div>
-                <div class="casino-log-game">${entry.game || '—'}</div>
-                <div class="casino-log-result${entry.result === 'Jackpot' ? ' jackpot' : ''}">${entry.result || '—'}</div>
+          sessionLog.innerHTML =
+            `<div class="casino-log-grid">` +
+            casino.history
+              .slice()
+              .reverse()
+              .map(
+                (entry) => `
+              <div class="casino-log-row ${entry.net >= 0 ? "log-win" : "log-loss"}">
+                <div class="casino-log-icon">${entry.result === "Jackpot" ? "🎰" : entry.net >= 0 ? "✅" : "❌"}</div>
+                <div class="casino-log-game">${entry.game || "—"}</div>
+                <div class="casino-log-result${entry.result === "Jackpot" ? " jackpot" : ""}">${entry.result || "—"}</div>
                 <div class="casino-log-bet">Bet: <strong>$${shortNumber(entry.bet)}</strong></div>
-                <div class="casino-log-net" style="color:${entry.net >= 0 ? '#4ade80' : '#f87171'};">${entry.net >= 0 ? '+' : ''}$${shortNumber(entry.net)}</div>
-              </div>`).join('') +
-          `</div>`;
+                <div class="casino-log-net" style="color:${entry.net >= 0 ? "#4ade80" : "#f87171"};">${entry.net >= 0 ? "+" : ""}$${shortNumber(entry.net)}</div>
+              </div>`,
+              )
+              .join("") +
+            `</div>`;
         }
       }
     }
 
     // ── POLITICS SECTION ─────────────────────────────────────────
-    const politicsHud    = document.getElementById("politics-hud");
+    const politicsHud = document.getElementById("politics-hud");
     const politicsAction = document.getElementById("politics-action-panel");
-    const politicsList   = document.getElementById("politics-roles-list");
+    const politicsList = document.getElementById("politics-roles-list");
 
     if (politicsHud || politicsAction || politicsList) {
       const p = this.state.politics;
-      p.approval    = p.approval    ?? 50;
-      p.corruption  = p.corruption  ?? 0;
+      p.approval = p.approval ?? 50;
+      p.corruption = p.corruption ?? 0;
       p.bribesTaken = p.bribesTaken ?? 0;
 
       // ── HUD
       if (politicsHud) {
-        const approvalColor = p.approval >= 60 ? "#4ade80" : p.approval >= 35 ? "#fbbf24" : "#f87171";
-        const corruptColor  = p.corruption > 50 ? "#f87171" : p.corruption > 20 ? "#fbbf24" : "#94a3b8";
-        const corruptLabel  = p.corruption > 50 ? "High Risk" : p.corruption > 20 ? "Moderate" : "Clean";
+        const approvalColor =
+          p.approval >= 60
+            ? "#4ade80"
+            : p.approval >= 35
+              ? "#fbbf24"
+              : "#f87171";
+        const corruptColor =
+          p.corruption > 50
+            ? "#f87171"
+            : p.corruption > 20
+              ? "#fbbf24"
+              : "#94a3b8";
+        const corruptLabel =
+          p.corruption > 50
+            ? "High Risk"
+            : p.corruption > 20
+              ? "Moderate"
+              : "Clean";
         politicsHud.innerHTML = `
           <div class="politics-hud-card">
             <div class="politics-hud-label">Influence</div>
@@ -8439,7 +9353,7 @@ const game = {
       // ── Action panel
       if (politicsAction) {
         if (p.role) {
-          const roleDef = CONFIG.POLITICS_ROLES.find(r => r.id === p.role);
+          const roleDef = CONFIG.POLITICS_ROLES.find((r) => r.id === p.role);
           politicsAction.innerHTML = `
             <div class="politics-office-banner">
               <div class="politics-office-left">
@@ -8487,23 +9401,55 @@ const game = {
       // ── Role cards
       if (politicsList) {
         const POL_IMGS = {
-          council:  "https://images.unsplash.com/photo-1555848962-6e79363797c3?w=700&h=280&fit=crop&auto=format",
-          mayor:    "https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=700&h=280&fit=crop&auto=format",
-          governor: "https://images.unsplash.com/photo-1575517111839-3a3843ee7f5d?w=700&h=280&fit=crop&auto=format",
-          senator:  "https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=700&h=280&fit=crop&auto=format",
+          council:
+            "https://images.unsplash.com/photo-1555848962-6e79363797c3?w=700&h=280&fit=crop&auto=format",
+          mayor:
+            "https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=700&h=280&fit=crop&auto=format",
+          governor:
+            "https://images.unsplash.com/photo-1575517111839-3a3843ee7f5d?w=700&h=280&fit=crop&auto=format",
+          senator:
+            "https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=700&h=280&fit=crop&auto=format",
         };
         const POL_TIERS = {
-          council:  { color: "#22d3ee", label: "Local",    grad: "linear-gradient(135deg,#0ea5e9,#22d3ee)" },
-          mayor:    { color: "#4ade80", label: "Municipal", grad: "linear-gradient(135deg,#16a34a,#4ade80)" },
-          governor: { color: "#a78bfa", label: "State",    grad: "linear-gradient(135deg,#7c3aed,#a78bfa)" },
-          senator:  { color: "#fbbf24", label: "Federal",  grad: "linear-gradient(135deg,#d97706,#fbbf24)" },
+          council: {
+            color: "#22d3ee",
+            label: "Local",
+            grad: "linear-gradient(135deg,#0ea5e9,#22d3ee)",
+          },
+          mayor: {
+            color: "#4ade80",
+            label: "Municipal",
+            grad: "linear-gradient(135deg,#16a34a,#4ade80)",
+          },
+          governor: {
+            color: "#a78bfa",
+            label: "State",
+            grad: "linear-gradient(135deg,#7c3aed,#a78bfa)",
+          },
+          senator: {
+            color: "#fbbf24",
+            label: "Federal",
+            grad: "linear-gradient(135deg,#d97706,#fbbf24)",
+          },
         };
-        politicsList.innerHTML = CONFIG.POLITICS_ROLES.map(r => {
+        politicsList.innerHTML = CONFIG.POLITICS_ROLES.map((r) => {
           const isCurrent = p.role === r.id;
-          const canRun = !p.role && this.state.cash >= r.cost && p.influence >= r.reqRep && !this.state.life.dead;
-          const tier = POL_TIERS[r.id] || { color: "#94a3b8", label: "Unknown", grad: "linear-gradient(135deg,#475569,#94a3b8)" };
+          const canRun =
+            !p.role &&
+            this.state.cash >= r.cost &&
+            p.influence >= r.reqRep &&
+            !this.state.life.dead;
+          const tier = POL_TIERS[r.id] || {
+            color: "#94a3b8",
+            label: "Unknown",
+            grad: "linear-gradient(135deg,#475569,#94a3b8)",
+          };
           if (isCurrent) return "";
-          const lockReason = p.role ? "Already in Office" : p.influence < r.reqRep ? `Need ${r.reqRep} Influence` : `Need $${shortNumber(r.cost)}`;
+          const lockReason = p.role
+            ? "Already in Office"
+            : p.influence < r.reqRep
+              ? `Need ${r.reqRep} Influence`
+              : `Need $${shortNumber(r.cost)}`;
           return `<div class="card politics-role-card${canRun ? "" : " locked"}">
             <div class="politics-role-bg" style="background-image:url('${POL_IMGS[r.id] || POL_IMGS.council}');">
               <div class="politics-role-bg-overlay"></div>
@@ -8557,24 +9503,68 @@ const app = {
     this.mobileNavOpen = !this.mobileNavOpen;
     const nav = document.getElementById("nav-tabs");
     const overlay = document.getElementById("mobile-nav-overlay");
-    const icon = document.getElementById("mobile-nav-icon");
+    const moreBtn = document.querySelector(".mbn-more");
     if (nav) nav.classList.toggle("nav-open", this.mobileNavOpen);
     if (overlay) overlay.classList.toggle("active", this.mobileNavOpen);
-    if (icon) {
-      icon.className = this.mobileNavOpen
-        ? "fa-solid fa-xmark"
-        : "fa-solid fa-bars";
-    }
+    if (moreBtn)
+      moreBtn.classList.toggle("nav-open-active", this.mobileNavOpen);
   },
   closeMobileNav() {
     this.mobileNavOpen = false;
     const nav = document.getElementById("nav-tabs");
     const overlay = document.getElementById("mobile-nav-overlay");
-    const icon = document.getElementById("mobile-nav-icon");
+    const moreBtn = document.querySelector(".mbn-more");
     if (nav) nav.classList.remove("nav-open");
     if (overlay) overlay.classList.remove("active");
-    if (icon) icon.className = "fa-solid fa-bars";
+    if (moreBtn) moreBtn.classList.remove("nav-open-active");
   },
+
+  showQuestsModal() {
+    if (
+      typeof CHALLENGE_POOL === "undefined" ||
+      !game.state?.gameplay?.monthlyChallenges?.length
+    ) {
+      app.toast("No quests yet — advance a month first.", "info");
+      return;
+    }
+    const gp = game.state.gameplay;
+    const snap = gp.challengeSnapshot || {};
+    const items = gp.monthlyChallenges
+      .map((ch) => {
+        const tpl = CHALLENGE_POOL.find((t) => t.id === ch.id);
+        if (!tpl) return "";
+        let done = ch.done;
+        if (!done) {
+          try {
+            done = tpl.check(snap, game);
+          } catch (e) {
+            done = false;
+          }
+        }
+        return `<div class="quest-item ${done ? "quest-done" : ""}" style="margin-bottom:10px">
+        <span class="quest-e">${tpl.e}</span>
+        <div class="quest-body">
+          <div class="quest-title">${tpl.title}</div>
+          <div class="quest-desc">${tpl.desc}</div>
+        </div>
+        <div class="quest-reward ${done ? "quest-reward-done" : ""}">
+          ${done ? '<i class="fa-solid fa-check"></i>' : "$" + shortNumber(tpl.reward)}
+        </div>
+      </div>`;
+      })
+      .join("");
+    const streak =
+      gp.challengeStreak > 0
+        ? `<div style="margin-bottom:12px;font-size:0.8rem;color:#fbbf24">🔥 Quest Streak: ${gp.challengeStreak} months — Bonus multiplier active!</div>`
+        : "";
+    const total = gp.challengesCompleted || 0;
+    app.modal(
+      "📜 Monthly Quests",
+      `${streak}<div style="font-size:0.75rem;color:var(--text-dim);margin-bottom:10px">All 3 cleared = streak bonus</div>${items}<div style="font-size:0.75rem;color:var(--text-dim);margin-top:10px">Total quests completed: <strong>${total}</strong></div>`,
+      [{ text: "Back to Grind", cb: () => app.closeModal() }],
+    );
+  },
+
   mobileStatsOpen: false,
   toggleMobileStats() {
     this.mobileStatsOpen = !this.mobileStatsOpen;
@@ -8607,6 +9597,23 @@ const app = {
       navEl || document.querySelector(`.nav-item[onclick*="'${id}'"]`);
     if (tab) tab.classList.add("active");
     if (id === "market") setTimeout(() => this.drawChart(), 100);
+    // Track current view for conditional rendering
+    this.currentView = id;
+    if (id === "relationships") {
+      try {
+        game && game.renderRelationships && game.renderRelationships();
+      } catch (e) {}
+    }
+    if (id === "crime") {
+      try {
+        game && game.renderAll && game.renderAll();
+      } catch (e) {}
+    }
+    if (id === "prison") {
+      try {
+        game && game.renderPrison && game.renderPrison();
+      } catch (e) {}
+    }
     this.closeMobileNav();
   },
   setView(id) {
@@ -9107,6 +10114,9 @@ const app = {
     this.log(msg);
     const container = document.getElementById("toast-container");
     if (!container) return;
+    // Cap visible toasts at 4 — remove oldest first
+    const existing = container.querySelectorAll(".toast-notification");
+    if (existing.length >= 4) existing[0].remove();
     const t = document.createElement("div");
     t.className = `toast-notification toast-${type}`;
     const icons = {
@@ -9119,19 +10129,29 @@ const app = {
     const icon = icons[type] || icons.success;
     t.innerHTML = `<i class="fa-solid ${icon}"></i><span>${msg}</span>`;
     container.appendChild(t);
-    setTimeout(() => {
-      t.classList.add("toast-out");
-      setTimeout(() => t.remove(), 400);
-    }, 3000);
+    setTimeout(
+      () => {
+        t.classList.add("toast-out");
+        setTimeout(() => t.remove(), 300);
+      },
+      type === "epic" ? 3000 : 1800,
+    );
   },
-  modal(t, d, acts) {
+  modal(t, d, acts, opts = {}) {
     document.getElementById("modal-title").innerText = t;
-    document.getElementById("modal-desc").innerText = d;
+    const descEl = document.getElementById("modal-desc");
+    // Auto-detect HTML content OR explicit html flag
+    if (opts.html || (typeof d === "string" && d.trim().startsWith("<"))) {
+      descEl.innerHTML = d;
+    } else {
+      descEl.innerText = d;
+    }
     const c = document.getElementById("modal-actions");
     c.innerHTML = "";
     acts.forEach((a) => {
       let b = document.createElement("button");
-      b.className = "btn btn-primary";
+      b.className =
+        a.style === "secondary" ? "btn btn-outline" : "btn btn-primary";
       b.innerText = a.text;
       b.onclick = a.cb;
       c.appendChild(b);
@@ -9143,39 +10163,112 @@ const app = {
   },
   _renderNews() {},
   drawChart() {
+    const id = window._mktSelected || "spy";
     const cvs = document.getElementById("market-chart");
     if (!cvs) return;
     const ctx = cvs.getContext("2d");
-    const rect = cvs.parentNode.getBoundingClientRect();
-    cvs.width = rect.width;
-    cvs.height = rect.height;
-    ctx.clearRect(0, 0, cvs.width, cvs.height);
-    const spy = game.state.assets["spy"];
-    if (spy) {
-      const data = spy.history;
-      if (data.length < 2) return;
-      ctx.beginPath();
-      ctx.strokeStyle = "#3b82f6";
-      ctx.lineWidth = 2;
-      let min = Math.min(...data);
-      let max = Math.max(...data);
-      let range = max - min || 1;
-      data.forEach((val, i) => {
-        let x = (i / (data.length - 1)) * cvs.width;
-        let y = cvs.height - ((val - min) / range) * (cvs.height - 40) - 20;
-        if (i === 0) ctx.moveTo(x, y);
-        else ctx.lineTo(x, y);
-      });
-      ctx.stroke();
-      ctx.lineTo(cvs.width, cvs.height);
-      ctx.lineTo(0, cvs.height);
-      ctx.closePath();
-      let gr = ctx.createLinearGradient(0, 0, 0, cvs.height);
-      gr.addColorStop(0, "rgba(59, 130, 246, 0.2)");
-      gr.addColorStop(1, "rgba(59, 130, 246, 0)");
-      ctx.fillStyle = gr;
-      ctx.fill();
+    const panel = cvs.parentNode;
+    const rect = panel.getBoundingClientRect();
+    cvs.width = rect.width || 480;
+    cvs.height = 188;
+    const W = cvs.width,
+      H = cvs.height;
+    ctx.clearRect(0, 0, W, H);
+
+    const asset = game.state.assets[id];
+    const def = CONFIG.ASSETS.find((d) => d.id === id);
+    if (!asset || !def) return;
+    const data = asset.history || [];
+    if (data.length < 2) {
+      ctx.fillStyle = "rgba(255,255,255,0.12)";
+      ctx.font = "11px JetBrains Mono, monospace";
+      ctx.textAlign = "center";
+      ctx.fillText("Building history…", W / 2, H / 2);
+      return;
     }
+
+    const up = data[data.length - 1] >= data[0];
+    const col = up ? "#34d399" : "#f87171";
+    const mn = Math.min(...data),
+      mx = Math.max(...data),
+      rng = mx - mn || 1;
+    const PAD = { t: 12, r: 8, b: 22, l: 54 };
+    const cW = W - PAD.l - PAD.r;
+    const cH = H - PAD.t - PAD.b;
+
+    // Horizontal grid lines + price labels
+    const gridN = 4;
+    for (let i = 0; i <= gridN; i++) {
+      const gy = PAD.t + (i / gridN) * cH;
+      const gv = mx - (i / gridN) * rng;
+      ctx.strokeStyle = "rgba(255,255,255,0.05)";
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(PAD.l, gy);
+      ctx.lineTo(W - PAD.r, gy);
+      ctx.stroke();
+      ctx.fillStyle = "rgba(255,255,255,0.28)";
+      ctx.font = "9px JetBrains Mono, monospace";
+      ctx.textAlign = "right";
+      ctx.fillText(
+        "$" + (gv < 100 ? gv.toFixed(1) : Math.round(gv)),
+        PAD.l - 4,
+        gy + 3,
+      );
+    }
+
+    // Month labels (every ~10 data points)
+    const step = Math.max(1, Math.floor(data.length / 5));
+    ctx.fillStyle = "rgba(255,255,255,0.22)";
+    ctx.font = "9px JetBrains Mono, monospace";
+    ctx.textAlign = "center";
+    for (let i = 0; i < data.length; i += step) {
+      const bx = PAD.l + (i / (data.length - 1)) * cW;
+      ctx.fillText("M" + i, bx, H - 5);
+    }
+
+    // Main area fill
+    ctx.beginPath();
+    data.forEach((v, i) => {
+      const x = PAD.l + (i / (data.length - 1)) * cW;
+      const y = PAD.t + (1 - (v - mn) / rng) * cH;
+      i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    });
+    const lastX = PAD.l + cW;
+    const baseY = PAD.t + cH;
+    ctx.lineTo(lastX, baseY);
+    ctx.lineTo(PAD.l, baseY);
+    ctx.closePath();
+    const gr = ctx.createLinearGradient(0, PAD.t, 0, baseY);
+    gr.addColorStop(0, up ? "rgba(52,211,153,0.22)" : "rgba(248,113,113,0.22)");
+    gr.addColorStop(1, "rgba(0,0,0,0)");
+    ctx.fillStyle = gr;
+    ctx.fill();
+
+    // Main line (drawn on top of fill)
+    ctx.beginPath();
+    data.forEach((v, i) => {
+      const x = PAD.l + (i / (data.length - 1)) * cW;
+      const y = PAD.t + (1 - (v - mn) / rng) * cH;
+      i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    });
+    ctx.strokeStyle = col;
+    ctx.lineWidth = 2;
+    ctx.shadowColor = col;
+    ctx.shadowBlur = 8;
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+
+    // Endpoint dot
+    const ex = PAD.l + cW;
+    const ey = PAD.t + (1 - (data[data.length - 1] - mn) / rng) * cH;
+    ctx.beginPath();
+    ctx.arc(ex, ey, 3.5, 0, Math.PI * 2);
+    ctx.fillStyle = col;
+    ctx.shadowColor = col;
+    ctx.shadowBlur = 10;
+    ctx.fill();
+    ctx.shadowBlur = 0;
   },
   bgEffect() {
     if (this._bgFxBooted) return;
@@ -10539,12 +11632,35 @@ game.triggerWorkEvent = function (track, level) {
 
 /* ── Attach triggerLifeEvent to game ── */
 game.triggerLifeEvent = function () {
-  const evt = LIFE_EVENTS[Math.floor(Math.random() * LIFE_EVENTS.length)];
+  const g = this;
+  const r = g.state.relationship || {};
+  const inRelationship = r.status && r.status !== "single";
+  const hasPets = g.state.pets && g.state.pets.length > 0;
+  // Only pick events that make sense for the current game state
+  const pool = LIFE_EVENTS.filter(function (e) {
+    // breakup events require an active relationship
+    if (e.title === "Bad Breakup" && !inRelationship) return false;
+    // car trouble: reduce chance when player is very young or broke
+    if (e.title === "Car Trouble" && g.state.cash < 800 && Math.random() < 0.7)
+      return false;
+    // scholarship offer: only make sense for younger characters
+    if (e.title === "Scholarship Offer" && Math.floor(g.state.age / 12) > 35)
+      return false;
+    // natural disaster costs a lot — cap at player being able to recover
+    if (e.title === "Natural Disaster" && g.state.cash < 1500) return false;
+    // pet-related event only if they have pets or can afford adoption
+    if (e.title === "Adopted a Pet" && (hasPets || g.state.cash < 300))
+      return false;
+    return true;
+  });
+  const evt = (pool.length > 0 ? pool : LIFE_EVENTS)[
+    Math.floor(Math.random() * (pool.length || LIFE_EVENTS.length))
+  ];
   app.modal(`${evt.emoji} ${evt.title}`, evt.desc, [
     {
       text: "Deal With It",
       cb: () => {
-        evt.effect(this);
+        evt.effect(g);
         app.closeModal();
         app.toast(evt.title, evt.type);
       },
@@ -11255,18 +12371,27 @@ game.openSideRelationshipMenu = function () {
   const buttons = [
     {
       text: "💋 Fling (Secret) — ~$220/mo",
-      cb: () => { app.closeModal(); game._pickSidePartner("fling"); },
+      cb: () => {
+        app.closeModal();
+        game._pickSidePartner("fling");
+      },
     },
     {
       text: "❤️ Girlfriend (Secret) — ~$440/mo",
-      cb: () => { app.closeModal(); game._pickSidePartner("girlfriend"); },
+      cb: () => {
+        app.closeModal();
+        game._pickSidePartner("girlfriend");
+      },
     },
   ];
 
   if (poly && r.status === "married") {
     buttons.push({
       text: "💍 Second Wife (Official) — ~$670/mo",
-      cb: () => { app.closeModal(); game._pickSidePartner("second_wife"); },
+      cb: () => {
+        app.closeModal();
+        game._pickSidePartner("second_wife");
+      },
     });
   }
   buttons.push({ text: "Cancel", cb: () => app.closeModal() });
@@ -11275,28 +12400,34 @@ game.openSideRelationshipMenu = function () {
     ? `You live in ${countryName} — polygamy is legal here. Official marriages are recognised; all wives will know about each other and will react.`
     : `In ${countryName} this is an affair. If your partner finds out, consequences will be severe. Risk grows every month.`;
 
-  app.modal(
-    "💔 Start a Side Relationship",
-    warningLine,
-    buttons,
-  );
+  app.modal("💔 Start a Side Relationship", warningLine, buttons);
 };
 
 /** Show partner picker for the chosen side-relationship type */
 game._pickSidePartner = function (type) {
   const r = this.state.relationship;
   const takenIds = r.sideRelationships.map((sr) => sr.partnerId);
-  const available = CONFIG.SIDE_PARTNERS.filter((sp) => !takenIds.includes(sp.id));
+  const available = CONFIG.SIDE_PARTNERS.filter(
+    (sp) => !takenIds.includes(sp.id),
+  );
   if (available.length === 0)
     return app.toast("No one else available right now.", "info");
 
   const btns = available.slice(0, 5).map((sp) => ({
     text: `${sp.name} — ${sp.trait}  (Looks ${"⭐".repeat(Math.round(sp.looks / 2))})`,
-    cb: () => { app.closeModal(); game._attemptSideRelationship(sp.id, type); },
+    cb: () => {
+      app.closeModal();
+      game._attemptSideRelationship(sp.id, type);
+    },
   }));
   btns.push({ text: "Never mind", cb: () => app.closeModal() });
 
-  const typeLabel = type === "fling" ? "Fling" : type === "girlfriend" ? "Girlfriend" : "Second Wife";
+  const typeLabel =
+    type === "fling"
+      ? "Fling"
+      : type === "girlfriend"
+        ? "Girlfriend"
+        : "Second Wife";
   app.modal(`Choose — ${typeLabel}`, "Pick someone:", btns);
 };
 
@@ -11311,7 +12442,10 @@ game._attemptSideRelationship = function (partnerId, type) {
 
   // Poly check for second_wife
   if (type === "second_wife" && !this.isPolygamyAllowed())
-    return app.toast("This is only possible in countries where polygamy is legal.", "error");
+    return app.toast(
+      "This is only possible in countries where polygamy is legal.",
+      "error",
+    );
   if (type === "second_wife" && this.state.relationship.status !== "married")
     return app.toast("You must be married to take a second wife.", "error");
 
@@ -11332,7 +12466,12 @@ game._attemptSideRelationship = function (partnerId, type) {
   }
 
   const expense = sp.monthlyExpense[type] || sp.monthlyExpense["fling"];
-  const typeLabel = type === "fling" ? "a fling" : type === "girlfriend" ? "your girlfriend" : "your second wife";
+  const typeLabel =
+    type === "fling"
+      ? "a fling"
+      : type === "girlfriend"
+        ? "your girlfriend"
+        : "your second wife";
 
   const entry = {
     id: "sr_" + Date.now(),
@@ -11349,7 +12488,8 @@ game._attemptSideRelationship = function (partnerId, type) {
   this.state.relationship.sideRelationships.push(entry);
   this.modStat("happiness", type === "second_wife" ? 12 : 10);
 
-  const typeEmoji = type === "fling" ? "🔥" : type === "girlfriend" ? "💋" : "💍";
+  const typeEmoji =
+    type === "fling" ? "🔥" : type === "girlfriend" ? "💋" : "💍";
   app.toast(`${typeEmoji} ${sp.name} is now ${typeLabel}!`, "success");
   FX.screenFlash("gain");
 
@@ -11379,15 +12519,18 @@ game.endSideRelationship = function (sideRelId) {
     sr.type === "second_wife"
       ? `Divorced ${name}. She will receive a settlement.`
       : sr.type === "girlfriend"
-      ? `Ended things with ${name}. She's hurt and confused.`
-      : `Cut off the fling with ${name}. Awkward, but done.`;
+        ? `Ended things with ${name}. She's hurt and confused.`
+        : `Cut off the fling with ${name}. Awkward, but done.`;
 
   r.sideRelationships.splice(idx, 1);
 
   if (sr.type === "second_wife") {
     const settlement = Math.min(this.state.cash * 0.08, 8000);
     this.modCash(-settlement);
-    app.toast(`${msg} Settlement: -$${shortNumber(Math.floor(settlement))}`, "warning");
+    app.toast(
+      `${msg} Settlement: -$${shortNumber(Math.floor(settlement))}`,
+      "warning",
+    );
   } else {
     app.toast(msg, "warning");
   }
@@ -11423,9 +12566,13 @@ game.processSideRelationshipsMonthly = function () {
 
     // ── Secret relationship / affair track ──
     // Discovery chance rises over time
-    const baseChance = sr.type === "fling" ? 0.014 : sr.type === "girlfriend" ? 0.024 : 0.034;
+    const baseChance =
+      sr.type === "fling" ? 0.014 : sr.type === "girlfriend" ? 0.024 : 0.034;
     const growthPerMonth = sr.type === "fling" ? 0.0008 : 0.0015;
-    const discoveryChance = Math.min(0.28, baseChance + sr.monthsTogether * growthPerMonth);
+    const discoveryChance = Math.min(
+      0.28,
+      baseChance + sr.monthsTogether * growthPerMonth,
+    );
 
     if (r.status !== "single" && Math.random() < discoveryChance) {
       this._affairDiscovered(sr, r);
@@ -11443,7 +12590,10 @@ game.processSideRelationshipsMonthly = function () {
         `${sr.partnerName} surprised you at lunch. Risky, but thrilling.`,
         `Late-night call with ${sr.partnerName}. You smile when no one's watching.`,
       ];
-      app.toast(positiveMsgs[Math.floor(Math.random() * positiveMsgs.length)], "info");
+      app.toast(
+        positiveMsgs[Math.floor(Math.random() * positiveMsgs.length)],
+        "info",
+      );
     }
 
     // Fling growing complicated
@@ -11453,24 +12603,36 @@ game.processSideRelationshipsMonthly = function () {
         `${sr.partnerName} asked "What are we?" — harder to keep this casual.`,
         `${sr.partnerName} wants to meet more often. You're juggling two lives.`,
       ];
-      app.toast(`⚠️ ${complicatedMsgs[Math.floor(Math.random() * complicatedMsgs.length)]}`, "warning");
+      app.toast(
+        `⚠️ ${complicatedMsgs[Math.floor(Math.random() * complicatedMsgs.length)]}`,
+        "warning",
+      );
       this.modStat("happiness", -2);
     }
 
     // Girlfriend putting pressure
-    if (sr.type === "girlfriend" && sr.monthsTogether >= 3 && Math.random() < 0.08) {
+    if (
+      sr.type === "girlfriend" &&
+      sr.monthsTogether >= 3 &&
+      Math.random() < 0.08
+    ) {
       const pressureMsgs = [
         `${sr.partnerName} wants to know why she can never meet your friends.`,
         `${sr.partnerName} suspects something. You deflect, but she's not convinced.`,
         `${sr.partnerName} noticed the hidden folder on your phone. Close call.`,
       ];
-      app.toast(`⚠️ ${pressureMsgs[Math.floor(Math.random() * pressureMsgs.length)]}`, "warning");
+      app.toast(
+        `⚠️ ${pressureMsgs[Math.floor(Math.random() * pressureMsgs.length)]}`,
+        "warning",
+      );
       this.modStat("happiness", -3);
     }
   });
 
   // Remove discovered ones
-  r.sideRelationships = r.sideRelationships.filter((sr) => !toRemove.includes(sr.id));
+  r.sideRelationships = r.sideRelationships.filter(
+    (sr) => !toRemove.includes(sr.id),
+  );
   return totalExpenses;
 };
 
@@ -11484,50 +12646,77 @@ game._affairDiscovered = function (sr, r) {
     {
       opener: `${mainName} found flirty messages from ${sideName} on your phone.`,
       details: `She read everything. Every exchange, every lie by omission. She sat in silence for a long time before the screaming started.`,
-      trustHit: 44, loveHit: 38, happinessHit: 24, divorceChance: 0.32,
+      trustHit: 44,
+      loveHit: 38,
+      happinessHit: 24,
+      divorceChance: 0.32,
     },
     {
       opener: `${mainName}'s friend saw you with ${sideName} at a restaurant.`,
       details: `Screenshots were sent. By the time you got home the locks were changed and your bags were on the doorstep.`,
-      trustHit: 50, loveHit: 46, happinessHit: 30, divorceChance: 0.50,
+      trustHit: 50,
+      loveHit: 46,
+      happinessHit: 30,
+      divorceChance: 0.5,
     },
     {
       opener: `${sideName} accidentally called ${mainName} after misdailing.`,
       details: `Twenty seconds of background noise. Enough. ${mainName} is pale when you walk in. She already knows.`,
-      trustHit: 62, loveHit: 56, happinessHit: 36, divorceChance: 0.62,
+      trustHit: 62,
+      loveHit: 56,
+      happinessHit: 36,
+      divorceChance: 0.62,
     },
     {
       opener: `${mainName} found hotel receipts in your jacket pocket.`,
       details: `Two rooms billed on the same night. Your name on both. She crumpled the receipts and threw them at you.`,
-      trustHit: 46, loveHit: 40, happinessHit: 26, divorceChance: 0.38,
+      trustHit: 46,
+      loveHit: 40,
+      happinessHit: 26,
+      divorceChance: 0.38,
     },
     {
       opener: `${sideName} confronted ${mainName} directly — she's done being hidden.`,
       details: `They had a full conversation. ${mainName} now knows exactly how long this has been going on. She is devastated.`,
-      trustHit: 68, loveHit: 60, happinessHit: 40, divorceChance: 0.72,
+      trustHit: 68,
+      loveHit: 60,
+      happinessHit: 40,
+      divorceChance: 0.72,
     },
     {
       opener: `${mainName} checked your location — it didn't match your story.`,
       details: `She drove there. Saw your car. Waited. Watched. Said nothing until you came home, then laid every inconsistency out on the table.`,
-      trustHit: 55, loveHit: 50, happinessHit: 32, divorceChance: 0.48,
+      trustHit: 55,
+      loveHit: 50,
+      happinessHit: 32,
+      divorceChance: 0.48,
     },
     {
       opener: `A mutual friend told ${mainName} they'd seen you with someone.`,
       details: `Word travels. She'd heard whispers for weeks and dismissed them. Not anymore. She's shaking with a combination of anger and grief.`,
-      trustHit: 40, loveHit: 36, happinessHit: 22, divorceChance: 0.28,
+      trustHit: 40,
+      loveHit: 36,
+      happinessHit: 22,
+      divorceChance: 0.28,
     },
     {
       opener: `${mainName} saw a photo of you and ${sideName} together on social media.`,
       details: `Someone tagged you both without thinking. Notifications lit up. ${mainName} saw it before you could do anything. Her DMs are already full of condolences from people she didn't even know were watching.`,
-      trustHit: 58, loveHit: 52, happinessHit: 34, divorceChance: 0.55,
+      trustHit: 58,
+      loveHit: 52,
+      happinessHit: 34,
+      divorceChance: 0.55,
     },
   ];
 
   const sc = scenarios[Math.floor(Math.random() * scenarios.length)];
   r.trust = Math.max(0, r.trust - sc.trustHit);
-  r.love  = Math.max(0, r.love  - sc.loveHit);
+  r.love = Math.max(0, r.love - sc.loveHit);
   this.modStat("happiness", -sc.happinessHit);
-  this.state.life.chronicStress = Math.min(200, this.state.life.chronicStress + 25);
+  this.state.life.chronicStress = Math.min(
+    200,
+    this.state.life.chronicStress + 25,
+  );
   this.state.relationship.fights++;
 
   FX.screenFlash("loss");
@@ -11551,7 +12740,10 @@ game._affairDiscovered = function (sr, r) {
       }, 3500);
     } else {
       setTimeout(() => {
-        app.toast(`${mainName} ended the relationship. She cannot trust you.`, "error");
+        app.toast(
+          `${mainName} ended the relationship. She cannot trust you.`,
+          "error",
+        );
         r.status = "single";
         r.partner = null;
         r.partnerName = "";
@@ -11578,7 +12770,10 @@ game._affairDiscovered = function (sr, r) {
         // Therapy demanded — costs money
         const therapyCost = 800 + Math.floor(Math.random() * 600);
         this.modCash(-therapyCost);
-        app.toast(`Couples therapy bills: -$${shortNumber(therapyCost)}`, "error");
+        app.toast(
+          `Couples therapy bills: -$${shortNumber(therapyCost)}`,
+          "error",
+        );
       }
       this.renderAll();
     }, 3200);
@@ -11590,56 +12785,80 @@ game._affairDiscovered = function (sr, r) {
 /** Jealousy / tension events for known polygamous arrangements */
 game._wifeJealousyEvent = function (sr, r) {
   const mainName = r.partnerName;
-  const sideName  = sr.partnerName;
+  const sideName = sr.partnerName;
 
   const events = [
     {
       msg: `${mainName} demands you spend more time with her and less with ${sideName}. You promise a special evening to smooth things over.`,
-      cost: 0, loveDrainMain: 4, happinessHit: 5,
+      cost: 0,
+      loveDrainMain: 4,
+      happinessHit: 5,
     },
     {
       msg: `${mainName} refuses to be in the same room as ${sideName}. A family dinner ends in tense silence.`,
-      cost: 0, loveDrainMain: 6, happinessHit: 9,
+      cost: 0,
+      loveDrainMain: 6,
+      happinessHit: 9,
     },
     {
       msg: `${mainName} demands an expensive gift to feel valued. You comply, quietly. (-$600)`,
-      cost: 600, loveDrainMain: 0, happinessHit: 4,
+      cost: 600,
+      loveDrainMain: 0,
+      happinessHit: 4,
     },
     {
       msg: `${sideName} wants her own apartment — the shared living arrangement is unbearable. (-$900/mo extra)`,
-      cost: 900, loveDrainMain: 2, happinessHit: 7,
+      cost: 900,
+      loveDrainMain: 2,
+      happinessHit: 7,
     },
     {
       msg: `Your children ask why they have two mothers at home. You fumble an explanation. Everyone is tense for days.`,
-      cost: 0, loveDrainMain: 5, happinessHit: 11,
+      cost: 0,
+      loveDrainMain: 5,
+      happinessHit: 11,
     },
     {
       msg: `${mainName} threatens to return to her parents' home unless you set clearer boundaries with ${sideName}.`,
-      cost: 0, loveDrainMain: 9, happinessHit: 14,
+      cost: 0,
+      loveDrainMain: 9,
+      happinessHit: 14,
     },
     {
       msg: `Word has spread in the neighbourhood about your arrangement. Some people stare, others whisper. Social discomfort follows.`,
-      cost: 0, loveDrainMain: 1, happinessHit: 6,
+      cost: 0,
+      loveDrainMain: 1,
+      happinessHit: 6,
     },
     {
       msg: `${sideName} is expecting a child. ${mainName} is silent for a long time. Even in a legal arrangement, this hits hard.`,
-      cost: 0, loveDrainMain: 18, happinessHit: 16,
+      cost: 0,
+      loveDrainMain: 18,
+      happinessHit: 16,
     },
     {
       msg: `${mainName} and ${sideName} argued loudly in the house. You had to mediate. No one won. You all lost something.`,
-      cost: 0, loveDrainMain: 7, happinessHit: 10,
+      cost: 0,
+      loveDrainMain: 7,
+      happinessHit: 10,
     },
     {
       msg: `${sideName} complains you spend more time with ${mainName}. Both feel neglected. The household is a powder keg.`,
-      cost: 0, loveDrainMain: 4, happinessHit: 8,
+      cost: 0,
+      loveDrainMain: 4,
+      happinessHit: 8,
     },
     {
       msg: `${mainName} discovers ${sideName} gave you a gift she couldn't afford — and feels inadequate. Quiet crying behind closed doors.`,
-      cost: 0, loveDrainMain: 5, happinessHit: 7,
+      cost: 0,
+      loveDrainMain: 5,
+      happinessHit: 7,
     },
     {
       msg: `You forgot ${mainName}'s birthday while focused on ${sideName}. The hurt is real and immediate. -$400 damage control.`,
-      cost: 400, loveDrainMain: 12, happinessHit: 12,
+      cost: 400,
+      loveDrainMain: 12,
+      happinessHit: 12,
     },
   ];
 
@@ -11652,7 +12871,10 @@ game._wifeJealousyEvent = function (sr, r) {
   if (evt.cost > 0) this.modCash(-evt.cost);
   r.love = Math.max(0, r.love - evt.loveDrainMain);
   this.modStat("happiness", -evt.happinessHit);
-  this.state.life.chronicStress = Math.min(200, this.state.life.chronicStress + 4);
+  this.state.life.chronicStress = Math.min(
+    200,
+    this.state.life.chronicStress + 4,
+  );
 
   app.toast(`⚠️ ${evt.msg}`, "warning");
 
@@ -11939,22 +13161,22 @@ game.renderRelationships = function () {
     }
   }
   const datingPool = document.getElementById("dating-pool");
-    if (datingPool) {
-      if (r.status === "single") {
-        const available = this.getAvailablePartners();
-        datingPool.innerHTML = available
-          .map(
-            (p) => `<div class="card">
+  if (datingPool) {
+    if (r.status === "single") {
+      const available = this.getAvailablePartners();
+      datingPool.innerHTML = available
+        .map(
+          (p) => `<div class="card">
           <div class="card-header"><h3>${p.name}</h3><span class="tag">${p.trait}</span></div>
           <p style="opacity:0.7;font-size:0.8rem">Income: $${shortNumber(p.income)}/mo \u2022 Loyalty: ${Math.round(p.loyalty * 100)}%</p>
           <div style="display:flex;gap:6px;margin-top:4px"><span style="font-size:0.75rem">Looks: ${"\u2B50".repeat(Math.round(p.looks / 2))}</span><span style="font-size:0.75rem">Humor: ${"\u{1F604}".repeat(Math.round(p.humor / 2))}</span></div>
           <button class="btn btn-primary" style="margin-top:10px" onclick="game.startDating('${p.id}')"><i class="fa-solid fa-heart"></i> Ask Out ($150)</button></div>`,
-          )
-          .join("");
-      } else {
-        datingPool.innerHTML = "";
-      }
+        )
+        .join("");
+    } else {
+      datingPool.innerHTML = "";
     }
+  }
   const childList = document.getElementById("children-list");
   if (childList) {
     if (r.children.length === 0) {
@@ -11999,7 +13221,7 @@ game.renderRelationships = function () {
 
   /* ── Side Relationships ── */
   const sideHeader = document.getElementById("side-rel-header-card");
-  const sideList   = document.getElementById("side-relationships-list");
+  const sideList = document.getElementById("side-relationships-list");
 
   if (sideHeader && sideList) {
     const poly = this.isPolygamyAllowed();
@@ -12033,27 +13255,52 @@ game.renderRelationships = function () {
         sideList.innerHTML =
           '<div class="card"><p style="opacity:0.45;text-align:center;font-size:0.85rem">No active side relationships.</p></div>';
       } else {
-        sideList.innerHTML = r.sideRelationships.map((sr) => {
-          const sp = CONFIG.SIDE_PARTNERS.find((x) => x.id === sr.partnerId) || {};
-          const loveColor = sr.love >= 60 ? "var(--green)" : sr.love >= 35 ? "var(--amber)" : "var(--red)";
-          const typeLabel  = sr.type === "fling" ? "💋 Fling" : sr.type === "girlfriend" ? "❤️ Girlfriend" : "💍 2nd Wife";
-          const typeClass  = sr.type === "second_wife" ? "safe" : "";
+        sideList.innerHTML = r.sideRelationships
+          .map((sr) => {
+            const sp =
+              CONFIG.SIDE_PARTNERS.find((x) => x.id === sr.partnerId) || {};
+            const loveColor =
+              sr.love >= 60
+                ? "var(--green)"
+                : sr.love >= 35
+                  ? "var(--amber)"
+                  : "var(--red)";
+            const typeLabel =
+              sr.type === "fling"
+                ? "💋 Fling"
+                : sr.type === "girlfriend"
+                  ? "❤️ Girlfriend"
+                  : "💍 2nd Wife";
+            const typeClass = sr.type === "second_wife" ? "safe" : "";
 
-          let discInfo = "";
-          if (sr.type !== "second_wife" || !poly) {
-            const base = sr.type === "fling" ? 0.014 : sr.type === "girlfriend" ? 0.024 : 0.034;
-            const growth = sr.type === "fling" ? 0.0008 : 0.0015;
-            const risk = Math.min(28, Math.round((base + sr.monthsTogether * growth) * 100));
-            const riskColor = risk < 8 ? "var(--green)" : risk < 18 ? "var(--amber)" : "var(--red)";
-            discInfo = `<p style="font-size:0.75rem;margin:4px 0">
+            let discInfo = "";
+            if (sr.type !== "second_wife" || !poly) {
+              const base =
+                sr.type === "fling"
+                  ? 0.014
+                  : sr.type === "girlfriend"
+                    ? 0.024
+                    : 0.034;
+              const growth = sr.type === "fling" ? 0.0008 : 0.0015;
+              const risk = Math.min(
+                28,
+                Math.round((base + sr.monthsTogether * growth) * 100),
+              );
+              const riskColor =
+                risk < 8
+                  ? "var(--green)"
+                  : risk < 18
+                    ? "var(--amber)"
+                    : "var(--red)";
+              discInfo = `<p style="font-size:0.75rem;margin:4px 0">
               <span style="opacity:0.6">DISCOVERY RISK / MO</span>
               <span style="color:${riskColor};font-weight:700;margin-left:6px">${risk}%</span>
             </p>`;
-          } else {
-            discInfo = `<p style="font-size:0.75rem;margin:4px 0;opacity:0.6">Known arrangement — jealousy events possible</p>`;
-          }
+            } else {
+              discInfo = `<p style="font-size:0.75rem;margin:4px 0;opacity:0.6">Known arrangement — jealousy events possible</p>`;
+            }
 
-          return `<div class="card">
+            return `<div class="card">
             <div class="card-header">
               <h3>${sr.partnerName}</h3>
               <span class="tag ${typeClass}">${typeLabel}</span>
@@ -12072,7 +13319,8 @@ game.renderRelationships = function () {
               <i class="fa-solid fa-heart-crack"></i> End It
             </button>
           </div>`;
-        }).join("");
+          })
+          .join("");
       }
     }
   }
@@ -12080,11 +13328,12 @@ game.renderRelationships = function () {
 
 game.renderPets = function () {
   const PET_IMGS = {
-    dog:     'https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=700&h=240&fit=crop&auto=format',
-    cat:     'https://images.unsplash.com/photo-1574158622682-e40e69881006?w=700&h=240&fit=crop&auto=format',
-    fish:    'https://images.unsplash.com/photo-1520990614490-d2b2c93b19ac?w=700&h=240&fit=crop&auto=format',
-    bird:    'https://images.unsplash.com/photo-1552728089-57bdde30beb3?w=700&h=240&fit=crop&auto=format',
-    reptile: 'https://images.unsplash.com/photo-1597645587822-e99fa5d0d3fa?w=700&h=240&fit=crop&auto=format',
+    dog: "https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=700&h=240&fit=crop&auto=format",
+    cat: "https://images.unsplash.com/photo-1574158622682-e40e69881006?w=700&h=240&fit=crop&auto=format",
+    fish: "fishtank.png",
+    bird: "https://images.unsplash.com/photo-1552728089-57bdde30beb3?w=700&h=240&fit=crop&auto=format",
+    reptile:
+      "reptile.png",
   };
   const petShop = document.getElementById("pet-shop");
   if (petShop) {
@@ -12184,11 +13433,23 @@ game.renderPrison = function () {
 /* ── Patch renderAll to include new sections ── */
 (function () {
   const origRenderAll3 = game.renderAll.bind(game);
+  let _galPending = false;
   game.renderAll = function () {
     origRenderAll3();
-    this.renderRelationships();
-    if (this.state.jail > 0) this.renderPrison();
-    galleryScroll.refresh();
+    // Only re-render relationships when social view is active — avoids expensive DOM rebuild on every render
+    if ((app.currentView || "career") === "relationships")
+      this.renderRelationships();
+    // Only re-render prison when prison view is active and actually in jail
+    if (this.state.jail > 0 && (app.currentView || "") === "prison")
+      this.renderPrison();
+    // Throttle gallery-scroll refresh so it runs at most once per animation frame
+    if (!_galPending) {
+      _galPending = true;
+      requestAnimationFrame(() => {
+        galleryScroll.refresh();
+        _galPending = false;
+      });
+    }
   };
 })();
 
@@ -12295,20 +13556,29 @@ const galleryScroll = (() => {
   const origNextMonthSide = game.nextMonth.bind(game);
   game.nextMonth = function () {
     origNextMonthSide();
-    if (this.state.jail <= 0 && !this.state.life.dead && !this.state.life.retired) {
+    if (
+      this.state.jail <= 0 &&
+      !this.state.life.dead &&
+      !this.state.life.retired
+    ) {
       const sideExpenses = this.processSideRelationshipsMonthly();
       if (sideExpenses > 0) this.modCash(-sideExpenses);
       // Drug empire monthly tick
       this.processDrugEmpireMonthly();
       // Standalone lawyer retainer (when no drug empire active — drug empire already handles it)
       if (!this.state.crime.drugEmpire.tier && this.state.crime.lawyer) {
-        const lDef = CONFIG.LAWYERS.find(l => l.id === this.state.crime.lawyer);
+        const lDef = CONFIG.LAWYERS.find(
+          (l) => l.id === this.state.crime.lawyer,
+        );
         if (lDef && lDef.monthlyCost > 0) {
           if (this.state.cash >= lDef.monthlyCost) {
             this.modCash(-lDef.monthlyCost);
           } else {
             this.state.crime.lawyer = null;
-            app.toast("Couldn't afford lawyer retainer — you're on your own.", "error");
+            app.toast(
+              "Couldn't afford lawyer retainer — you're on your own.",
+              "error",
+            );
           }
         }
       }
@@ -12316,6 +13586,2623 @@ const galleryScroll = (() => {
   };
 })();
 
+/* ══════════════════════════════════════════════════════════════════════
+   SOUND ENGINE  —  Web-Audio-API synthesised SFX + BG music toggle
+   ══════════════════════════════════════════════════════════════════════ */
+const SFX = (() => {
+  let _ac = null;
+  let muted = localStorage.getItem("greedigo_mute") === "1";
+
+  function ctx() {
+    if (!_ac) _ac = new (window.AudioContext || window.webkitAudioContext)();
+    if (_ac.state === "suspended") _ac.resume();
+    return _ac;
+  }
+
+  /* ── Core helpers ── */
+  function tone(freq, type, startVol, endVol, duration, startTime) {
+    const c = ctx();
+    const o = c.createOscillator();
+    const g = c.createGain();
+    o.connect(g);
+    g.connect(c.destination);
+    o.type = type;
+    o.frequency.setValueAtTime(freq, startTime);
+    g.gain.setValueAtTime(startVol, startTime);
+    g.gain.exponentialRampToValueAtTime(
+      Math.max(0.001, endVol),
+      startTime + duration,
+    );
+    o.start(startTime);
+    o.stop(startTime + duration + 0.01);
+  }
+  function sweep(f0, f1, type, vol, duration, startTime) {
+    const c = ctx();
+    const o = c.createOscillator();
+    const g = c.createGain();
+    o.connect(g);
+    g.connect(c.destination);
+    o.type = type;
+    o.frequency.setValueAtTime(f0, startTime);
+    o.frequency.exponentialRampToValueAtTime(f1, startTime + duration);
+    g.gain.setValueAtTime(vol, startTime);
+    g.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
+    o.start(startTime);
+    o.stop(startTime + duration + 0.01);
+  }
+
+  /* ── Sound library ── */
+  const sounds = {
+    click() {
+      const t = ctx().currentTime;
+      tone(680, "sine", 0.08, 0.001, 0.05, t);
+    },
+
+    coin() {
+      const t = ctx().currentTime;
+      [523, 659, 784, 1047].forEach((f, i) =>
+        tone(f, "sine", 0.12, 0.001, 0.09, t + i * 0.06),
+      );
+    },
+
+    bigCoin() {
+      const t = ctx().currentTime;
+      [523, 659, 784, 1047, 1319].forEach((f, i) =>
+        tone(f, "sine", 0.16, 0.001, 0.12, t + i * 0.07),
+      );
+    },
+
+    crimeSuccess() {
+      const t = ctx().currentTime;
+      sweep(200, 680, "sawtooth", 0.14, 0.12, t);
+      tone(880, "sine", 0.1, 0.001, 0.18, t + 0.1);
+    },
+
+    crimeFail() {
+      const t = ctx().currentTime;
+      sweep(600, 180, "sawtooth", 0.18, 0.3, t);
+      tone(120, "square", 0.1, 0.001, 0.25, t + 0.15);
+    },
+
+    arrested() {
+      const t = ctx().currentTime;
+      /* Wailing police siren — two tones alternating */
+      for (let i = 0; i < 5; i++) {
+        sweep(800, 550, "sawtooth", 0.15, 0.2, t + i * 0.22);
+        sweep(550, 800, "sawtooth", 0.15, 0.2, t + i * 0.22 + 0.11);
+      }
+    },
+
+    achievement() {
+      const t = ctx().currentTime;
+      /* Rising fanfare */
+      [
+        [523, 0],
+        [659, 0.09],
+        [784, 0.18],
+        [1047, 0.28],
+        [1319, 0.38],
+      ].forEach(([f, d]) => tone(f, "sine", 0.16, 0.001, 0.28, t + d));
+    },
+
+    casinoWin() {
+      const t = ctx().currentTime;
+      /* Slot-machine coins */
+      for (let i = 0; i < 6; i++) {
+        const f = 523 + i * 80 + Math.random() * 40;
+        tone(f, "sine", 0.12, 0.001, 0.08, t + i * 0.05);
+      }
+    },
+
+    jackpot() {
+      const t = ctx().currentTime;
+      /* Big fanfare + coin flood */
+      [
+        [330, 0],
+        [415, 0.1],
+        [494, 0.2],
+        [659, 0.32],
+        [880, 0.46],
+        [1047, 0.58],
+      ].forEach(([f, d]) => tone(f, "sine", 0.18, 0.001, 0.35, t + d));
+      for (let i = 0; i < 12; i++) {
+        const f = 523 + i * 60 + Math.random() * 80;
+        tone(f, "sine", 0.08, 0.001, 0.07, t + 0.55 + i * 0.04);
+      }
+    },
+
+    casinoLose() {
+      const t = ctx().currentTime;
+      /* Sad descend */
+      [
+        [494, 0],
+        [415, 0.12],
+        [370, 0.25],
+        [311, 0.4],
+      ].forEach(([f, d]) => tone(f, "sine", 0.14, 0.001, 0.22, t + d));
+    },
+
+    death() {
+      const t = ctx().currentTime;
+      /* Dark low descent */
+      sweep(220, 55, "sawtooth", 0.22, 1.2, t);
+      sweep(110, 40, "sine", 0.2, 1.0, t + 0.1);
+      tone(60, "square", 0.12, 0.001, 0.8, t + 0.5);
+    },
+
+    advance() {
+      const t = ctx().currentTime;
+      tone(420, "triangle", 0.06, 0.001, 0.06, t);
+      tone(560, "triangle", 0.04, 0.001, 0.05, t + 0.04);
+    },
+
+    buy() {
+      const t = ctx().currentTime;
+      tone(440, "sine", 0.1, 0.001, 0.09, t);
+      tone(550, "sine", 0.1, 0.001, 0.09, t + 0.08);
+    },
+
+    error() {
+      const t = ctx().currentTime;
+      tone(180, "square", 0.18, 0.001, 0.18, t);
+    },
+
+    epic() {
+      const t = ctx().currentTime;
+      sweep(220, 880, "sine", 0.15, 0.5, t);
+      [
+        [523, 0.1],
+        [659, 0.22],
+        [784, 0.34],
+        [1047, 0.46],
+      ].forEach(([f, d]) => tone(f, "sine", 0.14, 0.001, 0.28, t + d));
+    },
+  };
+
+  /* ── Public API ── */
+  const api = {
+    get muted() {
+      return muted;
+    },
+
+    play(name, ...args) {
+      if (muted) return;
+      try {
+        sounds[name] && sounds[name](...args);
+      } catch (e) {
+        /* ignore AudioContext errors */
+      }
+    },
+
+    toggle() {
+      muted = !muted;
+      localStorage.setItem("greedigo_mute", muted ? "1" : "0");
+      /* Sync background music */
+      const bgm = document.getElementById("bg-music");
+      if (bgm) bgm.muted = muted;
+      /* Update toggle button icon */
+      const btn = document.getElementById("snd-toggle-btn");
+      if (btn) {
+        btn.innerHTML = muted
+          ? '<i class="fa-solid fa-volume-xmark"></i>'
+          : '<i class="fa-solid fa-volume-high"></i>';
+        btn.title = muted ? "Unmute sounds" : "Mute sounds";
+        btn.classList.toggle("snd-muted", muted);
+      }
+      if (!muted) api.play("click");
+    },
+
+    _init() {
+      /* Restore bgm muted state */
+      const bgm = document.getElementById("bg-music");
+      if (bgm) {
+        bgm.muted = muted;
+      }
+      /* Restore toggle button state */
+      const btn = document.getElementById("snd-toggle-btn");
+      if (btn) {
+        btn.innerHTML = muted
+          ? '<i class="fa-solid fa-volume-xmark"></i>'
+          : '<i class="fa-solid fa-volume-high"></i>';
+        btn.classList.toggle("snd-muted", muted);
+      }
+      /* Global button click SFX */
+      document.addEventListener("click", function (e) {
+        const btn = e.target.closest(
+          ".btn, .mbn-tab, .speed-btn, .next-month-btn, .crime-execute-btn, .bank-action-btn, .bank-apply-btn",
+        );
+        if (btn && !btn.id.includes("snd-toggle")) api.play("click");
+      });
+    },
+  };
+
+  /* ── Patch app.toast for context-aware sounds ── */
+  (function () {
+    const _origToast = app.toast.bind(app);
+    app.toast = function (msg, type = "success") {
+      _origToast(msg, type);
+      const m = (msg || "").toLowerCase();
+      if (type === "epic") {
+        if (m.includes("jackpot")) api.play("jackpot");
+        else if (m.includes("getaway")) api.play("crimeSuccess");
+        else api.play("epic");
+      } else if (type === "success") {
+        if (m.includes("won $") || m.includes("win")) api.play("casinoWin");
+        else if (m.includes("success") || m.includes("+$")) api.play("coin");
+        else api.play("coin");
+      } else if (type === "error") {
+        if (
+          m.includes("busted") ||
+          m.includes("arrest") ||
+          m.includes("prison")
+        )
+          api.play("arrested");
+        else api.play("error");
+      } else if (type === "warning") {
+        if (m.includes("success") || m.includes("+$")) api.play("crimeSuccess");
+        else api.play("click");
+      } else if (type === "text-loss") {
+        api.play("casinoLose");
+      }
+    };
+  })();
+
+  /* ── Patch game.die for death SFX ── */
+  (function () {
+    const _origDie = game.die.bind(game);
+    game.die = function (reason) {
+      api.play("death");
+      _origDie(reason);
+    };
+  })();
+
+  /* ── Patch the advance button for month-tick SFX ── */
+  (function () {
+    const advBtn = document.getElementById("main-advance-btn");
+    if (advBtn) {
+      const _orig = advBtn.onclick;
+      advBtn.addEventListener("click", () => api.play("advance"), true);
+    }
+  })();
+
+  return api;
+})();
+
+/* ══════════════════════════════════════════════════════
+   MARKET UI HELPERS
+   ══════════════════════════════════════════════════════ */
+window._mktSelected = "spy";
+window._mktFilter = "all";
+
+function mktSelect(id, el) {
+  window._mktSelected = id;
+  document
+    .querySelectorAll(".mkt-card")
+    .forEach((c) => c.classList.remove("mkt-card-sel"));
+  if (el) el.classList.add("mkt-card-sel");
+  // Update chart header immediately
+  const def = CONFIG.ASSETS.find((d) => d.id === id);
+  const a = game.state.assets[id];
+  if (def && a) {
+    const n = document.getElementById("mkt-chart-name");
+    if (n) n.textContent = def.name;
+    const t = document.getElementById("mkt-chart-ticker");
+    if (t) t.textContent = id.toUpperCase();
+    const p = document.getElementById("mkt-chart-price");
+    if (p)
+      p.textContent =
+        "$" + (a.price < 100 ? a.price.toFixed(2) : a.price.toFixed(0));
+    const c = document.getElementById("mkt-chart-chg");
+    if (c) {
+      const up = a.trend >= 0;
+      c.textContent = (up ? "▲ +" : "▼ ") + (a.trend * 100).toFixed(2) + "%";
+      c.className = "mkt-chart-chg " + (up ? "gain" : "loss");
+    }
+  }
+  app.drawChart();
+}
+
+function mktFilter(type, btn) {
+  window._mktFilter = type;
+  document
+    .querySelectorAll(".mkt-tab")
+    .forEach((b) => b.classList.remove("active"));
+  if (btn) btn.classList.add("active");
+  game.renderAll();
+}
+
+function mktQtyAdj(id, delta) {
+  const el = document.getElementById("mkt-qty-" + id);
+  if (el) el.value = Math.max(1, (parseInt(el.value) || 1) + delta);
+}
+
+/* ══════════════════════════════════════════════════════
+   TUTORIAL ENGINE — TUT
+   ══════════════════════════════════════════════════════ */
+const TUT = (function () {
+  const STEPS = [
+    {
+      icon: "fa-rocket",
+      color: "#a78bfa",
+      title: "Welcome to Greedigo",
+      body: "You're 18, broke, and hungry. Build wealth, manage risk, and don't die doing it. Every decision has consequences — there are no do-overs.",
+      tip: "The goal isn't just money. It's surviving long enough to spend it.",
+      target: null,
+      action: null,
+    },
+    {
+      icon: "fa-briefcase",
+      color: "#60a5fa",
+      title: "Start Your Career",
+      body: "A job is your income engine. Open the Career view, pick a role, and start earning. Without income you'll run dry before month 3.",
+      tip: "Higher-paying roles require more smarts. Study early to unlock better jobs.",
+      target: '[data-view="career"], .nav-item[onclick*="career"]',
+      action: () => app.activateView("career"),
+      actionLabel: "Go to Career →",
+    },
+    {
+      icon: "fa-wallet",
+      color: "#34d399",
+      title: "Budget Reality Check",
+      body: "Rent, food, and lifestyle cost money every month. Watch your Cash in the top HUD — if it hits zero and you have no job, you spiral fast.",
+      tip: "Keep at least 3 months of expenses in cash at all times. That's your safety net.",
+      target: "#hud-cash",
+      action: null,
+    },
+    {
+      icon: "fa-heart-pulse",
+      color: "#f472b6",
+      title: "Your Four Stats",
+      body: "Health, Energy, Happiness, and Smarts degrade over time. Low health can kill you. Low happiness tanks productivity. Manage them via Wellness.",
+      tip: "Burnout is real — don't ignore the Stress and Burnout meters in the Wellness tab.",
+      target: "#bar-health",
+      action: () => app.activateView("wellness"),
+      actionLabel: "Open Wellness →",
+    },
+    {
+      icon: "fa-chart-line",
+      color: "#fbbf24",
+      title: "Invest in the Market",
+      body: "The stock market grows your cash passively — but it's volatile. Start small with index funds (SPY/QQQ) before touching crypto or individual stocks.",
+      tip: "Diversify across categories — never put all cash into one asset.",
+      target: '[data-view="market"], .nav-item[onclick*="market"]',
+      action: () => app.activateView("market"),
+      actionLabel: "Open Market →",
+    },
+    {
+      icon: "fa-triangle-exclamation",
+      color: "#f87171",
+      title: "Watch Your Risk",
+      body: "The Risk % in the top bar is your death clock. It climbs with debt, crime, poor health, and bad decisions. Above 80% you can die any month.",
+      tip: "The Cashout button locks in your net worth and ends the run safely. Use it before risk kills you.",
+      target: "#risk-pct",
+      action: null,
+    },
+    {
+      icon: "fa-building",
+      color: "#818cf8",
+      title: "Launch a Business",
+      body: "Startups unlock exponential income — but burn cash fast. Only launch when you have at least $10k buffer and a stable job income behind you.",
+      tip: "Hire carefully. Every employee costs monthly salary. Over-hiring early is a run-killer.",
+      target: '[data-view="business"], .nav-item[onclick*="business"]',
+      action: () => app.activateView("business"),
+      actionLabel: "Open Business →",
+    },
+    {
+      icon: "fa-landmark",
+      color: "#34d399",
+      title: "Build Passive Wealth",
+      body: "Real estate, bonds, franchises, and dividend funds generate income every month — even while you sleep. This is where real wealth compounds.",
+      tip: "Passive income covering your expenses = financial independence. That's the real win state.",
+      target: '[data-view="wealth"], .nav-item[onclick*="wealth"]',
+      action: () => app.activateView("wealth"),
+      actionLabel: "Open Wealth →",
+    },
+    {
+      icon: "fa-skull",
+      color: "#f87171",
+      title: "Crime Doesn't Pay... Much",
+      body: "Crime earns fast money but spikes Heat and Legal Risk. Too many offenses and you get arrested, lose assets, or die. It's a high-risk, late-game tool — not a strategy.",
+      tip: "Never commit crimes when your Risk % is above 50. One bad roll can end your run.",
+      target: '[data-view="crime"], .nav-item[onclick*="crime"]',
+      action: null,
+    },
+    {
+      icon: "fa-graduation-cap",
+      color: "#a78bfa",
+      title: "You're Ready",
+      body: "Tutorial complete. There's no hand-holding from here. Build wealth, survive risk, and get out before greed kills you. Good luck.",
+      tip: null,
+      target: null,
+      action: null,
+      isLast: true,
+    },
+  ];
+
+  let _current = -1;
+  let _ringTimeout = null;
+
+  function _panel() {
+    return document.getElementById("tut-panel");
+  }
+  function _ring() {
+    return document.getElementById("tut-ring");
+  }
+  function _seen() {
+    const o =
+      typeof game !== "undefined" && game.state ? game.state.onboarding : null;
+    return o ? o.seenSteps : [];
+  }
+
+  function _posRing(selector) {
+    const r = _ring();
+    if (!r) return;
+    if (!selector) {
+      r.style.display = "none";
+      return;
+    }
+    // Try mobile tab first, then desktop nav
+    const selectors = selector.split(",").map((s) => s.trim());
+    let el = null;
+    for (const s of selectors) {
+      el = document.querySelector(s);
+      if (el) break;
+    }
+    if (!el) {
+      r.style.display = "none";
+      return;
+    }
+    const rect = el.getBoundingClientRect();
+    const pad = 6;
+    r.style.display = "block";
+    r.style.top = rect.top - pad + "px";
+    r.style.left = rect.left - pad + "px";
+    r.style.width = rect.width + pad * 2 + "px";
+    r.style.height = rect.height + pad * 2 + "px";
+    r.style.borderRadius =
+      parseInt(getComputedStyle(el).borderRadius) + pad + "px";
+    // Pulse in
+    r.classList.remove("tut-ring-in");
+    void r.offsetWidth; // reflow
+    r.classList.add("tut-ring-in");
+  }
+
+  function _buildDots(total, current) {
+    const c = document.getElementById("tut-dots");
+    if (!c) return;
+    c.innerHTML = "";
+    for (let i = 0; i < total; i++) {
+      const d = document.createElement("div");
+      d.className =
+        "tut-dot" +
+        (i < current ? " tut-dot-done" : "") +
+        (i === current ? " tut-dot-active" : "");
+      c.appendChild(d);
+    }
+  }
+
+  function show(idx) {
+    const o =
+      typeof game !== "undefined" && game.state ? game.state.onboarding : null;
+    if (o && (o.skipped || o.completed)) return;
+    if (o && o.seenSteps.includes(idx)) return;
+    if (o) {
+      o.seenSteps.push(idx);
+      o.step = idx;
+    }
+
+    _current = idx;
+    const step = STEPS[idx];
+    if (!step) return;
+
+    const total = STEPS.length;
+    const p = _panel();
+    if (!p) return;
+
+    // Content
+    const iconEl = document.getElementById("tut-icon");
+    const wrapEl = document.getElementById("tut-icon-wrap");
+    const titleEl = document.getElementById("tut-title");
+    const descEl = document.getElementById("tut-desc");
+    const metaEl = document.getElementById("tut-step-label");
+    const tipBox = document.getElementById("tut-tip-box");
+    const tipText = document.getElementById("tut-tip-text");
+    const nextLbl = document.getElementById("tut-next-label");
+    const nextIco = document.getElementById("tut-next-icon");
+    const fillEl = document.getElementById("tut-progress-fill");
+
+    if (iconEl) {
+      iconEl.className = "fa-solid " + step.icon;
+    }
+    if (wrapEl) {
+      wrapEl.style.background = step.color + "22";
+      wrapEl.style.borderColor = step.color + "44";
+      wrapEl.querySelector("i").style.color = step.color;
+    }
+    if (titleEl) titleEl.textContent = step.title;
+    if (descEl) descEl.textContent = step.body;
+    if (metaEl) metaEl.textContent = "Step " + (idx + 1) + " of " + total;
+    if (fillEl)
+      fillEl.style.width = (((idx + 1) / total) * 100).toFixed(1) + "%";
+    if (fillEl) fillEl.style.background = step.color;
+
+    if (tipBox && tipText) {
+      if (step.tip) {
+        tipBox.style.display = "flex";
+        tipText.textContent = step.tip;
+      } else {
+        tipBox.style.display = "none";
+      }
+    }
+
+    if (step.isLast) {
+      if (nextLbl) nextLbl.textContent = "Finish";
+      if (nextIco) nextIco.className = "fa-solid fa-check";
+    } else if (step.action && step.actionLabel) {
+      if (nextLbl) nextLbl.textContent = step.actionLabel.replace(" →", "");
+      if (nextIco) nextIco.className = "fa-solid fa-arrow-right";
+    } else {
+      if (nextLbl) nextLbl.textContent = "Got It";
+      if (nextIco) nextIco.className = "fa-solid fa-arrow-right";
+    }
+    // Colour the next button
+    const nextBtn = document.getElementById("tut-next-btn");
+    if (nextBtn) nextBtn.style.background = step.color;
+
+    _buildDots(total, idx);
+
+    // Spotlight
+    clearTimeout(_ringTimeout);
+    if (step.target) {
+      _ringTimeout = setTimeout(() => _posRing(step.target), 250);
+    } else {
+      _posRing(null);
+    }
+
+    // Show panel
+    p.classList.remove("tut-panel-hidden");
+    p.classList.add("tut-panel-in");
+  }
+
+  function next() {
+    const step = STEPS[_current];
+    if (step && step.isLast) {
+      _finish();
+      return;
+    }
+
+    // Run step action (e.g. navigate to a view)
+    if (step && typeof step.action === "function") step.action();
+
+    const nextIdx = _current + 1;
+    if (nextIdx >= STEPS.length) {
+      _finish();
+      return;
+    }
+
+    // Swap content without hiding, then re-show
+    const p = _panel();
+    if (p) p.classList.add("tut-swap");
+    setTimeout(() => {
+      if (p) p.classList.remove("tut-swap");
+      show(nextIdx);
+    }, 160);
+  }
+
+  function skip() {
+    const o =
+      typeof game !== "undefined" && game.state ? game.state.onboarding : null;
+    if (o) {
+      o.skipped = true;
+      o.active = false;
+    }
+    _hide();
+    app.toast("Tutorial skipped. You're on your own.", "info");
+  }
+
+  function complete() {
+    _finish();
+  }
+
+  function reset() {
+    _current = -1;
+    _hide();
+  }
+
+  function _finish() {
+    const o =
+      typeof game !== "undefined" && game.state ? game.state.onboarding : null;
+    if (o) {
+      o.completed = true;
+      o.active = false;
+    }
+    _hide();
+    app.toast("Tutorial complete — good luck out there.", "success");
+  }
+
+  function _hide() {
+    const p = _panel();
+    if (p) {
+      p.classList.remove("tut-panel-in");
+      p.classList.add("tut-panel-hidden");
+    }
+    _posRing(null);
+  }
+
+  // Reposition spotlight on resize
+  window.addEventListener("resize", () => {
+    if (_current >= 0 && STEPS[_current] && STEPS[_current].target) {
+      _posRing(STEPS[_current].target);
+    }
+  });
+
+  return { show, next, skip, complete, reset };
+})();
+
 window.onload = function () {
   titleScreen.init();
+  SFX._init();
 };
+
+/* ═══════════════════════════════════════════════════════════════════
+   GREEDIGO ADDICTION ENGINE v2
+   Monthly Challenges · Prestige · Rival · Flash Events · New Events
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ─────────────────────────────────────────────────────────────────
+   CHALLENGE POOL  (30 mission templates for monthly quests)
+   ───────────────────────────────────────────────────────────────── */
+const CHALLENGE_POOL = [
+  {
+    id: "c_survive",
+    e: "🌟",
+    title: "Still Standing",
+    desc: "Survive the month alive & free",
+    reward: 400,
+    leg: 2,
+    check: (s, g) => !g.state.life.dead && !g.state.jail,
+  },
+  {
+    id: "c_employed",
+    e: "💼",
+    title: "Working Stiff",
+    desc: "Be employed this month",
+    reward: 550,
+    leg: 3,
+    check: (s, g) => !!g.state.job,
+  },
+  {
+    id: "c_happy",
+    e: "😁",
+    title: "High on Life",
+    desc: "Keep happiness above 65",
+    reward: 650,
+    leg: 4,
+    check: (s, g) => g.state.stats.happiness >= 65,
+  },
+  {
+    id: "c_healthy",
+    e: "💪",
+    title: "Iron Body",
+    desc: "Keep health above 70",
+    reward: 700,
+    leg: 4,
+    check: (s, g) => g.state.stats.health >= 70,
+  },
+  {
+    id: "c_nodbt",
+    e: "✅",
+    title: "Clean Slate",
+    desc: "Carry no debt this month",
+    reward: 900,
+    leg: 5,
+    check: (s, g) =>
+      (g.state.bank?.loans?.length || 0) === 0 &&
+      (g.state.bank?.creditCard?.balance || 0) < 100 &&
+      (g.state.edu?.loans || 0) < 100,
+  },
+  {
+    id: "c_relation",
+    e: "❤️",
+    title: "Heart Full",
+    desc: "Be in a relationship",
+    reward: 700,
+    leg: 5,
+    check: (s, g) => g.state.relationship?.status !== "single",
+  },
+  {
+    id: "c_crime1",
+    e: "🎭",
+    title: "Street Level",
+    desc: "Commit at least 1 crime",
+    reward: 950,
+    leg: 5,
+    check: (s, g) => g.state.runStats.crimeActions - s.crimeActions >= 1,
+  },
+  {
+    id: "c_trade2",
+    e: "📈",
+    title: "Wall St. Move",
+    desc: "Execute 2+ market trades",
+    reward: 1200,
+    leg: 7,
+    check: (s, g) => g.state.runStats.marketTrades - s.marketTrades >= 2,
+  },
+  {
+    id: "c_crypto",
+    e: "₿",
+    title: "Crypto Curious",
+    desc: "Own any BTC or ETH",
+    reward: 1500,
+    leg: 8,
+    check: (s, g) =>
+      (g.state.assets.btc?.owned || 0) > 0 ||
+      (g.state.assets.eth?.owned || 0) > 0,
+  },
+  {
+    id: "c_perform",
+    e: "⭐",
+    title: "Star Performer",
+    desc: "Job performance above 80%",
+    reward: 1400,
+    leg: 8,
+    check: (s, g) => (g.state.job?.performance || 0) >= 80,
+  },
+  {
+    id: "c_startup",
+    e: "🚀",
+    title: "Builder Mode",
+    desc: "Have an active startup running",
+    reward: 1000,
+    leg: 6,
+    check: (s, g) => (g.state.startups?.length || 0) > 0,
+  },
+  {
+    id: "c_hustle2",
+    e: "⚡",
+    title: "Side Grind",
+    desc: "Complete 2+ hustle gigs",
+    reward: 1100,
+    leg: 6,
+    check: (s, g) => g.state.runStats.hustleActions - s.hustleActions >= 2,
+  },
+  {
+    id: "c_greenday",
+    e: "🟢",
+    title: "Green Day",
+    desc: "End the month with higher net worth",
+    reward: 1800,
+    leg: 9,
+    check: (s, g) => g.getNetWorth() > s.netWorth,
+  },
+  {
+    id: "c_politician",
+    e: "🏛️",
+    title: "The Politician",
+    desc: "Hold a political office",
+    reward: 1500,
+    leg: 9,
+    check: (s, g) => !!g.state.politics?.role,
+  },
+  {
+    id: "c_cash5k",
+    e: "💸",
+    title: "Cash Flow",
+    desc: "Earn $5,000+ more cash than you started",
+    reward: 1800,
+    leg: 10,
+    check: (s, g) => g.state.cash - s.cash >= 5000,
+  },
+  {
+    id: "c_vital",
+    e: "✨",
+    title: "Peak Form",
+    desc: "Health AND happiness both above 70",
+    reward: 1600,
+    leg: 10,
+    check: (s, g) =>
+      g.state.stats.health >= 70 && g.state.stats.happiness >= 70,
+  },
+  {
+    id: "c_networth",
+    e: "💰",
+    title: "Stack Paper",
+    desc: "Net worth above $50,000",
+    reward: 1200,
+    leg: 7,
+    check: (s, g) => g.getNetWorth() >= 50000,
+  },
+  {
+    id: "c_property",
+    e: "🏠",
+    title: "Landlord Life",
+    desc: "Own at least 1 rental property",
+    reward: 2000,
+    leg: 12,
+    check: (s, g) =>
+      Object.values(g.state.wealth?.properties || {}).reduce(
+        (a, b) => a + b,
+        0,
+      ) >= 1,
+  },
+  {
+    id: "c_crime3",
+    e: "💀",
+    title: "Triple Threat",
+    desc: "Commit 3+ crimes this month",
+    reward: 2800,
+    leg: 14,
+    check: (s, g) => g.state.runStats.crimeActions - s.crimeActions >= 3,
+  },
+  {
+    id: "c_trade4",
+    e: "🐂",
+    title: "Bull Session",
+    desc: "Execute 4+ market trades",
+    reward: 2800,
+    leg: 14,
+    check: (s, g) => g.state.runStats.marketTrades - s.marketTrades >= 4,
+  },
+  {
+    id: "c_hustle4",
+    e: "🔥",
+    title: "Hustle King",
+    desc: "Complete 4+ hustle gigs",
+    reward: 2600,
+    leg: 14,
+    check: (s, g) => g.state.runStats.hustleActions - s.hustleActions >= 4,
+  },
+  {
+    id: "c_streak15",
+    e: "🔥",
+    title: "On Fire",
+    desc: "Maintain action streak of 15+",
+    reward: 2000,
+    leg: 11,
+    check: (s, g) => (g.state.gameplay?.actionStreak || 0) >= 15,
+  },
+  {
+    id: "c_diversify",
+    e: "🎯",
+    title: "Spread the Risk",
+    desc: "Hold 3+ different asset types",
+    reward: 2200,
+    leg: 12,
+    check: (s, g) => {
+      const t = new Set(
+        CONFIG.ASSETS.filter((a) => (g.state.assets[a.id]?.owned || 0) > 0).map(
+          (a) => a.type,
+        ),
+      );
+      return t.size >= 3;
+    },
+  },
+  {
+    id: "c_nw100k",
+    e: "💎",
+    title: "Six Figures",
+    desc: "Net worth above $100,000",
+    reward: 3000,
+    leg: 16,
+    check: (s, g) => g.getNetWorth() >= 100000,
+  },
+  {
+    id: "c_moonshot",
+    e: "🌙",
+    title: "Moonshot Month",
+    desc: "Net worth up 5%+ this month",
+    reward: 4000,
+    leg: 18,
+    check: (s, g) => s.netWorth > 1000 && g.getNetWorth() >= s.netWorth * 1.05,
+  },
+  {
+    id: "c_crime5",
+    e: "👑",
+    title: "Untouchable",
+    desc: "Commit 5+ crimes this month",
+    reward: 5500,
+    leg: 22,
+    check: (s, g) => g.state.runStats.crimeActions - s.crimeActions >= 5,
+  },
+  {
+    id: "c_recovery",
+    e: "🏥",
+    title: "Comeback Kid",
+    desc: "Start below 40 health, end above 60",
+    reward: 2200,
+    leg: 12,
+    check: (s, g) => s.health < 40 && g.state.stats.health >= 60,
+  },
+  {
+    id: "c_combo",
+    e: "🌪️",
+    title: "Full Send",
+    desc: "Crime + hustle + trade in same month",
+    reward: 3800,
+    leg: 20,
+    check: (s, g) =>
+      g.state.runStats.crimeActions - s.crimeActions >= 1 &&
+      g.state.runStats.hustleActions - s.hustleActions >= 1 &&
+      g.state.runStats.marketTrades - s.marketTrades >= 1,
+  },
+  {
+    id: "c_actions5",
+    e: "💥",
+    title: "Blitz Month",
+    desc: "Take 5+ tracked actions this month",
+    reward: 2500,
+    leg: 14,
+    check: (s, g) =>
+      g.state.runStats.crimeActions -
+        s.crimeActions +
+        (g.state.runStats.marketTrades - s.marketTrades) +
+        (g.state.runStats.hustleActions - s.hustleActions) >=
+      5,
+  },
+  {
+    id: "c_kingmaker",
+    e: "🗳️",
+    title: "Kingmaker",
+    desc: "Political influence above 50",
+    reward: 2800,
+    leg: 15,
+    check: (s, g) => (g.state.politics?.influence || 0) >= 50,
+  },
+];
+
+/* ─────────────────────────────────────────────────────────────────
+   FLASH OPPORTUNITY EVENTS (fire 6% monthly — urgent choices)
+   ───────────────────────────────────────────────────────────────── */
+const FLASH_EVENTS = [
+  {
+    e: "💡",
+    title: "Inside Intelligence",
+    desc: 'A well-connected friend drops a hot stock tip. "Buy TSLA before Friday — trust me." Could be illegal. Could be gold.',
+    yes: "I'm in",
+    no: "Pass",
+    onYes(g) {
+      const gain =
+        Math.random() < 0.65 ? g.state.cash * 0.18 : -(g.state.cash * 0.08);
+      g.modCash(gain);
+      app.toast(
+        gain > 0
+          ? `Tip paid off! +$${shortNumber(Math.round(gain))}`
+          : "Tip was wrong. Market moved against you.",
+        gain > 0 ? "epic" : "error",
+      );
+    },
+  },
+  {
+    e: "🏚️",
+    title: "Distressed Property Deal",
+    desc: "A motivated seller is offloading a duplex at 40% below market. Cash only. Offer expires this month.",
+    yes: "Buy it ($57,000)",
+    no: "Let it go",
+    gateFn(g) {
+      return g.state.cash >= 57000;
+    },
+    gateMsg: "You need at least $57,000 in cash.",
+    onYes(g) {
+      g.modCash(-57000);
+      g.state.wealth.properties = g.state.wealth.properties || {};
+      g.state.wealth.properties["flash_duplex"] =
+        (g.state.wealth.properties["flash_duplex"] || 0) + 1;
+      g.modStat("happiness", 8);
+      app.toast("Duplex acquired at 40% discount!", "success");
+    },
+  },
+  {
+    e: "🧠",
+    title: "Private Mentorship Session",
+    desc: "A renowned entrepreneur offers you 3 hours of private coaching. Life-altering wisdom — if you can afford the time.",
+    yes: "Make time",
+    no: "Too busy",
+    onYes(g) {
+      g.modStat("smarts", 12);
+      g.modStat("energy", -20);
+      g.modCash(-500);
+      g.registerAction(3);
+      app.toast("Mentorship unlocked: +12 Smarts", "success");
+    },
+  },
+  {
+    e: "💊",
+    title: "Underground Performance Stack",
+    desc: 'A shady vendor offers "focus supplements" — no prescription, questionable legality. Huge productivity boost, risky side effects.',
+    yes: "Take the stack",
+    no: "Hard pass",
+    onYes(g) {
+      if (Math.random() < 0.65) {
+        g.modStat("smarts", 10);
+        g.modStat("energy", 30);
+        app.toast("Absolute clarity. +10 Smarts, +30 Energy", "success");
+      } else {
+        g.modStat("health", -18);
+        app.toast("Nasty side effects. -18 Health", "error");
+      }
+    },
+  },
+  {
+    e: "🎁",
+    title: "Anonymous Wire Transfer",
+    desc: "$8,200 arrives in your account from an unknown sender. No explanation. You could return it — or keep it.",
+    yes: "Keep it",
+    no: "Return it (you won't)",
+    onYes(g) {
+      g.modCash(8200);
+      g.state.life.legalRecord += 0.3;
+      app.toast("$8,200 kept. Legal record: +0.3", "warning");
+    },
+    onNo(g) {
+      app.toast("You returned the mystery money. Solid citizen.", "info");
+      g.modStat("happiness", 5);
+    },
+  },
+  {
+    e: "📦",
+    title: "Black Market Hardware",
+    desc: "Someone's selling premium tech gear at 80% off — clearly stolen. Risky to buy, but the savings are insane.",
+    yes: "Buy the haul ($400)",
+    no: "Not worth it",
+    gateFn(g) {
+      return g.state.cash >= 400;
+    },
+    gateMsg: "Need $400.",
+    onYes(g) {
+      g.modCash(-400);
+      if (Math.random() < 0.7) {
+        g.modStat("smarts", 6);
+        g.modCash(1800);
+        app.toast("Flipped stolen gear for a $1,400 profit", "success");
+      } else {
+        g.modStat("health", -5);
+        app.toast("Stakeout. You barely got away.", "error");
+      }
+    },
+  },
+  {
+    e: "🗺️",
+    title: "Treasure Map — Crypto Cold Wallet",
+    desc: "You find a note with 12 seed words. It could be a real Bitcoin wallet — or a trap. No way to know without trying.",
+    yes: "Try the seed",
+    no: "Leave it",
+    onYes(g) {
+      const roll = Math.random();
+      if (roll < 0.12) {
+        const loot = 15000 + Math.random() * 50000;
+        g.modCash(loot);
+        app.toast(
+          `JACKPOT! Lost wallet with $${shortNumber(Math.round(loot))}`,
+          "epic",
+        );
+        FX.confetti();
+      } else if (roll < 0.55) {
+        app.toast("Empty. Either drained or fake.", "info");
+      } else {
+        g.modStat("health", -5);
+        g.state.life.legalRecord += 0.2;
+        app.toast(
+          "It was a phishing trap. Health & legal record hit.",
+          "error",
+        );
+      }
+    },
+  },
+  {
+    e: "💼",
+    title: "Headhunter Offer",
+    desc: "A corporate headhunter calls with an off-the-books offer: skip the interview process and start immediately at +30% salary — but it means leaving your current role.",
+    yes: "Take the offer",
+    no: "Stay put",
+    gateFn(g) {
+      return !!g.state.job;
+    },
+    gateMsg: "You need to be employed.",
+    onYes(g) {
+      const boost = Math.round((g.state.job?.salary || 40000) * 0.28);
+      g.state.job && (g.state.job.salary += boost);
+      g.modStat("happiness", 6);
+      app.toast(
+        `New salary: +$${shortNumber(boost)}/yr — no interview needed`,
+        "success",
+      );
+    },
+  },
+  {
+    e: "🎰",
+    title: "Private High-Stakes Game",
+    desc: "An invitation-only poker game. Buy-in is $3,000. High-rollers only. Winner takes the table.",
+    yes: "Buy in ($3,000)",
+    no: "Fold before you start",
+    gateFn(g) {
+      return g.state.cash >= 3000;
+    },
+    gateMsg: "Need $3,000 to enter.",
+    onYes(g) {
+      g.modCash(-3000);
+      const pot = 3000 * (3 + Math.floor(Math.random() * 5));
+      if (Math.random() < 0.35) {
+        g.modCash(pot);
+        app.toast(`You swept the table! +$${shortNumber(pot)}`, "epic");
+        FX.screenFlash("gain");
+      } else {
+        app.toast("Busted out. The house always wins — eventually.", "error");
+      }
+    },
+  },
+  {
+    e: "🦈",
+    title: "Predatory Loan Shark",
+    desc: "A loan shark offers $20,000 cash — right now, no questions. But miss a payment and things get... physical.",
+    yes: "Take the money",
+    no: "No thanks",
+    onYes(g) {
+      g.modCash(20000);
+      g.state.bank.loans = g.state.bank.loans || [];
+      g.state.bank.loans.push({
+        id: "shark_loan",
+        name: "Loan Shark Debt",
+        principal: 28000,
+        monthlyPayment: 1800,
+        monthsLeft: 18,
+        apr: 0.38,
+      });
+      g.state.life.riskDebt += 15;
+      app.toast("$20k cash, but $28k owed at 38% APR", "warning");
+    },
+  },
+  {
+    e: "📰",
+    title: "Viral Controversy",
+    desc: "A post you made years ago is circulating. You can pay a reputation firm $5,000 to bury it — or ride it out.",
+    yes: "Pay the firm ($5,000)",
+    no: "Ride it out",
+    gateFn(g) {
+      return g.state.cash >= 5000;
+    },
+    gateMsg: "Need $5,000.",
+    onYes(g) {
+      g.modCash(-5000);
+      g.modStat("happiness", 12);
+      app.toast("Crisis managed. Your image is clean.", "success");
+    },
+    onNo(g) {
+      const hit = Math.random();
+      if (hit < 0.4) {
+        g.modStat("happiness", -15);
+        if (g.state.job)
+          g.state.job.performance = Math.max(
+            0,
+            (g.state.job.performance || 0) - 20,
+          );
+        app.toast(
+          "Backlash costs you. -15 Happiness, job performance hit",
+          "error",
+        );
+      } else {
+        app.toast("Drama faded. People forgot in a week.", "info");
+      }
+    },
+  },
+  {
+    e: "🌍",
+    title: "Offshore Banking Tip",
+    desc: "An accountant whispers about a loophole: move $10k offshore and skip $3,400 in taxes — legally gray, but effective.",
+    yes: "Do it ($10,000)",
+    no: "Play it straight",
+    gateFn(g) {
+      return g.state.cash >= 10000;
+    },
+    gateMsg: "Need $10,000.",
+    onYes(g) {
+      g.modCash(-10000 + 3400);
+      g.state.life.legalRecord += 0.15;
+      app.toast("Tax savings claimed: +$3,400. Legal record: +0.15", "warning");
+    },
+  },
+];
+
+/* ─────────────────────────────────────────────────────────────────
+   30 NEW LIFE EVENTS  (pushed to existing pool)
+   ───────────────────────────────────────────────────────────────── */
+LIFE_EVENTS.push(
+  {
+    emoji: "🎤",
+    title: "Viral Moment",
+    desc: "A video of you goes viral. Followers, offers, and chaos follow.",
+    type: "epic",
+    effect(g) {
+      g.modCash(2200 + Math.random() * 4800);
+      g.modStat("happiness", 14);
+      g.state.crime &&
+        (g.state.crime.heat = Math.min(100, (g.state.crime.heat || 0) + 8));
+    },
+  },
+  {
+    emoji: "🧬",
+    title: "Health Scare",
+    desc: "A doctor finds a concerning result. You recover, but it shakes you.",
+    type: "error",
+    effect(g) {
+      g.modStat("health", -12);
+      g.modStat("happiness", -10);
+      g.modCash(-(1500 + Math.random() * 3000));
+    },
+  },
+  {
+    emoji: "📉",
+    title: "Market Panic",
+    desc: "A sudden crash wipes 20% off all market positions.",
+    type: "error",
+    effect(g) {
+      CONFIG.ASSETS.forEach((a) => {
+        const pos = g.state.assets[a.id];
+        if (pos && pos.avgPrice) pos.avgPrice *= 0.8;
+      });
+      g.modStat("happiness", -8);
+    },
+  },
+  {
+    emoji: "📊",
+    title: "Market Boom",
+    desc: "A surprise rate cut sends markets surging 15%.",
+    type: "epic",
+    effect(g) {
+      CONFIG.ASSETS.forEach((a) => {
+        const pos = g.state.assets[a.id];
+        if (pos && pos.avgPrice && (pos.owned || 0) > 0) {
+          const v = (pos.owned || 0) * pos.avgPrice * 0.15;
+          g.modCash(v > 0 ? v : 0);
+        }
+      });
+      g.modStat("happiness", 8);
+    },
+  },
+  {
+    emoji: "🏋️",
+    title: "Fitness Kick",
+    desc: "You get obsessed with working out. Health surges.",
+    type: "success",
+    effect(g) {
+      g.modStat("health", 14);
+      g.modStat("energy", 15);
+      g.modCash(-300);
+    },
+  },
+  {
+    emoji: "🔑",
+    title: "Unexpected Inheritance",
+    desc: "A distant aunt left you more than expected.",
+    type: "epic",
+    effect(g) {
+      const amt = 8000 + Math.random() * 22000;
+      g.modCash(amt);
+      g.modStat("happiness", 7);
+      app.toast(`Inheritance: +$${shortNumber(Math.round(amt))}`, "epic");
+    },
+  },
+  {
+    emoji: "🚓",
+    title: "Police Shake Down",
+    desc: "Cops roust you on suspicion. You're clean — but it costs time and dignity.",
+    type: "warning",
+    effect(g) {
+      g.modStat("happiness", -8);
+      g.modStat("energy", -15);
+      if (g.state.crime?.heat > 20)
+        g.state.crime.heat = Math.max(0, g.state.crime.heat - 10);
+    },
+  },
+  {
+    emoji: "💊",
+    title: "Chronic Burnout",
+    desc: "Months of overwork hit all at once. You crash hard.",
+    type: "error",
+    effect(g) {
+      g.modStat("health", -10);
+      g.modStat("energy", -40);
+      g.modStat("happiness", -12);
+      g.state.life.burnout = Math.min(100, (g.state.life.burnout || 0) + 15);
+    },
+  },
+  {
+    emoji: "🌅",
+    title: "Clarity Retreat",
+    desc: "A weekend alone in nature resets your mind.",
+    type: "success",
+    effect(g) {
+      g.modStat("happiness", 18);
+      g.modStat("health", 6);
+      g.state.life.chronicStress = Math.max(
+        0,
+        (g.state.life.chronicStress || 0) - 12,
+      );
+      g.modCash(-600);
+    },
+  },
+  {
+    emoji: "🎓",
+    title: "Skill Certification",
+    desc: "You completed an online course and earned a certificate.",
+    type: "success",
+    effect(g) {
+      g.modStat("smarts", 8);
+      g.modCash(-400);
+      g.modStat("happiness", 5);
+    },
+  },
+  {
+    emoji: "💬",
+    title: "Mentor Meeting",
+    desc: "An industry legend gave you their time. Priceless wisdom.",
+    type: "epic",
+    effect(g) {
+      g.modStat("smarts", 10);
+      g.modStat("happiness", 10);
+      g.registerAction(2);
+    },
+  },
+  {
+    emoji: "🍕",
+    title: "Food Poisoning",
+    desc: "Bad meal from a sketchy restaurant. You're down for a week.",
+    type: "error",
+    effect(g) {
+      g.modStat("health", -9);
+      g.modStat("energy", -30);
+      g.modStat("happiness", -6);
+    },
+  },
+  {
+    emoji: "🎮",
+    title: "Gaming Binge",
+    desc: "You lost a weekend to a game. You regret nothing.",
+    type: "info",
+    effect(g) {
+      g.modStat("happiness", 12);
+      g.modStat("energy", -20);
+      g.modStat("health", -3);
+    },
+  },
+  {
+    emoji: "🌊",
+    title: "Vacation Surprise",
+    desc: "A last-minute trip turned into the best weekend of your life.",
+    type: "success",
+    effect(g) {
+      g.modCash(-(800 + Math.random() * 1200));
+      g.modStat("happiness", 20);
+      g.modStat("health", 8);
+    },
+  },
+  {
+    emoji: "🔓",
+    title: "Account Hacked",
+    desc: "Someone drained your checking account while you slept.",
+    type: "error",
+    effect(g) {
+      const loss = Math.min(g.state.cash * 0.15, 3500);
+      g.modCash(-loss);
+      g.modStat("happiness", -12);
+    },
+  },
+  {
+    emoji: "🏆",
+    title: "Community Award",
+    desc: "You were recognized by the local chamber of commerce.",
+    type: "success",
+    effect(g) {
+      g.modStat("happiness", 12);
+      g.state.crime &&
+        (g.state.crime.heat = Math.max(0, (g.state.crime.heat || 0) - 6));
+      g.modCash(1000);
+    },
+  },
+  {
+    emoji: "🌡️",
+    title: "Heatwave",
+    desc: "An extreme heat event disrupts your routine.",
+    type: "warning",
+    effect(g) {
+      g.modStat("health", -5);
+      g.modStat("energy", -20);
+      g.modCash(-400);
+    },
+  },
+  {
+    emoji: "📬",
+    title: "Old Friend Returns",
+    desc: "A long-lost contact resurfaces with a business opportunity.",
+    type: "success",
+    effect(g) {
+      g.modCash(1500 + Math.random() * 3000);
+      g.modStat("happiness", 9);
+      g.registerAction(1);
+    },
+  },
+  {
+    emoji: "🎪",
+    title: "Festival Frenzy",
+    desc: "You splurged on VIP festival tickets. Worth every penny.",
+    type: "info",
+    effect(g) {
+      g.modCash(-1200);
+      g.modStat("happiness", 16);
+    },
+  },
+  {
+    emoji: "🚨",
+    title: "Neighborhood Crime",
+    desc: "A break-in near your place puts everyone on edge.",
+    type: "error",
+    effect(g) {
+      g.modCash(-600);
+      g.modStat("happiness", -8);
+    },
+  },
+  {
+    emoji: "💌",
+    title: "Love Letter",
+    desc: "Someone left a note under your door. You smile for days.",
+    type: "success",
+    effect(g) {
+      g.modStat("happiness", 14);
+    },
+  },
+  {
+    emoji: "🛢️",
+    title: "Gas Price Spike",
+    desc: "Fuel costs went through the roof this month.",
+    type: "warning",
+    effect(g) {
+      g.modCash(-(200 + Math.random() * 300));
+      g.modStat("happiness", -4);
+    },
+  },
+  {
+    emoji: "🦺",
+    title: "Side Job Surprise",
+    desc: "An unexpected gig paid double what you expected.",
+    type: "success",
+    effect(g) {
+      const bonus = 1800 + Math.random() * 2800;
+      g.modCash(bonus);
+      g.registerAction(2);
+    },
+  },
+  {
+    emoji: "🎯",
+    title: "Lucky Bet",
+    desc: "You made a small wager on something ridiculous — and won.",
+    type: "epic",
+    effect(g) {
+      g.modCash(3500 + Math.random() * 6500);
+      g.modStat("happiness", 10);
+    },
+  },
+  {
+    emoji: "🌀",
+    title: "Identity Crisis",
+    desc: "You question everything. Productivity tanks, clarity surfaces.",
+    type: "warning",
+    effect(g) {
+      g.modStat("happiness", -10);
+      g.modStat("smarts", 6);
+      g.state.life.greed = Math.max(0, (g.state.life.greed || 0) - 5);
+    },
+  },
+  {
+    emoji: "🤝",
+    title: "Networking Event",
+    desc: "A black-tie event led to three new contacts and two leads.",
+    type: "success",
+    effect(g) {
+      g.modCash(-500);
+      g.modStat("smarts", 4);
+      g.modStat("happiness", 6);
+      if (g.state.job)
+        g.state.job.performance = Math.min(
+          100,
+          (g.state.job.performance || 50) + 8,
+        );
+    },
+  },
+  {
+    emoji: "🎲",
+    title: "Vegas Night",
+    desc: "You caught a last-minute flight to Vegas. No regrets.",
+    type: "info",
+    effect(g) {
+      const win = Math.random() < 0.45;
+      g.modCash(win ? Math.random() * 3000 : -Math.random() * 2500);
+      g.modStat("happiness", win ? 12 : -5);
+    },
+  },
+  {
+    emoji: "🧩",
+    title: "Puzzle Solved",
+    desc: "You cracked a problem you've been stuck on for months.",
+    type: "success",
+    effect(g) {
+      g.modStat("smarts", 8);
+      g.modStat("happiness", 8);
+      g.registerAction(2);
+    },
+  },
+  {
+    emoji: "🩺",
+    title: "Free Health Screening",
+    desc: "A community clinic screened you — caught an early issue.",
+    type: "info",
+    effect(g) {
+      g.modStat("health", 7);
+      g.modStat("happiness", 5);
+    },
+  },
+  {
+    emoji: "🌋",
+    title: "Financial Volcano",
+    desc: "Every expense hit at once. Bills, rent hike, and a surprise deduction.",
+    type: "error",
+    effect(g) {
+      g.modCash(-(2200 + Math.random() * 3500));
+      g.modStat("happiness", -10);
+    },
+  },
+);
+
+/* ─────────────────────────────────────────────────────────────────
+   CHOICE-BASED LIFE EVENTS  (modal with 2 options)
+   ───────────────────────────────────────────────────────────────── */
+const CHOICE_EVENTS = [
+  {
+    emoji: "📰",
+    title: "Whistleblower Opportunity",
+    desc: "You discovered financial fraud at work. You could report it to regulators (risky, but a potential reward) or stay quiet and protect your career.",
+    optA: "Report it",
+    optB: "Stay quiet",
+    fxA(g) {
+      if (Math.random() < 0.5) {
+        g.modCash(15000 + Math.random() * 20000);
+        g.modStat("happiness", 15);
+        app.toast("Whistleblower reward: major payout!", "epic");
+        FX.confetti();
+      } else {
+        g.state.job && (g.state.job.performance = 0);
+        app.toast("Reported — but it backfired. You were pushed out.", "error");
+      }
+    },
+    fxB(g) {
+      g.modStat("happiness", -8);
+      g.state.life.greed = (g.state.life.greed || 0) + 3;
+      app.toast("You looked the other way. Greed index +3.", "warning");
+    },
+  },
+  {
+    emoji: "🤑",
+    title: "Startup Buyout Offer",
+    desc: "A corpo just offered to buy your startup for a flat $250,000. It's below market, but it's guaranteed money. Accept or hold out for more?",
+    optA: "Take the $250k",
+    optB: "Hold out",
+    gateFn(g) {
+      return (g.state.startups?.length || 0) > 0;
+    },
+    fxA(g) {
+      g.state.startups = g.state.startups || [];
+      if (g.state.startups.length > 0) {
+        g.state.startups.shift();
+        g.modCash(250000);
+        app.toast("Startup sold for $250,000!", "epic");
+        FX.confetti();
+      }
+    },
+    fxB(g) {
+      if (Math.random() < 0.4) {
+        setTimeout(
+          () => app.toast("They withdrew the offer. Nothing.", "error"),
+          200,
+        );
+      } else {
+        app.toast("Smart hold. They might come back higher.", "success");
+      }
+    },
+  },
+  {
+    emoji: "💼",
+    title: "Corporate Spy Approach",
+    desc: "A competitor wants you to leak your company's strategy. They're offering $30,000 in cash. Illegal, high risk.",
+    optA: "Take the cash",
+    optB: "Refuse",
+    fxA(g) {
+      if (Math.random() < 0.6) {
+        g.modCash(30000);
+        g.state.life.legalRecord = (g.state.life.legalRecord || 0) + 1.5;
+        app.toast("$30k received, legal record spiked", "warning");
+      } else {
+        g.state.job && (g.state.job = null);
+        g.state.life.legalRecord = (g.state.life.legalRecord || 0) + 3;
+        app.toast("Caught. Fired and under investigation.", "error");
+      }
+    },
+    fxB(g) {
+      g.modStat("happiness", 5);
+      app.toast("You refused. Your integrity is intact.", "success");
+    },
+  },
+  {
+    emoji: "🌍",
+    title: "Life-Changing Relocation",
+    desc: "A spectacular job offer just came in — from another country. 60% salary increase, but you'd leave everything behind.",
+    optA: "Relocate",
+    optB: "Stay home",
+    fxA(g) {
+      const boost = Math.round((g.state.job?.salary || 45000) * 0.6);
+      g.state.job && (g.state.job.salary += boost);
+      g.modStat("happiness", -6);
+      g.modStat("smarts", 5);
+      app.toast(`Relocated — salary +$${shortNumber(boost)}/yr`, "success");
+    },
+    fxB(g) {
+      g.modStat("happiness", 6);
+      app.toast("You stayed. Your roots run deep.", "info");
+    },
+  },
+  {
+    emoji: "🃏",
+    title: "Double or Nothing",
+    desc: "A broker calls: leverage your entire portfolio 2x for one month. If markets go up, you double gains. If down — you lose half.",
+    optA: "Double down",
+    optB: "Hold steady",
+    fxA(g) {
+      const nw = g.getNetWorth();
+      if (Math.random() < 0.5) {
+        g.modCash(nw * 0.25);
+        app.toast(
+          `Leveraged bet won! +$${shortNumber(Math.round(nw * 0.25))}`,
+          "epic",
+        );
+        FX.confetti();
+      } else {
+        const loss = Math.min(g.state.cash, nw * 0.2);
+        g.modCash(-loss);
+        app.toast(
+          `Leveraged bet lost. -$${shortNumber(Math.round(loss))}`,
+          "error",
+        );
+      }
+    },
+    fxB(g) {
+      app.toast("Patience prevails. Portfolio untouched.", "info");
+    },
+  },
+];
+
+/* ─────────────────────────────────────────────────────────────────
+   CHALLENGES MODULE
+   ───────────────────────────────────────────────────────────────── */
+const CHALLENGES = {
+  _migrate(g) {
+    const gp = g.state.gameplay;
+    if (!gp) return;
+    gp.monthlyChallenges = gp.monthlyChallenges ?? [];
+    gp.challengeSnapshot = gp.challengeSnapshot ?? {};
+    gp.challengesCompleted = gp.challengesCompleted ?? 0;
+    gp.challengeStreak = gp.challengeStreak ?? 0;
+    gp.bestChallengeStreak = gp.bestChallengeStreak ?? 0;
+  },
+
+  _snap(g) {
+    return {
+      cash: g.state.cash,
+      netWorth: g.getNetWorth(),
+      crimeActions: g.state.runStats.crimeActions,
+      marketTrades: g.state.runStats.marketTrades,
+      hustleActions: g.state.runStats.hustleActions,
+      health: g.state.stats.health,
+      happiness: g.state.stats.happiness,
+      monthsPlayed: g.state.runStats.monthsPlayed,
+      casinoHistory: g.state.casino?.history?.length || 0,
+    };
+  },
+
+  /* Called at the START of each new month — checks last month's challenges */
+  check(g) {
+    this._migrate(g);
+    const gp = g.state.gameplay;
+    if (!gp.monthlyChallenges.length || !gp.challengeSnapshot.netWorth) return;
+    const snap = gp.challengeSnapshot;
+    let completedThisMonth = 0;
+
+    gp.monthlyChallenges.forEach((ch) => {
+      if (ch.done) return;
+      const tpl = CHALLENGE_POOL.find((t) => t.id === ch.id);
+      if (!tpl) return;
+      try {
+        if (tpl.check(snap, g)) {
+          ch.done = true;
+          completedThisMonth++;
+          gp.challengesCompleted++;
+          g.modCash(tpl.reward);
+          g.state.gameplay.legendScore += tpl.leg;
+          app.toast(
+            `✅ Quest: "${tpl.title}" — +$${shortNumber(tpl.reward)}`,
+            "success",
+          );
+        }
+      } catch (e) {
+        /* guard */
+      }
+    });
+
+    const allDone = gp.monthlyChallenges.every((ch) => ch.done);
+    if (allDone && completedThisMonth > 0) {
+      gp.challengeStreak++;
+      gp.bestChallengeStreak = Math.max(
+        gp.bestChallengeStreak,
+        gp.challengeStreak,
+      );
+      const bonus = 2000 * gp.challengeStreak;
+      g.modCash(bonus);
+      g.state.gameplay.legendScore += 8;
+      FX.confetti();
+      FX.milestoneOverlay(
+        "🏅 All Quests Cleared!",
+        `Streak x${gp.challengeStreak} — Bonus +$${shortNumber(bonus)}`,
+      );
+    } else if (completedThisMonth === 0 && gp.monthlyChallenges.length) {
+      gp.challengeStreak = 0; // reset streak on missed month
+    }
+  },
+
+  /* Generate 3 new challenges for the coming month */
+  generate(g) {
+    this._migrate(g);
+    const gp = g.state.gameplay;
+
+    // Pick one from each difficulty tier: easy (reward<1000), med (1000-2500), hard (2500+)
+    const easy = CHALLENGE_POOL.filter((t) => t.reward < 1000);
+    const med = CHALLENGE_POOL.filter(
+      (t) => t.reward >= 1000 && t.reward < 2500,
+    );
+    const hard = CHALLENGE_POOL.filter((t) => t.reward >= 2500);
+
+    const pick = (pool, exclude) => {
+      const filtered = pool.filter((t) => !exclude.includes(t.id));
+      return filtered[Math.floor(Math.random() * filtered.length)];
+    };
+
+    const selected = [];
+    const e = pick(easy, []);
+    if (e) selected.push(e);
+    const m = pick(
+      med,
+      selected.map((t) => t.id),
+    );
+    if (m) selected.push(m);
+    const h = pick(
+      hard,
+      selected.map((t) => t.id),
+    );
+    if (h) selected.push(h);
+
+    gp.monthlyChallenges = selected.map((t) => ({ id: t.id, done: false }));
+    gp.challengeSnapshot = this._snap(g);
+  },
+
+  render() {
+    const el = document.getElementById("quest-list");
+    if (!el) return;
+    const g = game;
+    if (!g.state?.gameplay?.monthlyChallenges?.length) {
+      el.innerHTML =
+        '<div style="color:var(--text-dim);font-size:0.78rem;padding:4px 0">Next month will reveal your quests.</div>';
+      return;
+    }
+    const gp = g.state.gameplay;
+    const snap = gp.challengeSnapshot || {};
+    el.innerHTML = gp.monthlyChallenges
+      .map((ch) => {
+        const tpl = CHALLENGE_POOL.find((t) => t.id === ch.id);
+        if (!tpl) return "";
+        let done = ch.done;
+        if (!done) {
+          try {
+            done = tpl.check(snap, g);
+          } catch (e) {
+            done = false;
+          }
+        }
+        return `<div class="quest-item ${done ? "quest-done" : ""}">
+        <span class="quest-e">${tpl.e}</span>
+        <div class="quest-body">
+          <div class="quest-title">${tpl.title}</div>
+          <div class="quest-desc">${tpl.desc}</div>
+        </div>
+        <div class="quest-reward ${done ? "quest-reward-done" : ""}">
+          ${done ? '<i class="fa-solid fa-check"></i>' : "$" + shortNumber(tpl.reward)}
+        </div>
+      </div>`;
+      })
+      .join("");
+
+    // update mobile quest badge
+    const badge = document.getElementById("quest-count-badge");
+    if (badge) {
+      const done = gp.monthlyChallenges.filter((ch) => {
+        if (ch.done) return true;
+        const tpl = CHALLENGE_POOL.find((t) => t.id === ch.id);
+        try {
+          return tpl && tpl.check(snap, g);
+        } catch (e) {
+          return false;
+        }
+      }).length;
+      const total = gp.monthlyChallenges.length;
+      badge.textContent = `${done}/${total}`;
+      badge.className = `quest-count-badge ${done === total ? "quest-all-done" : ""}`;
+    }
+
+    // quest streak badge
+    const streak = document.getElementById("quest-streak-badge");
+    if (streak && gp.challengeStreak > 0) {
+      streak.textContent = `🔥${gp.challengeStreak}`;
+    } else if (streak) {
+      streak.textContent = "";
+    }
+  },
+};
+
+/* ─────────────────────────────────────────────────────────────────
+   PRESTIGE / LEGACY SYSTEM
+   ───────────────────────────────────────────────────────────────── */
+const PRESTIGE = {
+  PERKS: [
+    {
+      id: "silver_spoon",
+      e: "🥄",
+      name: "Silver Spoon",
+      desc: "Start your next life with 3× the starting cash. Old money never dies.",
+      apply(g) {
+        g.state.cash *= 3;
+      },
+    },
+    {
+      id: "prodigy",
+      e: "🧠",
+      name: "Prodigy",
+      desc: "+20 starting Smarts. You were born different.",
+      apply(g) {
+        g.state.stats.smarts = Math.min(100, g.state.stats.smarts + 20);
+      },
+    },
+    {
+      id: "street_cred",
+      e: "🗡️",
+      name: "Street Cred",
+      desc: "Start with 150 Crime Rep — the streets already know your name.",
+      apply(g) {
+        g.state.crime.rep = 150;
+      },
+    },
+    {
+      id: "trust_fund",
+      e: "💵",
+      name: "Trust Fund",
+      desc: "Receive $1,200/month passive income from family inheritance. Forever.",
+      apply(g) {
+        g.state.prestige = g.state.prestige || {};
+        g.state.prestige.trustFund = true;
+      },
+    },
+    {
+      id: "iron_will",
+      e: "🔥",
+      name: "Iron Will",
+      desc: "Start with maxed Health & Energy. Minimum health floor: 25.",
+      apply(g) {
+        g.state.stats.health = 100;
+        g.state.stats.energy = 100;
+        g.state.prestige = g.state.prestige || {};
+        g.state.prestige.ironWill = true;
+      },
+    },
+    {
+      id: "connected",
+      e: "🤝",
+      name: "Connected",
+      desc: "Skip interviews — start with a senior Software Engineer role ($125k).",
+      apply(g) {
+        g.state.prestige = g.state.prestige || {};
+        g.state.prestige.connected = true;
+        // Auto-assign a senior tech position (level index 2 in the "tech" track)
+        const track = CONFIG.CAREERS.find((t) => t.id === "tech");
+        const levelIdx = track ? Math.min(2, track.levels.length - 1) : 0;
+        const baseSalary =
+          track && track.levels[levelIdx]
+            ? track.levels[levelIdx].salary
+            : 125000;
+        g.state.job = {
+          trackId: "tech",
+          level: levelIdx,
+          performance: 50,
+          politics: 10,
+          salary: baseSalary,
+          stress: 0,
+        };
+      },
+    },
+  ],
+
+  load() {
+    try {
+      return JSON.parse(localStorage.getItem("GreedigoPrestige") || "{}");
+    } catch (e) {
+      return {};
+    }
+  },
+
+  save(data) {
+    try {
+      localStorage.setItem("GreedigoPrestige", JSON.stringify(data));
+    } catch (e) {}
+  },
+
+  getTotalRuns() {
+    const d = this.load();
+    return d.totalRuns || 0;
+  },
+
+  injectToEndingPanel(g) {
+    const panel = document.getElementById("ending-panel");
+    if (!panel || !panel.innerHTML || panel.querySelector(".prestige-block"))
+      return;
+    const pData = this.load();
+    const runs = (pData.totalRuns || 0) + 1;
+    const activePerk = pData.perk
+      ? this.PERKS.find((p) => p.id === pData.perk)
+      : null;
+
+    // Increment total runs once per game end
+    if (!g.state.life._prestigeCounted) {
+      g.state.life._prestigeCounted = true;
+      pData.totalRuns = runs;
+      this.save(pData);
+    }
+
+    const block = document.createElement("div");
+    block.className = "prestige-block";
+    block.innerHTML = `
+      <div class="prestige-title"><i class="fa-solid fa-infinity"></i> Legacy Continues — Run #${runs}</div>
+      ${activePerk ? `<div class="prestige-active-perk">Active Legacy: ${activePerk.e} <strong>${activePerk.name}</strong></div>` : ""}
+      <div class="prestige-subtitle">Before starting over, lock in a Legacy Perk that carries into your next life.</div>
+      <button class="prestige-btn" onclick="PRESTIGE.showPicker()"><i class="fa-solid fa-seedling"></i> Choose Your Legacy</button>
+    `;
+
+    const foot = panel.querySelector(".ending-foot");
+    if (foot) panel.insertBefore(block, foot);
+    else panel.appendChild(block);
+  },
+
+  showPicker() {
+    // Pick 3 random perks to offer
+    const shuffled = [...this.PERKS]
+      .sort(() => Math.random() - 0.5)
+      .slice(0, 3);
+    const pData = this.load();
+    const rows = shuffled
+      .map(
+        (p) => `
+      <div class="perk-card ${pData.perk === p.id ? "perk-active" : ""}" onclick="PRESTIGE.selectPerk('${p.id}')">
+        <div class="perk-emoji">${p.e}</div>
+        <div class="perk-info">
+          <div class="perk-name">${p.name}</div>
+          <div class="perk-desc">${p.desc}</div>
+        </div>
+        ${pData.perk === p.id ? '<i class="fa-solid fa-check perk-check"></i>' : ""}
+      </div>`,
+      )
+      .join("");
+
+    app.modal(
+      "🌿 Choose Your Legacy Perk",
+      `<div class="perk-list">${rows}</div>
+       <div style="font-size:0.76rem;color:var(--text-dim);margin-top:12px;text-align:center;">This bonus carries into your NEXT run.</div>`,
+      [
+        {
+          text: "Start New Timeline →",
+          cb() {
+            app.closeModal();
+            game.startNewTimeline();
+          },
+        },
+      ],
+    );
+  },
+
+  selectPerk(id) {
+    const pData = this.load();
+    pData.perk = id;
+    this.save(pData);
+    // Re-render perk cards
+    document.querySelectorAll(".perk-card").forEach((c) => {
+      c.classList.toggle(
+        "perk-active",
+        c.getAttribute("onclick")?.includes(id),
+      );
+    });
+    const perk = this.PERKS.find((p) => p.id === id);
+    app.toast(`Legacy locked: ${perk?.e} ${perk?.name}`, "success");
+  },
+
+  apply(g) {
+    const pData = this.load();
+    if (!pData.perk) return;
+    const perk = this.PERKS.find((p) => p.id === pData.perk);
+    if (perk) {
+      perk.apply(g);
+      g.state.prestige = g.state.prestige || {};
+      g.state.prestige.activePerk = pData.perk;
+      g.state.prestige.run = pData.totalRuns || 1;
+      setTimeout(
+        () => app.toast(`Legacy active: ${perk.e} ${perk.name}`, "epic"),
+        2000,
+      );
+    }
+    // Increment prestige run counter
+    g.state.gameplay.prestigeRun = pData.totalRuns || 0;
+  },
+};
+
+/* ─────────────────────────────────────────────────────────────────
+   RIVAL NPC SYSTEM
+   ───────────────────────────────────────────────────────────────── */
+const RIVAL = {
+  NAMES: [
+    "Riley Chen",
+    "Marcus Webb",
+    "Priya Nair",
+    "Jake Holloway",
+    "Sofia Reyes",
+    "Aiden Park",
+    "Layla Brooks",
+    "Ethan Cruz",
+  ],
+  TAUNTS: [
+    "Your rival just lapped you. \uD83D\uDE0F",
+    "They said your name at their party — as a cautionary tale.",
+    "Rival Update: they just bought what you couldn't afford.",
+    "Heard your rival closed a seven-figure deal. You?",
+    "Your rival doesn't even know you exist anymore.",
+  ],
+  PRAISES: [
+    "You're ahead of your rival now. They're studying YOUR moves.",
+    "Rival left on read. They can't keep up.",
+    "Word is your rival is nervous. They should be.",
+    "Your rival asked around about you. The answer impressed them.",
+  ],
+
+  init(g) {
+    if (g.state.rival) return;
+    const name = this.NAMES[Math.floor(Math.random() * this.NAMES.length)];
+    g.state.rival = {
+      name,
+      netWorth: g.getNetWorth() * (0.9 + Math.random() * 0.3),
+      growthRate: 0.012 + Math.random() * 0.012, // 1.2% – 2.4% monthly
+      taunts: 0,
+      wasAhead: false,
+    };
+  },
+
+  tick(g) {
+    if (!g.state.rival) this.init(g);
+    const rv = g.state.rival;
+    // Rival grows by growthRate +/- variance
+    const growth = rv.growthRate * (0.6 + Math.random() * 0.8);
+    rv.netWorth = Math.max(500, rv.netWorth * (1 + growth));
+
+    const playerNW = g.getNetWorth();
+    const rivalAhead = rv.netWorth > playerNW;
+
+    if (rivalAhead && !rv.wasAhead && Math.random() < 0.35) {
+      app.toast(
+        this.TAUNTS[Math.floor(Math.random() * this.TAUNTS.length)],
+        "warning",
+      );
+      rv.taunts++;
+    } else if (!rivalAhead && rv.wasAhead) {
+      app.toast(
+        this.PRAISES[Math.floor(Math.random() * this.PRAISES.length)],
+        "success",
+      );
+    }
+    rv.wasAhead = rivalAhead;
+  },
+
+  render() {
+    const el = document.getElementById("rival-nw");
+    const nameEl = document.getElementById("rival-name");
+    const msgEl = document.getElementById("rival-msg");
+    const panelEl = document.getElementById("rival-panel");
+    if (!el) return;
+    const rv = game.state?.rival;
+    if (!rv) {
+      if (panelEl) panelEl.style.display = "none";
+      return;
+    }
+    if (panelEl) panelEl.style.display = "";
+    if (nameEl) nameEl.textContent = rv.name;
+
+    const playerNW = game.getNetWorth();
+    const diff = playerNW - rv.netWorth;
+    const pct =
+      rv.netWorth > 0 ? Math.abs((diff / rv.netWorth) * 100).toFixed(1) : "0";
+    el.textContent = "$" + shortNumber(Math.round(rv.netWorth));
+    el.style.color = diff > 0 ? "#34d399" : "#f87171";
+
+    if (msgEl) {
+      if (diff > 0) {
+        msgEl.innerHTML = `<i class="fa-solid fa-arrow-up" style="color:#34d399"></i> You're +${pct}% ahead`;
+        msgEl.style.color = "#34d399";
+      } else {
+        msgEl.innerHTML = `<i class="fa-solid fa-arrow-down" style="color:#f87171"></i> You're ${pct}% behind`;
+        msgEl.style.color = "#f87171";
+      }
+    }
+  },
+};
+
+/* ─────────────────────────────────────────────────────────────────
+   25 NEW ACHIEVEMENTS
+   ───────────────────────────────────────────────────────────────── */
+const NEW_ACHIEVEMENTS = [
+  {
+    id: "first_job",
+    title: "First Paycheck",
+    points: 8,
+    reward: 300,
+    check() {
+      return !!game.state.job;
+    },
+  },
+  {
+    id: "ten_million",
+    title: "Eight Figures",
+    points: 90,
+    reward: 50000,
+    check() {
+      return game.getNetWorth() >= 10000000;
+    },
+  },
+  {
+    id: "billionaire",
+    title: "Billionaire Club",
+    points: 150,
+    reward: 200000,
+    check() {
+      return game.getNetWorth() >= 1000000000;
+    },
+  },
+  {
+    id: "ceo_reached",
+    title: "C-Suite",
+    points: 55,
+    reward: 15000,
+    check() {
+      return game.state.job?.trackId === "corp" && game.state.job?.level >= 4;
+    },
+  },
+  {
+    id: "chief_surgery",
+    title: "In Your Hands",
+    points: 50,
+    reward: 12000,
+    check() {
+      return game.state.job?.trackId === "med" && game.state.job?.level >= 4;
+    },
+  },
+  {
+    id: "dist_engineer",
+    title: "Distinguished",
+    points: 55,
+    reward: 12000,
+    check() {
+      return game.state.job?.trackId === "tech" && game.state.job?.level >= 5;
+    },
+  },
+  {
+    id: "married_once",
+    title: "Til Death",
+    points: 15,
+    reward: 1500,
+    check() {
+      return game.state.relationship?.status === "married";
+    },
+  },
+  {
+    id: "full_house",
+    title: "Full House",
+    points: 20,
+    reward: 2500,
+    check() {
+      return (game.state.relationship?.children?.length || 0) >= 3;
+    },
+  },
+  {
+    id: "senator_title",
+    title: "Senator",
+    points: 60,
+    reward: 18000,
+    check() {
+      return game.state.politics?.role === "senator";
+    },
+  },
+  {
+    id: "cartel_boss",
+    title: "Cartel Boss",
+    points: 80,
+    reward: 40000,
+    check() {
+      return game.state.drug?.tier === "cartel";
+    },
+  },
+  {
+    id: "lone_wolf",
+    title: "Lone Wolf",
+    points: 15,
+    reward: 1200,
+    check() {
+      return (
+        game.state.life.retired &&
+        game.state.relationship?.status === "single" &&
+        game.state.relationship?.fights === 0
+      );
+    },
+  },
+  {
+    id: "moon_wallet",
+    title: "Moon Wallet",
+    points: 45,
+    reward: 10000,
+    check() {
+      const btc = game.state.assets.btc;
+      return btc && (btc.owned || 0) * (btc.avgPrice || 0) >= 500000;
+    },
+  },
+  {
+    id: "iron_constitution",
+    title: "Iron Constitution",
+    points: 25,
+    reward: 3000,
+    check() {
+      return (
+        (game.state.runStats.monthsPlayed || 0) >= 12 &&
+        game.state.stats.health >= 60
+      );
+    },
+  },
+  {
+    id: "quest_master",
+    title: "Quest Master",
+    points: 30,
+    reward: 4000,
+    check() {
+      return (game.state.gameplay?.challengeStreak || 0) >= 3;
+    },
+  },
+  {
+    id: "jailbird",
+    title: "Prison Veteran",
+    points: 18,
+    reward: 1500,
+    check() {
+      return (game.state.prison?.monthsServed || 0) >= 24;
+    },
+  },
+  {
+    id: "clean_money",
+    title: "Clean Money",
+    points: 65,
+    reward: 20000,
+    check() {
+      return (
+        game.getNetWorth() >= 1000000 &&
+        (game.state.bank?.loans?.length || 0) === 0 &&
+        (game.state.edu?.loans || 0) < 100
+      );
+    },
+  },
+  {
+    id: "young_money",
+    title: "Young Money",
+    points: 40,
+    reward: 6000,
+    check() {
+      return game.state.age / 12 <= 28 && game.getNetWorth() >= 100000;
+    },
+  },
+  {
+    id: "portfolio_pro",
+    title: "Portfolio Pro",
+    points: 20,
+    reward: 2000,
+    check() {
+      return (
+        CONFIG.ASSETS.filter((a) => (game.state.assets[a.id]?.owned || 0) > 0)
+          .length >= 5
+      );
+    },
+  },
+  {
+    id: "prestige_1",
+    title: "Transcended",
+    points: 30,
+    reward: 5000,
+    check() {
+      return (game.state.gameplay?.prestigeRun || 0) >= 1;
+    },
+  },
+  {
+    id: "prestige_3",
+    title: "Reborn Thrice",
+    points: 60,
+    reward: 12000,
+    check() {
+      return (game.state.gameplay?.prestigeRun || 0) >= 3;
+    },
+  },
+  {
+    id: "full_send",
+    title: "Full Send",
+    points: 35,
+    reward: 5000,
+    check() {
+      const gp = game.state.gameplay;
+      if (!gp?.challengeSnapshot) return false;
+      const s = gp.challengeSnapshot;
+      const rs = game.state.runStats;
+      return (
+        rs.crimeActions - s.crimeActions >= 1 &&
+        rs.hustleActions - s.hustleActions >= 1 &&
+        rs.marketTrades - s.marketTrades >= 1
+      );
+    },
+  },
+  {
+    id: "flash_accepted",
+    title: "Opportunity Seeker",
+    points: 12,
+    reward: 1000,
+    check() {
+      return (game.state.life.flashEventsAccepted || 0) >= 3;
+    },
+  },
+  {
+    id: "law_abiding",
+    title: "Law Abiding",
+    points: 20,
+    reward: 2500,
+    check() {
+      return (
+        game.state.age / 12 >= 40 &&
+        (game.state.life.legalRecord || 0) < 0.1 &&
+        (game.state.crime?.rep || 0) < 5
+      );
+    },
+  },
+  {
+    id: "challenge_50",
+    title: "Quest Veteran",
+    points: 40,
+    reward: 5000,
+    check() {
+      return (game.state.gameplay?.challengesCompleted || 0) >= 50;
+    },
+  },
+  {
+    id: "rival_crusher",
+    title: "Rival Crusher",
+    points: 28,
+    reward: 4000,
+    check() {
+      const rv = game.state.rival;
+      return rv && game.getNetWorth() >= rv.netWorth * 2;
+    },
+  },
+];
+
+/* ─────────────────────────────────────────────────────────────────
+   WIRE IN NEW ACHIEVEMENTS via monkey-patch
+   ───────────────────────────────────────────────────────────────── */
+(function () {
+  const orig = game.getAchievementDefinitions.bind(game);
+  game.getAchievementDefinitions = function () {
+    const defs = orig();
+    NEW_ACHIEVEMENTS.forEach((na) => {
+      if (!defs.find((d) => d.id === na.id)) defs.push(na);
+    });
+    return defs;
+  };
+})();
+
+/* ─────────────────────────────────────────────────────────────────
+   CHOICE EVENT TRIGGER  (attaches to game)
+   ───────────────────────────────────────────────────────────────── */
+game.triggerChoiceEvent = function () {
+  const available = CHOICE_EVENTS.filter((e) => !e.gateFn || e.gateFn(this));
+  if (!available.length) return;
+  const evt = available[Math.floor(Math.random() * available.length)];
+  app.modal(`${evt.emoji} ${evt.title}`, evt.desc, [
+    {
+      text: evt.optA,
+      cb: () => {
+        evt.fxA && evt.fxA(this);
+        app.closeModal();
+      },
+    },
+    {
+      text: evt.optB,
+      style: "secondary",
+      cb: () => {
+        evt.fxB && evt.fxB(this);
+        app.closeModal();
+      },
+    },
+  ]);
+};
+
+/* ─────────────────────────────────────────────────────────────────
+   PATCH nextMonth — wire everything in
+   ───────────────────────────────────────────────────────────────── */
+(function () {
+  const orig = game.nextMonth.bind(game);
+  game.nextMonth = function () {
+    // --- 1. Challenges: check last month, then generate new batch for this month ---
+    if (!this.state.life.dead && !this.state.life.retired && !this.state.jail) {
+      if (this.state.gameplay?.monthlyChallenges?.length) {
+        CHALLENGES.check(this);
+      }
+      CHALLENGES.generate(this); // always fresh challenges each month
+    }
+
+    // --- 2. Rival tick ---
+    if (!this.state.life.dead && !this.state.life.retired) {
+      RIVAL.init(this);
+      RIVAL.tick(this);
+    }
+
+    // --- 3. Run the month ---
+    const _wasInJail = (this.state.jail || 0) > 0;
+    orig.call(this);
+    if (_wasInJail) return; // skip post-month processing during jail
+
+    // --- 4. Trust Fund passive (prestige perk) ---
+    if (this.state.prestige?.trustFund && !this.state.life.dead) {
+      this.modCash(1200);
+      app.log("Trust fund: +$1,200 family income.");
+    }
+
+    // --- 5. Iron Will floor ---
+    if (this.state.prestige?.ironWill && !this.state.life.dead) {
+      if (this.state.stats.health < 25) this.state.stats.health = 25;
+    }
+
+    // --- 6. Flash opportunity (6% chance) ---
+    if (
+      !this.state.life.dead &&
+      !this.state.life.retired &&
+      !this.state.jail &&
+      Math.random() < 0.06
+    ) {
+      const avail = FLASH_EVENTS.filter((e) => !e.gateFn || e.gateFn(this));
+      if (avail.length) {
+        const fe = avail[Math.floor(Math.random() * avail.length)];
+        const gSelf = this;
+        app.modal(`⚡ ${fe.title}`, fe.desc, [
+          {
+            text: fe.yes,
+            cb() {
+              if (fe.gateFn && !fe.gateFn(gSelf)) {
+                app.toast(fe.gateMsg || "Requirements not met.", "warning");
+                app.closeModal();
+                return;
+              }
+              fe.onYes && fe.onYes(gSelf);
+              gSelf.state.life.flashEventsAccepted =
+                (gSelf.state.life.flashEventsAccepted || 0) + 1;
+              gSelf.registerAction(1);
+              app.closeModal();
+            },
+          },
+          {
+            text: fe.no,
+            style: "secondary",
+            cb() {
+              fe.onNo && fe.onNo(gSelf);
+              app.closeModal();
+            },
+          },
+        ]);
+      }
+    }
+
+    // --- 7. Rare choice event (4% chance) ---
+    if (
+      !this.state.life.dead &&
+      !this.state.life.retired &&
+      !this.state.jail &&
+      Math.random() < 0.04
+    ) {
+      this.triggerChoiceEvent();
+    }
+
+    // --- 8. Generate challenges on first month ---
+    if (
+      !this.state.life.dead &&
+      !this.state.life.retired &&
+      !this.state.gameplay?.monthlyChallenges?.length
+    ) {
+      CHALLENGES.generate(this);
+    }
+  };
+})();
+
+/* ─────────────────────────────────────────────────────────────────
+   PATCH startNewTimeline  — apply prestige perk at game start
+   ───────────────────────────────────────────────────────────────── */
+(function () {
+  const orig = game.startNewTimeline.bind(game);
+  game.startNewTimeline = function () {
+    orig.call(this);
+    // Apply prestige perk after reset (charCreation will re-init anyway, so we hook charCreation.onConfirm)
+    this._applyPrestigeOnNextStart = true;
+  };
+})();
+
+/* Hook charCreation.start to apply prestige immediately after character is created */
+(function () {
+  const origStart = charCreation.start.bind(charCreation);
+  charCreation.start = function () {
+    const shouldApply = !!game._applyPrestigeOnNextStart;
+    if (!shouldApply) {
+      origStart();
+      return;
+    }
+
+    // Intercept the one-shot 650ms setTimeout that charCreation.start uses
+    // to launch the game, so we can apply prestige perks before the first renderAll.
+    const origSetTimeout = window.setTimeout;
+    let intercepted = false;
+    window.setTimeout = function (fn, delay) {
+      if (!intercepted && delay === 650 && typeof fn === "function") {
+        intercepted = true;
+        window.setTimeout = origSetTimeout; // restore immediately
+        return origSetTimeout(function () {
+          fn(); // runs: initializeAssets, saveGame, renderAll, activateView, etc.
+          game._applyPrestigeOnNextStart = false;
+          PRESTIGE.apply(game);
+          RIVAL.init(game);
+          game.renderAll(); // re-render so perk values are visible from the start
+        }, delay);
+      }
+      return origSetTimeout(fn, delay);
+    };
+    origStart();
+    // Safety: restore in case no 650ms setTimeout was registered
+    window.setTimeout = origSetTimeout;
+  };
+})();
+
+/* ─────────────────────────────────────────────────────────────────
+   PATCH renderAll  — inject challenges, rival, prestige panel
+   ───────────────────────────────────────────────────────────────── */
+(function () {
+  const orig = game.renderAll.bind(game);
+  game.renderAll = function () {
+    orig.call(this);
+    if (this.state?.life?.dead || this.state?.life?.retired) {
+      PRESTIGE.injectToEndingPanel(this);
+    }
+    CHALLENGES.render();
+    RIVAL.render();
+  };
+})();

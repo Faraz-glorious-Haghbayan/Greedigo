@@ -6,11 +6,11 @@
     <title>Greedigo: The Free Wealth Simulator Game</title>
     <meta
       name="description"
-      content="The Free Wealth Simulator Game. Start at 18, build wealth through careers, crime, markets, and startups. Trade stocks, run for senator, gamble at the casino — all free in your browser."
+      content="The Free Wealth Simulator Game. Start at 18, build wealth through careers, markets, and startups. Trade stocks, run for senator, gamble at the casino — all free in your browser."
     />
     <meta
       name="keywords"
-      content="life simulator, free browser game, wealth building game, career simulator, crime game, casino game, stock trading game, tycoon game, text game"
+      content="life simulator, free browser game, wealth building game, career simulator, casino game, stock trading game, tycoon game, text game"
     />
     <meta name="author" content="The Choice Engine Studios" />
     <meta name="robots" content="index, follow" />
@@ -155,9 +155,6 @@
         <div class="title-showcase" id="title-showcase">
           <div class="showcase-card sc-wealth">
             <i class="fa-solid fa-coins"></i><span>Wealth</span>
-          </div>
-          <div class="showcase-card sc-crime">
-            <i class="fa-solid fa-user-secret"></i><span>Crime</span>
           </div>
           <div class="showcase-card sc-casino">
             <i class="fa-solid fa-dice-d6"></i><span>Casino</span>
@@ -505,14 +502,49 @@
               <span id="hud-pets">0</span>
             </div>
           </div>
+
+          <!-- ═══ MONTHLY QUESTS ═══ -->
+          <div class="quest-panel" id="quest-panel">
+            <div class="hud-title">
+              <i class="fa-solid fa-scroll" style="color: #f59e0b"></i> Monthly
+              Quests
+              <span class="quest-streak" id="quest-streak-badge"></span>
+            </div>
+            <div id="quest-list">
+              <div
+                style="
+                  color: var(--text-dim);
+                  font-size: 0.78rem;
+                  padding: 4px 0;
+                "
+              >
+                Advance a month to reveal quests.
+              </div>
+            </div>
+          </div>
+
+          <!-- ═══ RIVAL ═══ -->
+          <div class="rival-panel" id="rival-panel" style="display: none">
+            <div class="hud-title">
+              <i class="fa-solid fa-user-ninja" style="color: #f87171"></i>
+              Rival: <span id="rival-name">—</span>
+            </div>
+            <div class="hud-row">
+              <span>Their Net Worth</span>
+              <span
+                id="rival-nw"
+                style="font-family: var(--font-mono); font-weight: 700"
+                >$0</span
+              >
+            </div>
+            <div class="rival-msg" id="rival-msg"></div>
+          </div>
         </aside>
 
         <main class="main-area">
           <!-- ═══ Mobile Top Bar ═══ -->
           <div class="mobile-top-bar" id="mobile-top-bar">
-            <button class="mtb-btn" onclick="app.toggleMobileNav()">
-              <i class="fa-solid fa-bars" id="mobile-nav-icon"></i>
-            </button>
+            <div class="mtb-brand">GG</div>
             <div class="mtb-info">
               <span class="mtb-name" id="mtb-name">Player</span>
               <span class="mtb-dot">&middot;</span>
@@ -617,6 +649,7 @@
           ></div>
           <nav class="nav-tabs" id="nav-tabs">
             <div class="nav-close-btn" onclick="app.closeMobileNav()">
+              <span>ALL VIEWS</span>
               <i class="fa-solid fa-xmark"></i>
             </div>
             <div class="nav-item active" onclick="app.setView('career')">
@@ -646,14 +679,14 @@
             <div class="nav-item" onclick="app.setView('travel')">
               <i class="fa-solid fa-plane-departure"></i> Travel
             </div>
-            <div class="nav-item" onclick="app.setView('crime')">
-              <i class="fa-solid fa-mask"></i> Crime
-            </div>
             <div class="nav-item" onclick="app.setView('relationships')">
               <i class="fa-solid fa-heart"></i> Social
             </div>
             <div class="nav-item" onclick="app.setView('casino')">
               <i class="fa-solid fa-dice"></i> Casino
+            </div>
+            <div class="nav-item" onclick="app.setView('crime')">
+              <i class="fa-solid fa-skull-crossbones"></i> Crime
             </div>
             <div class="nav-item" onclick="app.setView('politics')">
               <i class="fa-solid fa-scale-balanced"></i> Politics
@@ -853,25 +886,60 @@
           </div>
 
           <div id="view-market" class="view-container">
-            <div class="view-hero">
-              <img
-                class="view-hero-img"
-                src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=1400&h=560&fit=crop&auto=format"
-                alt=""
-                loading="lazy"
-              />
-              <div class="view-hero-overlay"></div>
-              <div class="view-hero-content">
-                <i class="fa-solid fa-arrow-trend-up"></i>
-                <h2>Global Markets</h2>
+            <!-- Scrolling ticker tape -->
+            <div class="mkt-tape">
+              <div class="mkt-tape-track" id="mkt-tape-track"></div>
+            </div>
+
+            <div class="mkt-body">
+              <!-- Top row: chart + portfolio -->
+              <div class="mkt-top-row">
+                <div class="mkt-chart-panel">
+                  <div class="mkt-chart-hd">
+                    <div class="mkt-chart-label">
+                      <span id="mkt-chart-name" class="mkt-chart-name"
+                        >S&amp;P 500 ETF</span
+                      >
+                      <span id="mkt-chart-ticker" class="mkt-chart-ticker"
+                        >SPY</span
+                      >
+                    </div>
+                    <div class="mkt-chart-price-block">
+                      <span id="mkt-chart-price" class="mkt-chart-price"
+                        >$450</span
+                      >
+                      <span id="mkt-chart-chg" class="mkt-chart-chg gain"
+                        >▲ +0.00%</span
+                      >
+                    </div>
+                  </div>
+                  <canvas id="market-chart"></canvas>
+                </div>
+                <div class="mkt-port-card" id="mkt-port-card"></div>
               </div>
-            </div>
 
-            <div class="chart-box">
-              <canvas id="market-chart"></canvas>
-            </div>
+              <!-- Filter tabs -->
+              <div class="mkt-tabs-bar">
+                <button class="mkt-tab active" onclick="mktFilter('all', this)">
+                  All
+                </button>
+                <button class="mkt-tab" onclick="mktFilter('index', this)">
+                  Indices
+                </button>
+                <button class="mkt-tab" onclick="mktFilter('stock', this)">
+                  Stocks
+                </button>
+                <button class="mkt-tab" onclick="mktFilter('crypto', this)">
+                  Crypto
+                </button>
+                <button class="mkt-tab" onclick="mktFilter('comm', this)">
+                  Commodities
+                </button>
+              </div>
 
-            <div class="grid-cards" id="market-list"></div>
+              <!-- Asset list -->
+              <div class="mkt-asset-grid" id="market-list"></div>
+            </div>
           </div>
 
           <div id="view-lifestyle" class="view-container">
@@ -998,74 +1066,6 @@
             <div class="grid-cards" id="bank-active-loans"></div>
           </div>
 
-          <div id="view-crime" class="view-container">
-            <div class="view-hero">
-              <img
-                class="view-hero-img"
-                src="crime.png"
-                alt=""
-                loading="lazy"
-              />
-              <div class="view-hero-overlay"></div>
-              <div class="view-hero-content">
-                <i class="fa-solid fa-skull-crossbones"></i>
-                <div>
-                  <h2>The Underworld</h2>
-                  <div
-                    style="
-                      font-size: 0.88rem;
-                      color: rgba(255, 255, 255, 0.45);
-                      margin-top: 4px;
-                      font-weight: 500;
-                    "
-                  >
-                    Rise through the ranks. Control the streets. Build your
-                    empire.
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- CRIME HUD -->
-            <div class="crime-hud" id="crime-hud">
-              <!-- injected by JS -->
-            </div>
-
-            <!-- DRUG LORD EMPIRE -->
-            <div class="crime-section-label">
-              <i class="fa-solid fa-flask-vial"></i>Drug Empire
-            </div>
-            <div id="drug-empire-panel" class="grid-cards"></div>
-
-            <!-- CRIMINAL SKILLS -->
-            <div class="crime-section-label">
-              <i class="fa-solid fa-dumbbell"></i>Criminal Skills
-            </div>
-            <div
-              id="crime-skills-list"
-              class="grid-cards crime-skills-grid"
-            ></div>
-
-            <!-- LEGAL DEFENSE -->
-            <div class="crime-section-label">
-              <i class="fa-solid fa-scale-balanced"></i>Legal Defense
-            </div>
-            <div id="lawyer-list" class="grid-cards"></div>
-
-            <!-- CRIMINAL OPERATIONS -->
-            <div class="crime-section-label">
-              <i class="fa-solid fa-mask"></i>Criminal Operations
-            </div>
-            <div class="crime-ops-notice" id="crime-ops-notice">
-              <i class="fa-solid fa-triangle-exclamation"></i>
-              <span
-                >Heat increases bust chance — train skills &amp; hire a lawyer
-                to tilt the odds.</span
-              >
-            </div>
-            <div class="grid-cards" id="crime-list"></div>
-          </div>
-
           <div id="view-casino" class="view-container">
             <div class="view-hero">
               <img
@@ -1108,6 +1108,60 @@
             <div id="casino-session-log"></div>
           </div>
 
+          <div id="view-crime" class="view-container">
+            <div class="view-hero">
+              <img
+                class="view-hero-img"
+                src="https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=1400&h=560&fit=crop&auto=format"
+                alt=""
+                loading="lazy"
+              />
+              <div class="view-hero-overlay"></div>
+              <div class="view-hero-content">
+                <i class="fa-solid fa-skull-crossbones"></i>
+                <div>
+                  <h2>The Criminal Underworld</h2>
+                  <div
+                    style="
+                      font-size: 0.88rem;
+                      color: rgba(255, 255, 255, 0.6);
+                      margin-top: 4px;
+                    "
+                  >
+                    High risk, high reward. Stay off the radar.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Crime HUD — 4 status cards -->
+            <div class="grid-cards" id="crime-hud"></div>
+
+            <!-- Drug Empire -->
+            <h3 class="section-subtitle">
+              <i class="fa-solid fa-pills"></i> Drug Empire
+            </h3>
+            <div id="drug-empire-panel"></div>
+
+            <!-- Street Operations -->
+            <h3 class="section-subtitle">
+              <i class="fa-solid fa-street-view"></i> Street Operations
+            </h3>
+            <div class="grid-cards" id="crime-list"></div>
+
+            <!-- Criminal Skills -->
+            <h3 class="section-subtitle">
+              <i class="fa-solid fa-dagger"></i> Criminal Skills
+            </h3>
+            <div class="grid-cards" id="crime-skills-list"></div>
+
+            <!-- Legal Defense -->
+            <h3 class="section-subtitle">
+              <i class="fa-solid fa-gavel"></i> Legal Defense
+            </h3>
+            <div class="grid-cards" id="lawyer-list"></div>
+          </div>
+
           <div id="view-relationships" class="view-container">
             <div class="view-hero">
               <img
@@ -1148,27 +1202,6 @@
             </h3>
             <div class="grid-cards" id="pet-list"></div>
             <div class="grid-cards" id="pet-shop"></div>
-          </div>
-
-          <div id="view-prison" class="view-container">
-            <div class="view-hero">
-              <img
-                class="view-hero-img"
-                src="prison.png"
-                alt=""
-                loading="lazy"
-              />
-              <div class="view-hero-overlay"></div>
-              <div class="view-hero-content">
-                <i class="fa-solid fa-handcuffs"></i>
-                <h2>Federal Prison</h2>
-              </div>
-            </div>
-
-            <div class="card" id="prison-status-card"></div>
-
-            <h3 class="section-subtitle">Daily Actions</h3>
-            <div class="grid-cards" id="prison-actions"></div>
           </div>
 
           <div id="view-politics" class="view-container">
@@ -1305,6 +1338,25 @@
             </div>
             <div class="control-right">
               <button
+                id="snd-toggle-btn"
+                class="snd-btn"
+                onclick="SFX.toggle()"
+                title="Mute sounds"
+                aria-label="Toggle sound"
+              >
+                <i class="fa-solid fa-volume-high"></i>
+              </button>
+              <button
+                class="quest-bar-btn"
+                onclick="app.showQuestsModal()"
+                title="Monthly Quests"
+              >
+                <i class="fa-solid fa-scroll"></i>
+                <span class="quest-count-badge" id="quest-count-badge"
+                  >0/3</span
+                >
+              </button>
+              <button
                 class="next-month-btn"
                 id="main-advance-btn"
                 onclick="game.advanceBySpeed()"
@@ -1374,6 +1426,12 @@
       </div>
     </div>
 
+    <!-- ═══ Background Music placeholder — drop your audio file path into src ═══ -->
+    <!-- To use: set src="your-music-file.mp3" and remove the comment -->
+    <audio id="bg-music" loop preload="none" style="display: none">
+      <!-- <source src="music/background.mp3" type="audio/mpeg"> -->
+    </audio>
+
     <div id="modal-overlay" class="modal-overlay">
       <div class="modal-content">
         <div class="modal-header">
@@ -1439,6 +1497,45 @@
             <i class="fa-solid fa-clock-rotate-left"></i>&nbsp;Past Lives
           </button>
         </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         TUTORIAL PANEL — non-blocking floating card
+         ═══════════════════════════════════════════════════════════ -->
+    <div id="tut-ring"></div>
+    <div id="tut-panel" class="tut-panel tut-panel-hidden">
+      <div class="tut-hd">
+        <div class="tut-label-wrap">
+          <i class="fa-solid fa-graduation-cap"></i>
+          <span>Tutorial</span>
+        </div>
+        <div class="tut-dots" id="tut-dots"></div>
+        <button class="tut-x-btn" onclick="TUT.skip()" title="Skip tutorial">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="tut-progress-track">
+        <div class="tut-progress-fill" id="tut-progress-fill"></div>
+      </div>
+      <div class="tut-body">
+        <div class="tut-icon-wrap" id="tut-icon-wrap">
+          <i class="fa-solid fa-rocket" id="tut-icon"></i>
+        </div>
+        <div class="tut-meta" id="tut-step-label">Step 1 of 9</div>
+        <div class="tut-title" id="tut-title">Welcome to Greedigo</div>
+        <div class="tut-desc" id="tut-desc"></div>
+        <div class="tut-tip-box" id="tut-tip-box" style="display: none">
+          <i class="fa-solid fa-lightbulb tut-tip-icon"></i>
+          <span id="tut-tip-text"></span>
+        </div>
+      </div>
+      <div class="tut-footer">
+        <button class="tut-skip-btn" onclick="TUT.skip()">Skip Tutorial</button>
+        <button class="tut-next-btn" id="tut-next-btn" onclick="TUT.next()">
+          <span id="tut-next-label">Continue</span>
+          <i class="fa-solid fa-arrow-right" id="tut-next-icon"></i>
+        </button>
       </div>
     </div>
 
