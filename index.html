@@ -29,7 +29,7 @@
       content="You are 18 years old with 500$. Can you find a way to retire rich?"
     />
     <meta property="og:type" content="website" />
-    <meta property="og:image" content="logo.png" />
+    <meta property="og:image" content="poster.png" />
     <meta property="og:site_name" content="Greedigo" />
     <meta property="og:url" content="https://greedigo.com/" />
 
@@ -43,10 +43,10 @@
       name="twitter:description"
       content="You are 18 years old with 500$. Can you find a way to retire rich?"
     />
-    <meta name="twitter:image" content="logo.png" />
+    <meta name="twitter:image" content="poster.png" />
 
     <link
-      href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;700&family=Space+Grotesk:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
     <link
@@ -349,6 +349,18 @@
             <button class="btn btn-outline btn-save" onclick="game.saveGame()">
               <i class="fa-solid fa-floppy-disk"></i> Save Game
             </button>
+            <!-- Next Milestone Goal -->
+            <div
+              class="milestone-goal-block"
+              id="milestone-goal-block"
+              style="display: none"
+            >
+              <div class="mg-label" id="mg-label">→ First $10,000</div>
+              <div class="mg-track">
+                <div class="mg-fill" id="mg-fill" style="width: 0%"></div>
+              </div>
+              <div class="mg-pct" id="mg-pct">0%</div>
+            </div>
           </div>
 
           <!-- ═══ VITALS ═══ -->
@@ -539,12 +551,29 @@
             </div>
             <div class="rival-msg" id="rival-msg"></div>
           </div>
+
+          <!-- ═══ LIFE JOURNAL ═══ -->
+          <div class="life-journal-panel" id="life-journal-panel">
+            <div class="hud-title">
+              <i
+                class="fa-solid fa-book-open-reader"
+                style="color: #60a5fa"
+              ></i>
+              Life Journal
+            </div>
+            <div class="life-journal-entries" id="life-journal-entries">
+              <div class="lj-entry lj-info">
+                <span class="lj-icon">📖</span
+                ><span class="lj-msg">Your story begins here...</span>
+              </div>
+            </div>
+          </div>
         </aside>
 
         <main class="main-area">
           <!-- ═══ Mobile Top Bar ═══ -->
           <div class="mobile-top-bar" id="mobile-top-bar">
-            <div class="mtb-brand">GG</div>
+            <div class="mtb-brand">Greedigo</div>
             <div class="mtb-info">
               <span class="mtb-name" id="mtb-name">Player</span>
               <span class="mtb-dot">&middot;</span>
@@ -1109,57 +1138,29 @@
           </div>
 
           <div id="view-crime" class="view-container">
-            <div class="view-hero">
-              <img
-                class="view-hero-img"
-                src="https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=1400&h=560&fit=crop&auto=format"
-                alt=""
-                loading="lazy"
-              />
-              <div class="view-hero-overlay"></div>
-              <div class="view-hero-content">
+            <!-- Fun crime header -->
+            <div class="crime-simple-header">
+              <div class="csh-icon">
                 <i class="fa-solid fa-skull-crossbones"></i>
-                <div>
-                  <h2>The Criminal Underworld</h2>
-                  <div
-                    style="
-                      font-size: 0.88rem;
-                      color: rgba(255, 255, 255, 0.6);
-                      margin-top: 4px;
-                    "
-                  >
-                    High risk, high reward. Stay off the radar.
-                  </div>
-                </div>
+              </div>
+              <div>
+                <h2>💀 Criminal Underworld</h2>
+                <p class="csh-sub">
+                  Pick a job. Take the risk. Get paid — or get caught. 🚔
+                </p>
               </div>
             </div>
 
-            <!-- Crime HUD — 4 status cards -->
-            <div class="grid-cards" id="crime-hud"></div>
+            <!-- Status (2 cards) -->
+            <div class="crime-status-row" id="crime-hud"></div>
 
-            <!-- Drug Empire -->
-            <h3 class="section-subtitle">
-              <i class="fa-solid fa-pills"></i> Drug Empire
-            </h3>
-            <div id="drug-empire-panel"></div>
+            <!-- Operations list -->
+            <div id="crime-list"></div>
 
-            <!-- Street Operations -->
-            <h3 class="section-subtitle">
-              <i class="fa-solid fa-street-view"></i> Street Operations
-            </h3>
-            <div class="grid-cards" id="crime-list"></div>
-
-            <!-- Criminal Skills -->
-            <h3 class="section-subtitle">
-              <i class="fa-solid fa-dagger"></i> Criminal Skills
-            </h3>
-            <div class="grid-cards" id="crime-skills-list"></div>
-
-            <!-- Legal Defense -->
-            <h3 class="section-subtitle">
-              <i class="fa-solid fa-gavel"></i> Legal Defense
-            </h3>
-            <div class="grid-cards" id="lawyer-list"></div>
+            <!-- Legacy elements kept hidden for JS compatibility -->
+            <div id="drug-empire-panel" style="display: none"></div>
+            <div id="crime-skills-list" style="display: none"></div>
+            <div id="lawyer-list" style="display: none"></div>
           </div>
 
           <div id="view-relationships" class="view-container">
@@ -1426,10 +1427,9 @@
       </div>
     </div>
 
-    <!-- ═══ Background Music placeholder — drop your audio file path into src ═══ -->
-    <!-- To use: set src="your-music-file.mp3" and remove the comment -->
-    <audio id="bg-music" loop preload="none" style="display: none">
-      <!-- <source src="music/background.mp3" type="audio/mpeg"> -->
+    <!-- Background Music -->
+    <audio id="bg-music" loop preload="auto" style="display: none">
+      <source src="music/background.mp3" type="audio/mpeg" />
     </audio>
 
     <div id="modal-overlay" class="modal-overlay">

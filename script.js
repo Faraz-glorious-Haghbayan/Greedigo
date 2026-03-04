@@ -1377,21 +1377,21 @@ const CONFIG = {
       id: "slots",
       name: "Lucky Slots",
       minBet: 50,
-      maxBet: 5000,
+      maxBet: 50000,
       desc: "Spin the reels. 95% RTP.",
     },
     {
       id: "blackjack",
       name: "Blackjack",
       minBet: 100,
-      maxBet: 10000,
+      maxBet: 100000,
       desc: "Beat the dealer (21).",
     },
     {
       id: "horse",
       name: "Horse Racing",
       minBet: 500,
-      maxBet: 50000,
+      maxBet: 500000,
       desc: "High stakes track betting.",
     },
   ],
@@ -2578,6 +2578,7 @@ const game = {
     app.bgEffect();
     this.maybeStartOnboarding();
     this.bindHotkeys();
+    this._checkDailyBonus();
 
     if (this.state.life.dead || this.state.life.retired) {
       const end = this.state.life.endingSummary;
@@ -2916,7 +2917,16 @@ const game = {
     g.legendScore += Math.max(1, Math.floor(score));
 
     if (g.actionStreak > 0 && g.actionStreak % 10 === 0) {
-      app.log(`Hot streak x${g.actionStreak}! Keep momentum for bonus growth.`);
+      SFX.play("hotStreak");
+      app.log(
+        `🔥 Hot streak x${g.actionStreak}! Momentum cash bonus incoming!`,
+        "epic",
+      );
+    } else if (g.actionStreak > 0 && g.actionStreak % 5 === 0) {
+      app.log(
+        `⚡ Action streak x${g.actionStreak} — keep the momentum!`,
+        "success",
+      );
     }
   },
 
@@ -2926,15 +2936,233 @@ const game = {
     if (g.currentMonthActions === 0) {
       g.actionStreak = Math.max(0, g.actionStreak - 2);
     } else if (g.currentMonthActions >= 3) {
-      const bonus = Math.min(4000, 200 + g.currentMonthActions * 80);
+      const bonus = Math.min(12000, 500 + g.currentMonthActions * 200);
       this.modCash(bonus);
-      this.modStat("happiness", 1.5);
-      g.legendScore += 2;
+      SFX.play("bigCoin");
+      this.modStat("happiness", 3);
+      g.legendScore += 4;
+      const tier =
+        g.currentMonthActions >= 10
+          ? "🚀🔥 INSANE"
+          : g.currentMonthActions >= 6
+            ? "🚀 EPIC"
+            : "⚡ Solid";
       app.log(
-        `Momentum bonus: +$${Math.round(bonus)} from disciplined execution.`,
+        `${tier} momentum! +$${Math.round(bonus).toLocaleString()} bonus — ${g.currentMonthActions} actions this month!`,
+        g.currentMonthActions >= 6 ? "epic" : "success",
       );
+      if (g.currentMonthActions >= 8) FX.screenFlash("rgba(255,215,0,0.15)");
     }
     g.currentMonthActions = 0;
+  },
+
+  /* ── Daily Login Bonus ── */
+  _checkDailyBonus() {
+    const today = new Date().toDateString();
+    const lastLogin = localStorage.getItem("GreedigoLastLogin");
+    if (lastLogin === today) return;
+    localStorage.setItem("GreedigoLastLogin", today);
+    // Don't reward on very first session (no save yet)
+    if (!this.state || this.state.age <= 18 * 12 + 2) return;
+
+    const raw = parseInt(localStorage.getItem("GreedigoLoginStreak") || "0");
+    const last = lastLogin ? new Date(lastLogin) : null;
+    const yest = new Date();
+    yest.setDate(yest.getDate() - 1);
+    const streak =
+      last && last.toDateString() === yest.toDateString() ? raw + 1 : 1;
+    localStorage.setItem("GreedigoLoginStreak", String(streak));
+
+    const base = 300;
+    const bonus = base + streak * 120 + Math.floor(Math.random() * 400);
+    const isMega = streak % 7 === 0 && streak > 0;
+    const finalBonus = isMega ? bonus * 3 : bonus;
+
+    setTimeout(() => {
+      this.modCash(finalBonus);
+      this._showDailyBonusBanner(finalBonus, streak, isMega);
+    }, 1800);
+  },
+
+  _showDailyBonusBanner(amount, streak, isMega) {
+    const ov = document.createElement("div");
+    ov.className = "db-overlay";
+    const banner = document.createElement("div");
+    banner.className = "daily-bonus-banner";
+    banner.innerHTML = `
+      <div class="db-emoji">${isMega ? "💎" : streak >= 3 ? "🔥" : "🌅"}</div>
+      <div class="db-title">${isMega ? "MEGA BONUS UNLOCKED!" : "Daily Return Bonus!"}</div>
+      <div class="db-sub">Day ${streak} streak — welcome back!</div>
+      <div class="db-amount">+$${amount.toLocaleString()}</div>
+      <div class="db-streak">${streak >= 7 ? "🏆 7-day streak achiever!" : streak >= 3 ? "🔥 On a hot streak!" : "Come back tomorrow for more!"}</div>
+      <button class="db-btn" id="db-close-btn">Collect & Play!</button>
+    `;
+    document.body.appendChild(ov);
+    document.body.appendChild(banner);
+    SFX.play("dailyBonus");
+    FX.confetti();
+    const close = () => {
+      ov.remove();
+      banner.remove();
+    };
+    document.getElementById("db-close-btn").addEventListener("click", close);
+    ov.addEventListener("click", close);
+  },
+
+  /* ── Milestone Goal Indicator ── */
+  renderMilestoneGoal() {
+    const block = document.getElementById("milestone-goal-block");
+    const labelEl = document.getElementById("mg-label");
+    const fillEl = document.getElementById("mg-fill");
+    const pctEl = document.getElementById("mg-pct");
+    if (!block || !labelEl || !fillEl || !pctEl) return;
+
+    const nw = this.getNetWorth();
+    const milestones = [
+      { label: "First $1,000", target: 1000 },
+      { label: "First $5,000", target: 5000 },
+      { label: "First $10,000", target: 10000 },
+      { label: "First $25,000", target: 25000 },
+      { label: "First $50,000", target: 50000 },
+      { label: "First $100,000", target: 100000 },
+      { label: "First $250,000", target: 250000 },
+      { label: "First $500,000", target: 500000 },
+      { label: "Millionaire club", target: 1000000 },
+      { label: "Five Million", target: 5000000 },
+    ];
+
+    const next = milestones.find((m) => nw < m.target);
+    if (!next) {
+      block.style.display = "none";
+      return;
+    }
+
+    block.style.display = "block";
+    const prev = milestones[milestones.indexOf(next) - 1];
+    const base = prev ? prev.target : 0;
+    const pct = Math.min(
+      100,
+      Math.max(0, ((nw - base) / (next.target - base)) * 100),
+    );
+    labelEl.textContent = `→ ${next.label}`;
+    fillEl.style.width = pct.toFixed(1) + "%";
+    pctEl.textContent = pct.toFixed(0) + "%";
+  },
+
+  /* ── First Purchase Nudges ── */
+  _checkFirstPurchaseNudges() {
+    if (!this.state || this.state.life.dead || this.state.life.retired) return;
+    const cash = this.state.cash;
+    const inv = this.state.inventory || [];
+    const hasVehicle = inv.some((i) =>
+      ["bike", "civic", "tesla", "porsche"].includes(i),
+    );
+    const hasProperty =
+      Object.values(this.state.wealth?.properties || {}).reduce(
+        (a, b) => a + b,
+        0,
+      ) >= 1;
+
+    if (cash >= 6000 && !hasVehicle && !this._nudgedCar) {
+      this._nudgedCar = true;
+      app.toast(
+        "🚗 You can afford your first vehicle! Check Lifestyle →",
+        "info",
+      );
+      app.log(
+        "💡 Tip: You have enough for your first vehicle. Check Lifestyle!",
+        "info",
+      );
+    }
+    if (cash >= 250000 && !hasProperty && !this._nudgedProperty) {
+      this._nudgedProperty = true;
+      app.toast("🏠 Time to invest in property! Check Wealth →", "info");
+      app.log(
+        "💡 Tip: You have enough to start building a property portfolio!",
+        "info",
+      );
+    }
+    if (cash >= 45000 && !hasVehicle && this._nudgedCar && !this._nudgedTesla) {
+      this._nudgedTesla = true;
+      app.toast("⚡ You could upgrade to a Tesla Model 3. Status up!", "info");
+    }
+  },
+
+  _checkNetWorthMilestone() {
+    if (!this.state || this.state.age <= 18 * 12 + 6) return;
+    const nw = this.getNetWorth();
+    const crossed =
+      this.state._nwMilestonesCrossed || (this.state._nwMilestonesCrossed = {});
+    const milestones = [
+      {
+        val: 10000,
+        label: "Five Figures!",
+        emoji: "💵",
+        sub: "You crossed $10,000 net worth!",
+      },
+      {
+        val: 50000,
+        label: "Fifty Grand!",
+        emoji: "💸",
+        sub: "Net worth hit $50,000. Respect.",
+      },
+      {
+        val: 100000,
+        label: "Six Figures!",
+        emoji: "🤑",
+        sub: "$100,000 net worth — welcome to the club.",
+      },
+      {
+        val: 250000,
+        label: "Quarter Million!",
+        emoji: "🏦",
+        sub: "Net worth: $250,000. You are crushing it.",
+      },
+      {
+        val: 500000,
+        label: "Half a Million!",
+        emoji: "💰",
+        sub: "$500K net worth. Most people never get here.",
+      },
+      {
+        val: 1000000,
+        label: "MILLIONAIRE!",
+        emoji: "🏆",
+        sub: "You are officially worth $1,000,000!",
+        mega: true,
+      },
+      {
+        val: 5000000,
+        label: "MULTI-MILLIONAIRE!",
+        emoji: "🚀",
+        sub: "$5 Million net worth. Legendary status.",
+        mega: true,
+      },
+      {
+        val: 10000000,
+        label: "DECA-MILLIONAIRE!",
+        emoji: "👑",
+        sub: "$10 MILLION. You are untouchable.",
+        mega: true,
+      },
+    ];
+    for (const m of milestones) {
+      if (nw >= m.val && !crossed[m.val]) {
+        crossed[m.val] = true;
+        setTimeout(() => {
+          SFX.play(m.mega ? "netWorthMilestone" : "epic");
+          FX.confetti();
+          if (m.mega) {
+            FX.milestoneOverlay(m.label);
+          } else {
+            FX.screenFlash("rgba(255,215,0,0.25)");
+            app.toast(`${m.emoji} ${m.label} — ${m.sub}`, "success");
+          }
+          app.log(`${m.emoji} ${m.label} — ${m.sub}`, "epic");
+        }, 400);
+        break; // one per month max
+      }
+    }
   },
 
   getAchievementDefinitions() {
@@ -3016,6 +3244,132 @@ const game = {
         check: () =>
           this.state.gameplay.wasBankrupt && this.getNetWorth() >= 75000,
       },
+      // ── NEW ACHIEVEMENTS ──────────────────────────────────────────
+      {
+        id: "first_job",
+        title: "Employee of the Month",
+        points: 5,
+        reward: 300,
+        check: () => !!this.state.job,
+      },
+      {
+        id: "car_owner",
+        title: "Getting Around",
+        points: 8,
+        reward: 600,
+        check: () =>
+          this.state.inventory.some((i) =>
+            ["bike", "civic", "tesla", "porsche"].includes(i),
+          ),
+      },
+      {
+        id: "homeowner",
+        title: "Property Owner",
+        points: 15,
+        reward: 1500,
+        check: () =>
+          Object.values(this.state.wealth.properties || {}).reduce(
+            (a, b) => a + b,
+            0,
+          ) >= 1,
+      },
+      {
+        id: "startup_ceo",
+        title: "Startup CEO",
+        points: 20,
+        reward: 2000,
+        check: () => (this.state.startups || []).length > 0,
+      },
+      {
+        id: "love_struck",
+        title: "Love Struck",
+        points: 12,
+        reward: 800,
+        check: () =>
+          this.state.relationship &&
+          this.state.relationship.status !== "single",
+      },
+      {
+        id: "parent",
+        title: "New Parent",
+        points: 20,
+        reward: 2500,
+        check: () => (this.state.relationship?.children || []).length > 0,
+      },
+      {
+        id: "debt_free",
+        title: "Debt Free",
+        points: 18,
+        reward: 1800,
+        check: () =>
+          (this.state.bank?.loans?.length || 0) === 0 &&
+          (this.state.bank?.creditCard?.balance || 0) < 100 &&
+          (this.state.edu?.loans || 0) < 100,
+      },
+      {
+        id: "multimillionaire",
+        title: "Multi-Millionaire",
+        points: 100,
+        reward: 25000,
+        check: () => this.getNetWorth() >= 5000000,
+      },
+      {
+        id: "speed_run",
+        title: "Speed Runner",
+        points: 45,
+        reward: 8000,
+        check: () => this.state.life.retired && this.state.age / 12 <= 35,
+      },
+      {
+        id: "crime_master",
+        title: "Street God",
+        points: 55,
+        reward: 12000,
+        check: () => (this.state.crime?.rep || 0) >= 1000,
+      },
+      {
+        id: "casino_addict",
+        title: "Casino Regular",
+        points: 15,
+        reward: 1000,
+        check: () => (this.state.casino?.lifetimeSpins || 0) >= 50,
+      },
+      {
+        id: "high_saver",
+        title: "High Saver",
+        points: 20,
+        reward: 2500,
+        check: () => (this.state.bank?.savings || 0) >= 50000,
+      },
+      {
+        id: "politician",
+        title: "Political Power",
+        points: 25,
+        reward: 3000,
+        check: () => !!this.state.politics?.role,
+      },
+      {
+        id: "drug_lord",
+        title: "Cartel Boss",
+        points: 60,
+        reward: 15000,
+        check: () => this.state.crime?.drugEmpire?.tier === "cartel",
+      },
+      {
+        id: "pet_owner",
+        title: "Pet Parent",
+        points: 8,
+        reward: 400,
+        check: () => (this.state.pets || []).length > 0,
+      },
+      {
+        id: "social_butterfly",
+        title: "Social Butterfly",
+        points: 10,
+        reward: 500,
+        check: () =>
+          (this.state.relationship?.sideRelationships || []).length >= 1,
+      },
     ];
   },
 
@@ -3036,6 +3390,7 @@ const game = {
         `Legend +${achievement.points}${achievement.reward ? " | Cash +$" + shortNumber(achievement.reward) : ""}`,
       );
       FX.screenShake("lg");
+      SFX.play("achievement");
       app.toast("Achievement: " + achievement.title, "epic");
     });
   },
@@ -3461,6 +3816,7 @@ const game = {
   die(reason = "Health collapse from prolonged over-risking") {
     if (this.state.life.dead || this.state.life.retired) return;
     this.state.life.dead = true;
+    setTimeout(() => SFX.play("death"), 80);
     this.finalizeRunTelemetry("dead");
     this.state.life.deathReason = reason;
     const ageYrs = Math.floor(this.state.age / 12);
@@ -3870,6 +4226,37 @@ const game = {
     this.state.stats.energy = 100;
     this.modStat("happiness", -1);
 
+    // Age milestone messages
+    if (this.state.age % 12 === 0) {
+      const yr = Math.floor(this.state.age / 12);
+      const nw = this.getNetWorth();
+      const birthdayLines = {
+        18: "🎂 18 — legally an adult. The world is wide open.",
+        20: "🎂 The teenage years are behind you. Hustle harder.",
+        25: "🎂 Quarter century. Time flies — make it count.",
+        30: "🎂 Thirty. Some call it the new twenty. Prove them right.",
+        35: "🎂 Thirty-five. Half the lifetime for some. How far have you come?",
+        40: "🎂 Forty. Legacy starts here. What will they remember you for?",
+        50: "🎂 Fifty. Wealth means nothing without wisdom — got both?",
+        60: "🎂 Sixty. Slow down? Never. The grind never retires.",
+        70: "🎂 Seventy years on this earth. A legend in the making.",
+      };
+      const line = birthdayLines[yr];
+      if (line) {
+        const wealthNote =
+          nw >= 1e6
+            ? ` Net worth: $${(nw / 1e6).toFixed(1)}M 💰`
+            : nw >= 1000
+              ? ` Net worth: $${Math.round(nw / 1000)}K`
+              : "";
+        app.log(line + wealthNote, "epic");
+        SFX.play("epic");
+        FX.screenFlash("rgba(255,215,0,0.18)");
+      } else if (yr > 18) {
+        app.log(`🎂 Happy Birthday! Age ${yr}.`, "info");
+      }
+    }
+
     // Decay Heat naturally
     if (this.state.crime.heat > 0) {
       this.state.crime.heat = Math.max(0, this.state.crime.heat - 5);
@@ -3914,6 +4301,7 @@ const game = {
       const track = CONFIG.CAREERS.find((t) => t.id === this.state.job.trackId);
       const level = track.levels[this.state.job.level];
       income += this.state.job.salary / 12;
+      SFX.play("salary");
       this.state.job.performance += this.state.job.performance > 50 ? -2 : 1;
       let stressHit = level.stress / 10;
       if (this.state.job.performance < 30) stressHit *= 2;
@@ -3923,6 +4311,17 @@ const game = {
           100,
           Math.max(0, (this.state.job.stress || 0) + level.stress * 0.06 - 1.5),
         ).toFixed(1) * 1;
+      // Narrative journal entry
+      const narratives = [
+        `You clocked in another month as a ${level.title}. The grind continues.`,
+        `Work was ${level.stress > 70 ? "brutal" : "steady"} this month as a ${level.title}.`,
+        `Paycheck landed: $${shortNumber(Math.round(this.state.job.salary / 12))} from your ${level.title} role.`,
+        `You put in the hours at ${track.name}. The ${this.state.job.performance > 70 ? "boss noticed your hard work" : "routine feels familiar"}.`,
+      ];
+      app.log(
+        narratives[Math.floor(this.state.age % narratives.length)],
+        "info",
+      );
 
       if (this.state.job.performance < 10) {
         app.modal(
@@ -3994,6 +4393,30 @@ const game = {
     this.modCash(income - expenses);
     if (this.state.cash < 0) this.state.gameplay.wasBankrupt = true;
     if (this.state.cash < 0) this.state.runStats.bankruptMonths += 1;
+
+    // Narrative life journal entry based on current state
+    if (!this.state.job && this.state.startups.length === 0) {
+      const noJobLines = [
+        "Another month without a job. The savings are shrinking.",
+        "You spend the days hustling but have no steady income.",
+        "No paycheck this month. Time to find work — or make your own.",
+      ];
+      app.log(
+        noJobLines[Math.floor(this.state.age % noJobLines.length)],
+        "warning",
+      );
+    }
+    if (this.state.stats.health < 35) {
+      app.log(
+        "Your body is breaking down. You really need to take care of yourself.",
+        "error",
+      );
+    } else if (this.state.stats.happiness < 25) {
+      app.log(
+        "You feel empty. The grind is taking its toll on your soul.",
+        "warning",
+      );
+    }
     this.decayActionStreak();
     this.evaluateLifePressure(expenses);
     this.processTravelTick();
@@ -4017,6 +4440,9 @@ const game = {
     this.checkAchievements();
     this.maybeAdvanceOnboarding();
     this.maybeOfferRetirement();
+    this._checkFirstPurchaseNudges();
+    this._checkNetWorthMilestone();
+    this.renderMilestoneGoal();
     if (this.state.age % 6 === 0) this.saveGame(false);
   },
 
@@ -4423,6 +4849,7 @@ const game = {
               salary: baseSalary,
               stress: 0, // Personal accumulation
             };
+            SFX.play("jobGet");
             app.closeModal();
             this.renderAll();
           },
@@ -4908,6 +5335,7 @@ const game = {
         this.state.life.riskDebt + c.risk * 4,
       );
 
+      SFX.play("crimeSuccess");
       const cleanGetaway = Math.random() > 0.88;
       if (cleanGetaway) {
         this.state.crime.heat = Math.max(0, this.state.crime.heat - c.heatAdd);
@@ -4994,6 +5422,7 @@ const game = {
               ? ` ${lawyer.name} reduced your sentence from ${c.jail} → ${sentenceMonths} months.`
               : "";
 
+          SFX.play("arrested");
           FX.screenFlash("jail");
           FX.screenShake("lg");
           app.modal(
@@ -5017,6 +5446,7 @@ const game = {
         }
       } else {
         // Escaped but botched
+        SFX.play("crimeFail");
         app.toast(
           "Botched — escaped by the skin of your teeth. Heat explodes.",
           "text-loss",
@@ -6729,6 +7159,7 @@ const game = {
     this.state.casino.lifetimeSpins++;
     this.state.casino.wagered += amt;
     app.closeModal();
+    SFX.play("casinoSpin");
 
     let win = 0;
     let outcome = "loss";
@@ -6769,6 +7200,7 @@ const game = {
         this.state.casino.streak >= 0 ? this.state.casino.streak + 1 : 1;
       this.state.casino.lastOutcome = outcome === "jackpot" ? "Jackpot" : "Win";
       this.registerAction(outcome === "jackpot" ? 8 : 2);
+      SFX.play(outcome === "jackpot" ? "jackpot" : "casinoWin");
       app.toast(`Won $${win}!`, outcome === "jackpot" ? "epic" : "success");
       if (outcome === "jackpot") {
         FX.confetti();
@@ -6782,6 +7214,7 @@ const game = {
       this.state.casino.streak =
         this.state.casino.streak <= 0 ? this.state.casino.streak - 1 : -1;
       this.state.casino.lastOutcome = "Loss";
+      SFX.play("casinoLose");
       app.toast("Lost...", "text-loss");
     }
 
@@ -6974,6 +7407,34 @@ const game = {
     this.state.inventory.push(id);
     this.modStat("happiness", it.happy);
     this.registerAction(1);
+    // Milestone toasts
+    const VEHICLES = ["bike", "civic", "tesla", "porsche"];
+    const HOMES = ["apt", "mansion"];
+    const inv = this.state.inventory;
+    if (
+      VEHICLES.includes(id) &&
+      inv.filter((i) => VEHICLES.includes(i)).length === 1
+    ) {
+      setTimeout(() => {
+        FX.milestoneOverlay(
+          "🚗 First Vehicle!",
+          it.name + " — you’re on the road!",
+        );
+        FX.confetti();
+      }, 400);
+    }
+    if (
+      HOMES.includes(id) &&
+      inv.filter((i) => HOMES.includes(i)).length === 1
+    ) {
+      setTimeout(() => {
+        FX.milestoneOverlay(
+          "🏠 First Property!",
+          it.name + " — building real wealth!",
+        );
+        FX.confetti();
+      }, 400);
+    }
     this.renderAll();
   },
   modCash(amt) {
@@ -7042,7 +7503,205 @@ const game = {
     this.registerAction(1);
     this.renderAll();
   },
+  renderCrimeSimple() {
+    if (!this.state?.crime) return;
+    const cr = this.state.crime;
+    // STATUS
+    const hudEl = document.getElementById("crime-hud");
+    if (hudEl) {
+      const heatPct = Math.min(100, cr.heat);
+      const heatColor =
+        cr.heat > 80
+          ? "#ef4444"
+          : cr.heat > 50
+            ? "#f97316"
+            : cr.heat > 20
+              ? "#f59e0b"
+              : "#4ade80";
+      const heatLabel =
+        cr.heat > 80
+          ? "🚨 MANHUNT"
+          : cr.heat > 50
+            ? "🔥 HOT"
+            : cr.heat > 20
+              ? "⚠️ WANTED"
+              : "✅ CLEAN";
+      const heatSub =
+        cr.heat > 80
+          ? "🚔🚔🚔 Cops are EVERYWHERE. Lie low!"
+          : cr.heat > 50
+            ? "🚔🚔 You're on their radar. Be careful."
+            : cr.heat > 20
+              ? "🚔 A few suspicious eyes around."
+              : "😎 You're invisible. Perfect time to hustle.";
+      const repLevel = Math.floor(cr.rep / 100) + 1;
+      const repTitle =
+        repLevel >= 13
+          ? "Kingpin 👑"
+          : repLevel >= 10
+            ? "Boss 💀"
+            : repLevel >= 7
+              ? "Made Man 🤝"
+              : repLevel >= 4
+                ? "Soldier 🔫"
+                : repLevel >= 2
+                  ? "Street Thug 🥊"
+                  : "Small-Timer 😬";
+      hudEl.innerHTML = `
+        <div class="crime-stat-card" style="border-color:${heatColor}44;">
+          <div class="csc-label"><i class="fa-solid fa-fire"></i> Police Heat</div>
+          <div class="csc-value" style="color:${heatColor}">${heatLabel}</div>
+          <div class="csc-bar"><div class="csc-bar-fill" style="width:${heatPct}%;background:${heatColor}"></div></div>
+          <div class="csc-sub">${heatSub}</div>
+          <button class="btn btn-outline" style="margin-top:10px;font-size:0.8rem;padding:7px 14px;" onclick="game.launderHeat()">
+            <i class="fa-solid fa-water"></i> 💸 Cool Down ($1,000)
+          </button>
+        </div>
+        <div class="crime-stat-card" style="border-color:rgba(168,85,247,0.3);">
+          <div class="csc-label"><i class="fa-solid fa-street-view"></i> Street Rep</div>
+          <div class="csc-value" style="background:linear-gradient(135deg,#a855f7,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">${cr.rep} ⭐</div>
+          <div class="csc-sub"><strong style="color:#a78bfa;">Lv.${repLevel}</strong> — ${repTitle}</div>
+          <div class="csc-sub" style="margin-top:5px;opacity:0.7;">Do crimes → earn rep → unlock bigger jobs</div>
+        </div>`;
+    }
+    // OPERATIONS
+    const crimeListEl = document.getElementById("crime-list");
+    if (crimeListEl) {
+      const CRIME_EMOJI = {
+        shoplift: "🛍️",
+        pickpocket: "👜",
+        mug: "👊",
+        carjack: "🚗",
+        burglary: "🏠",
+        robbery: "🔫",
+        phishing: "🎣",
+        scam: "₿",
+        corp_hack: "💻",
+        protection: "🤝",
+        arms_deal: "⚔️",
+        street_deal: "💊",
+        cook_sell: "🧪",
+        distribution: "📦",
+        heist: "🏦",
+        insider: "📈",
+        extortion: "🃏",
+      };
+      const TYPE_THEME = {
+        Petty: {
+          bg: "rgba(148,163,184,0.07)",
+          border: "rgba(148,163,184,0.18)",
+          badge: "#94a3b8",
+        },
+        Street: {
+          bg: "rgba(249,115,22,0.07)",
+          border: "rgba(249,115,22,0.22)",
+          badge: "#f97316",
+        },
+        Felony: {
+          bg: "rgba(239,68,68,0.07)",
+          border: "rgba(239,68,68,0.22)",
+          badge: "#ef4444",
+        },
+        Cyber: {
+          bg: "rgba(59,130,246,0.07)",
+          border: "rgba(59,130,246,0.22)",
+          badge: "#3b82f6",
+        },
+        "Drug Trade": {
+          bg: "rgba(168,85,247,0.07)",
+          border: "rgba(168,85,247,0.22)",
+          badge: "#a855f7",
+        },
+        Organized: {
+          bg: "rgba(220,38,38,0.08)",
+          border: "rgba(220,38,38,0.26)",
+          badge: "#dc2626",
+        },
+        "White Collar": {
+          bg: "rgba(56,189,248,0.07)",
+          border: "rgba(56,189,248,0.22)",
+          badge: "#38bdf8",
+        },
+        Elite: {
+          bg: "rgba(245,158,11,0.08)",
+          border: "rgba(245,158,11,0.28)",
+          badge: "#f59e0b",
+        },
+      };
+      const unlocked = CONFIG.CRIMES.filter((c) => cr.rep >= c.reqRep);
+      const locked = CONFIG.CRIMES.filter((c) => cr.rep < c.reqRep);
+
+      const cards = unlocked
+        .map((c) => {
+          const skillXp = cr.skills[c.skill] || 0;
+          const skillBonus = Math.min(0.3, skillXp / 3000);
+          const sc = Math.max(
+            0.05,
+            Math.min(
+              0.97,
+              c.baseChance +
+                skillBonus -
+                cr.heat * 0.005 -
+                this.state.life.legalRecord * 0.012 +
+                this.state.stats.smarts * 0.002,
+            ),
+          );
+          const scPct = (sc * 100).toFixed(0);
+          const scDot = sc > 0.7 ? "🟢" : sc > 0.4 ? "🟡" : "🔴";
+          const scColor =
+            sc > 0.7 ? "#4ade80" : sc > 0.4 ? "#fbbf24" : "#f87171";
+          const tc = TYPE_THEME[c.type] || TYPE_THEME.Petty;
+          const emoji = CRIME_EMOJI[c.id] || "🎭";
+          return `<div class="crime-card" style="background:${tc.bg};border-color:${tc.border};">
+          <div class="cc-top">
+            <div class="cc-emoji">${emoji}</div>
+            <div class="cc-meta">
+              <div class="cc-name">${c.name}</div>
+              <span class="cc-type-badge" style="color:${tc.badge};background:${tc.badge}1a;border-color:${tc.badge}33;">${c.type}</span>
+            </div>
+          </div>
+          <div class="cc-desc">${c.desc}</div>
+          <div class="cc-stats-row">
+            <div class="cc-stat-cell">
+              <div class="cc-stat-val" style="color:#4ade80;">$${shortNumber(c.reward[0])}–$${shortNumber(c.reward[1])}</div>
+              <div class="cc-stat-lbl">💵 Payout</div>
+            </div>
+            <div class="cc-stat-cell">
+              <div class="cc-stat-val" style="color:${scColor};">${scDot} ${scPct}%</div>
+              <div class="cc-stat-lbl">🎯 Success</div>
+            </div>
+            <div class="cc-stat-cell">
+              <div class="cc-stat-val" style="color:#f87171;">${c.jail}mo</div>
+              <div class="cc-stat-lbl">⛓️ Jail Risk</div>
+            </div>
+          </div>
+          <button class="btn cc-run-btn" style="border-color:${tc.badge}55;color:${tc.badge};" onclick="game.commitCrime('${c.id}')">
+            <i class="fa-solid fa-bolt"></i> Run It!
+          </button>
+        </div>`;
+        })
+        .join("");
+
+      let lockedHtml = "";
+      if (locked.length) {
+        const nextRep = Math.min(...locked.map((c) => c.reqRep));
+        lockedHtml = `<div class="crime-locked-bar">
+          <i class="fa-solid fa-lock"></i>
+          <span>${locked.length} more ops locked · need <strong style="color:#fbbf24;">${nextRep} rep</strong> to unlock</span>
+        </div>`;
+      }
+      crimeListEl.innerHTML = `<div class="crime-cards-grid">${cards}</div>${lockedHtml}`;
+    }
+  },
+
   renderAll() {
+    // Throttle: collapse rapid batched renders into one
+    if (this._renderPending) return;
+    this._renderPending = true;
+    clearTimeout(this._renderPendingTimer);
+    this._renderPendingTimer = setTimeout(() => {
+      this._renderPending = false;
+    }, 20);
     app.updateStats();
 
     const nextBtn = document.getElementById("main-advance-btn");
@@ -7339,7 +7998,11 @@ const game = {
     }
 
     // --- CRIME SECTION ---
-    {
+    if (app.currentView === "crime") {
+      this.renderCrimeSimple();
+    }
+    if (false) {
+      /* old complex crime rendering - disabled */
       const cr = this.state.crime;
       const de = cr.drugEmpire;
 
@@ -9401,14 +10064,10 @@ const game = {
       // ── Role cards
       if (politicsList) {
         const POL_IMGS = {
-          council:
-            "https://images.unsplash.com/photo-1555848962-6e79363797c3?w=700&h=280&fit=crop&auto=format",
-          mayor:
-            "https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=700&h=280&fit=crop&auto=format",
-          governor:
-            "https://images.unsplash.com/photo-1575517111839-3a3843ee7f5d?w=700&h=280&fit=crop&auto=format",
-          senator:
-            "https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=700&h=280&fit=crop&auto=format",
+          council: "city-council.png",
+          mayor: "mayor.png",
+          governor: "governor.png",
+          senator: "senator.png",
         };
         const POL_TIERS = {
           council: {
@@ -9987,7 +10646,13 @@ const app = {
     if (hudLegend) hudLegend.innerText = Math.round(gameplay.legendScore || 0);
 
     const hudStreak = document.getElementById("hud-action-streak");
-    if (hudStreak) hudStreak.innerText = `${gameplay.actionStreak || 0}`;
+    if (hudStreak) {
+      const s = gameplay.actionStreak || 0;
+      const fireEmoji = s >= 20 ? "🔥🔥" : s >= 10 ? "🔥" : s >= 5 ? "⚡" : "";
+      const sfClass =
+        s >= 20 ? "sf-fire" : s >= 10 ? "sf-hot" : s >= 5 ? "sf-warm" : "";
+      hudStreak.innerHTML = `<span class="hud-streak-fire ${sfClass}">${fireEmoji}${s}</span>`;
+    }
 
     const fm = game.state.finance?.lastMonth || {
       income: 0,
@@ -10106,9 +10771,33 @@ const app = {
     const dur = tier === "float-xl" ? 2200 : tier === "float-lg" ? 1800 : 1500;
     setTimeout(() => el.remove(), dur);
   },
-  log(msg) {
+  _feedHistory: [],
+  log(msg, type = "info") {
     const el = document.getElementById("log-latest");
     if (el) el.innerText = msg;
+    // Push to Life Journal feed
+    this._feedHistory = this._feedHistory || [];
+    this._feedHistory.push({ msg, type });
+    if (this._feedHistory.length > 10) this._feedHistory.shift();
+    this._renderLifeFeed();
+  },
+  _renderLifeFeed() {
+    const el = document.getElementById("life-journal-entries");
+    if (!el) return;
+    const icons = {
+      success: "✅",
+      error: "❌",
+      info: "📖",
+      warning: "⚠️",
+      epic: "🔥",
+    };
+    const entries = [...this._feedHistory].reverse();
+    el.innerHTML = entries
+      .map((e, i) => {
+        const cls = `lj-${e.type || "info"}${i === 0 ? " lj-newest" : ""}`;
+        return `<div class="lj-entry ${cls}"><span class="lj-icon">${icons[e.type] || "📖"}</span><span class="lj-msg">${e.msg}</span></div>`;
+      })
+      .join("");
   },
   toast(msg, type = "success") {
     this.log(msg);
@@ -10400,7 +11089,7 @@ const app = {
         return;
       }
 
-      const targetFps = window.innerWidth < 900 ? 16 : 22;
+      const targetFps = window.innerWidth < 900 ? 12 : 16;
 
       if (ts - lastFrame < 1000 / targetFps) {
         requestAnimationFrame(drawGrid);
@@ -11099,6 +11788,11 @@ const titleScreen = {
     const screen = document.getElementById("title-screen");
     if (!screen) return;
 
+    /* ── Start music NOW, inside the click handler, before any setTimeout ──
+       Browser autoplay policy requires play() within the user-gesture stack.
+       Calling it 1400ms later (after the fade) makes Chrome block it. */
+    SFX.startBgMusicUnmuted();
+
     // Massive particle explosion from center
     const cx = window.innerWidth / 2;
     const cy = window.innerHeight / 2;
@@ -11157,6 +11851,7 @@ const titleScreen = {
       } else {
         game.init();
       }
+      /* Music was already started at the top of launchGame() */
     }, 1400);
   },
 
@@ -11164,6 +11859,8 @@ const titleScreen = {
     const appShell = document.getElementById("app-shell");
     if (appShell) appShell.style.display = "";
     game.init();
+    /* Start background music */
+    SFX.startBgMusicUnmuted();
   },
 };
 
@@ -11171,30 +11868,51 @@ const titleScreen = {
    FX ENGINE — Screen shake, flash, confetti, milestone, life events
    ====================================================================== */
 const FX = {
+  _shakePending: false,
   screenShake(size = "sm") {
-    document.body.classList.add("fx-shake-" + size);
-    setTimeout(
-      () => document.body.classList.remove("fx-shake-" + size),
-      size === "lg" ? 600 : 400,
-    );
+    /* Debounce: ignore if a shake is already queued or running */
+    if (this._shakePending) return;
+    this._shakePending = true;
+    const target = document.querySelector(".app-container") || document.body;
+    const cls = "fx-shake-" + size;
+    target.classList.remove(
+      "fx-shake-sm",
+      "fx-shake-lg",
+    ); /* reset if stacked */
+    /* Force reflow so re-adding the class restarts the animation */
+    void target.offsetWidth;
+    target.classList.add(cls);
+    const dur = size === "lg" ? 600 : 400;
+    setTimeout(() => {
+      target.classList.remove(cls);
+      this._shakePending = false;
+    }, dur);
   },
+  _flashEl: null,
+  _flashTimer: null,
   screenFlash(type = "gain") {
-    const el = document.createElement("div");
+    /* Reuse a single overlay element rather than creating new DOM nodes */
+    if (!this._flashEl) {
+      this._flashEl = document.createElement("div");
+      this._flashEl.className = "fx-flash-overlay";
+      document.body.appendChild(this._flashEl);
+    }
+    const el = this._flashEl;
+    clearTimeout(this._flashTimer);
     el.className = "fx-flash-overlay fx-flash-" + type;
-    document.body.appendChild(el);
-    setTimeout(() => el.remove(), 600);
+    /* Restart animation by removing and re-adding */
+    el.style.animation = "none";
+    void el.offsetWidth;
+    el.style.animation = "";
+    this._flashTimer = setTimeout(() => {
+      el.className = "fx-flash-overlay";
+    }, 600);
   },
   confetti() {
+    /* CSS-based confetti — zero JS animation loop, fully GPU-composited */
     if (this._confettiActive) return;
     this._confettiActive = true;
     const self = this;
-    const canvas = document.createElement("canvas");
-    canvas.className = "confetti-canvas";
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    document.body.appendChild(canvas);
-    const ctx = canvas.getContext("2d");
-    const pieces = [];
     const colors = [
       "#f59e0b",
       "#ef4444",
@@ -11205,46 +11923,45 @@ const FX = {
       "#14b8a6",
       "#f97316",
     ];
-    for (let i = 0; i < 80; i++) {
-      pieces.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height * -1,
-        w: Math.random() * 10 + 5,
-        h: Math.random() * 6 + 3,
-        color: colors[Math.floor(Math.random() * colors.length)],
-        vx: (Math.random() - 0.5) * 8,
-        vy: Math.random() * 4 + 3,
-        rot: Math.random() * 360,
-        rv: (Math.random() - 0.5) * 12,
-        opacity: 1,
-      });
+    const container = document.createElement("div");
+    container.className = "confetti-container";
+    document.body.appendChild(container);
+    const count = 48;
+    let settled = 0;
+    for (let i = 0; i < count; i++) {
+      const p = document.createElement("div");
+      p.className = "confetti-piece";
+      const color = colors[i % colors.length];
+      const x = (Math.random() * 96 + 2).toFixed(1);
+      const w = (Math.random() * 9 + 5).toFixed(1);
+      const h = (Math.random() * 5 + 3).toFixed(1);
+      const dur = (Math.random() * 0.7 + 0.85).toFixed(2);
+      const delay = (Math.random() * 0.45).toFixed(2);
+      const endX = ((Math.random() - 0.5) * 180).toFixed(0);
+      const r0 = (Math.random() * 360).toFixed(0);
+      const r1 = (parseFloat(r0) + (Math.random() - 0.5) * 540).toFixed(0);
+      p.style.cssText =
+        `left:${x}vw;width:${w}px;height:${h}px;background:${color};` +
+        `--cfx:${endX}px;--cr0:${r0}deg;--cr1:${r1}deg;` +
+        `animation:confettiFall ${dur}s ${delay}s linear forwards;`;
+      p.addEventListener(
+        "animationend",
+        () => {
+          settled++;
+          if (settled >= count) {
+            container.remove();
+            self._confettiActive = false;
+          }
+        },
+        { once: true },
+      );
+      container.appendChild(p);
     }
-    let frame = 0;
-    const maxFrames = 90;
-    function draw() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      pieces.forEach((p) => {
-        p.x += p.vx;
-        p.y += p.vy;
-        p.vy += 0.12;
-        p.rot += p.rv;
-        if (frame > maxFrames * 0.6) p.opacity = Math.max(0, p.opacity - 0.03);
-        ctx.save();
-        ctx.globalAlpha = p.opacity;
-        ctx.translate(p.x, p.y);
-        ctx.rotate((p.rot * Math.PI) / 180);
-        ctx.fillStyle = p.color;
-        ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
-        ctx.restore();
-      });
-      frame++;
-      if (frame < maxFrames) requestAnimationFrame(draw);
-      else {
-        canvas.remove();
-        self._confettiActive = false;
-      }
-    }
-    requestAnimationFrame(draw);
+    /* Safety cleanup in case all animationend events don't fire (tab hidden etc.) */
+    setTimeout(() => {
+      if (container.parentNode) container.remove();
+      self._confettiActive = false;
+    }, 2500);
   },
   milestoneOverlay(title, sub) {
     // Remove any existing milestone overlay to prevent stacking
@@ -11499,6 +12216,318 @@ const LIFE_EVENTS = [
     },
     type: "error",
   },
+  /* ── WILD & FUNNY NEW EVENTS ── */
+  {
+    emoji: "🎬",
+    title: "Went Viral!",
+    desc: "A random video you posted exploded online. Brands are sliding into your DMs with sponsorship cash!",
+    effect: (g) => {
+      g.modCash(5000 + Math.random() * 15000);
+      g.modStat("happiness", 20);
+    },
+    type: "epic",
+  },
+  {
+    emoji: "🎟️",
+    title: "Lottery Ticket!",
+    desc: "You scratched a lottery ticket and hit a secondary prize. Not the jackpot, but hey — that's real money!",
+    effect: (g) => {
+      g.modCash(2000 + Math.random() * 18000);
+      g.modStat("happiness", 15);
+    },
+    type: "epic",
+  },
+  {
+    emoji: "🚀",
+    title: "Crypto Moon",
+    desc: "A forgotten wallet of some random coin you bought years ago just surged 10,000%. You're cashing out!",
+    effect: (g) => {
+      g.modCash(8000 + Math.random() * 40000);
+      g.modStat("happiness", 25);
+    },
+    type: "epic",
+  },
+  {
+    emoji: "🧸",
+    title: "eBay Goldmine",
+    desc: "You listed a dusty old toy on eBay as a joke. A collector bought it for way more than it had any right to be worth.",
+    effect: (g) => {
+      g.modCash(1500 + Math.random() * 4000);
+      g.modStat("happiness", 8);
+    },
+    type: "success",
+  },
+  {
+    emoji: "🍕",
+    title: "Mysterious Pizza",
+    desc: "A pizza delivery guy showed up at your door. Wrong address, but both of you agreed you deserved it. Life is good.",
+    effect: (g) => {
+      g.modStat("happiness", 10);
+      g.modStat("health", 3);
+    },
+    type: "info",
+  },
+  {
+    emoji: "🌟",
+    title: "Celebrity Encounter",
+    desc: "You bumped into a famous celebrity at a coffee shop. They were surprisingly normal — and they paid for your latte!",
+    effect: (g) => {
+      g.modStat("happiness", 14);
+      g.modStat("smarts", 2);
+    },
+    type: "success",
+  },
+  {
+    emoji: "💎",
+    title: "Old Coat Surprise",
+    desc: "You found a diamond ring in the pocket of an old coat. Appraisal says it's the real deal. Craigslist payday!",
+    effect: (g) => {
+      g.modCash(3000 + Math.random() * 7000);
+      g.modStat("happiness", 10);
+    },
+    type: "success",
+  },
+  {
+    emoji: "📞",
+    title: "Scam Caller Scammed",
+    desc: "A scammer called you. You strung them along for 45 minutes pretending to buy gift cards, then trolled them. They somehow sent YOU money by mistake.",
+    effect: (g) => {
+      g.modCash(300 + Math.random() * 600);
+      g.modStat("happiness", 12);
+    },
+    type: "success",
+  },
+  {
+    emoji: "🏃",
+    title: "Accidental Marathon",
+    desc: "You signed up for a 5K but showed up to the wrong race. Somehow finished a half marathon. You feel incredible.",
+    effect: (g) => {
+      g.modStat("health", 15);
+      g.modStat("happiness", 10);
+    },
+    type: "success",
+  },
+  {
+    emoji: "🤖",
+    title: "AI Took Their Job",
+    desc: "Your entire department was threatened with AI replacement. You're the only one whose role got upgraded instead. Eat, sleep, win.",
+    effect: (g) => {
+      g.modStat("happiness", 12);
+      g.modStat("smarts", 5);
+      g.state.job &&
+        (g.state.job.performance = Math.min(
+          100,
+          (g.state.job.performance || 50) + 15,
+        ));
+    },
+    type: "success",
+  },
+  {
+    emoji: "🎮",
+    title: "Gaming Tournament",
+    desc: "You entered an online gaming tournament on a whim. You wiped the floor with everyone.",
+    effect: (g) => {
+      g.modCash(1000 + Math.random() * 4000);
+      g.modStat("happiness", 15);
+    },
+    type: "success",
+  },
+  {
+    emoji: "📸",
+    title: "Paparazzi Mistake",
+    desc: "Paparazzi mistook you for a celebrity outside a restaurant. You played along. The photo sold. You got a cut.",
+    effect: (g) => {
+      g.modCash(500 + Math.random() * 2000);
+      g.modStat("happiness", 18);
+    },
+    type: "success",
+  },
+  {
+    emoji: "🚢",
+    title: "Won a Cruise Raffle",
+    desc: "You won a luxury cruise in a charity raffle you forgot you entered. Bon voyage!",
+    effect: (g) => {
+      g.modStat("happiness", 25);
+      g.modStat("health", 10);
+    },
+    type: "epic",
+  },
+  {
+    emoji: "🦜",
+    title: "Inherited a Parrot",
+    desc: "A distant relative left you their parrot, Biscuit. He knows three words: 'Money', 'Now', and a slur. Oddly motivating.",
+    effect: (g) => {
+      g.modStat("happiness", 12);
+      g.modCash(-100);
+    },
+    type: "info",
+  },
+  {
+    emoji: "💌",
+    title: "Secret Admirer",
+    desc: "You received an anonymous letter confessing someone has a crush on you. You have no idea who it is, but your confidence is through the roof.",
+    effect: (g) => {
+      g.modStat("happiness", 16);
+    },
+    type: "info",
+  },
+  {
+    emoji: "👑",
+    title: "30 Under 30 Feature",
+    desc: "A local magazine listed you in their '30 Under 30' issue. You didn't apply. Your neighbor nominated you. Legend.",
+    effect: (g) => {
+      g.modStat("happiness", 14);
+      g.modStat("smarts", 3);
+      g.state.job &&
+        (g.state.job.performance = Math.min(
+          100,
+          (g.state.job.performance || 50) + 10,
+        ));
+    },
+    type: "success",
+  },
+  {
+    emoji: "🎪",
+    title: "Spontaneous Busking",
+    desc: "You grabbed a guitar at a street fair and busked for two hours. People went wild. Hat full of cash, heart full of joy.",
+    effect: (g) => {
+      g.modCash(200 + Math.random() * 600);
+      g.modStat("happiness", 10);
+    },
+    type: "success",
+  },
+  {
+    emoji: "💰",
+    title: "Dividend Surprise",
+    desc: "You forgot you owned stocks. They've been paying dividends for 3 years and it just compounded into something meaningful.",
+    effect: (g) => {
+      g.modCash(2000 + Math.random() * 5000);
+      g.modStat("happiness", 7);
+    },
+    type: "success",
+  },
+  {
+    emoji: "😤",
+    title: "Fender Bender",
+    desc: "A minor car accident. The other driver was unreasonably rude, but their insurance covered everything — including a fat inconvenience payment.",
+    effect: (g) => {
+      g.modCash(800 + Math.random() * 1200);
+      g.modStat("happiness", -5);
+    },
+    type: "warning",
+  },
+  {
+    emoji: "🛸",
+    title: "I Swear I Saw Something",
+    desc: "You saw something in the sky last night that no rational explanation covers. You can't stop thinking about it. Your brain is on fire.",
+    effect: (g) => {
+      g.modStat("smarts", 6);
+      g.modStat("happiness", 8);
+    },
+    type: "info",
+  },
+  {
+    emoji: "🌮",
+    title: "Free Festival Food",
+    desc: "You stumbled into a food festival that was giving away free samples. You ate for three hours straight. Absolute bliss.",
+    effect: (g) => {
+      g.modStat("happiness", 12);
+      g.modStat("health", 5);
+    },
+    type: "info",
+  },
+  {
+    emoji: "📚",
+    title: "Book Deal Offer",
+    desc: "A publisher reached out after reading your old blog. They want your 'unflinching life story.' You have no idea what they're talking about but the advance check is real.",
+    effect: (g) => {
+      g.modCash(10000 + Math.random() * 20000);
+      g.modStat("happiness", 15);
+    },
+    type: "epic",
+  },
+  {
+    emoji: "🎃",
+    title: "Costume Contest Champion",
+    desc: "You threw together a last-minute costume from stuff around the house and somehow won the whole contest. Cash prize included.",
+    effect: (g) => {
+      g.modCash(500 + Math.random() * 1000);
+      g.modStat("happiness", 12);
+    },
+    type: "success",
+  },
+  {
+    emoji: "🤑",
+    title: "Micro-Influencer",
+    desc: "A niche brand noticed your social media and offered you a tiny sponsorship deal. The check is embarrassingly small but the ego boost is immense.",
+    effect: (g) => {
+      g.modCash(1200 + Math.random() * 2000);
+      g.modStat("happiness", 10);
+    },
+    type: "success",
+  },
+  {
+    emoji: "⚡",
+    title: "Sued the Power Company",
+    desc: "A power outage fried your appliances. You filed a small claims complaint and somehow won — plus legal fees covered.",
+    effect: (g) => {
+      g.modCash(1500 + Math.random() * 3000);
+      g.modStat("happiness", 8);
+    },
+    type: "success",
+  },
+  {
+    emoji: "🍀",
+    title: "Billionaire Bet",
+    desc: "A bored billionaire randomly Venmo'd you $5,000 with the note 'do something interesting.' You already spent it. No regrets.",
+    effect: (g) => {
+      g.modCash(5000);
+      g.modStat("happiness", 20);
+    },
+    type: "epic",
+  },
+  {
+    emoji: "🦁",
+    title: "Zoo Escape Chaos",
+    desc: "A peacock escaped the local zoo and chased you for three blocks. You got a $500 viral clip deal out of it.",
+    effect: (g) => {
+      g.modCash(500);
+      g.modStat("happiness", 14);
+      g.modStat("health", -2);
+    },
+    type: "info",
+  },
+  {
+    emoji: "🏖️",
+    title: "Boss Gave You a Vacation",
+    desc: "Your boss felt guilty about last month's abuse and surprised the whole team with paid time off. You're going somewhere warm.",
+    effect: (g) => {
+      g.modStat("happiness", 20);
+      g.modStat("health", 8);
+      g.modStat("energy", 40);
+    },
+    type: "success",
+  },
+  {
+    emoji: "🎵",
+    title: "Nostalgia Playlist",
+    desc: "You found your old iPod and listened to the whole thing. Suddenly your energy is back, your focus is laser-sharp, and you feel unstoppable.",
+    effect: (g) => {
+      g.modStat("happiness", 10);
+      g.modStat("energy", 30);
+    },
+    type: "info",
+  },
+  {
+    emoji: "🧙",
+    title: "Fortune Teller",
+    desc: "A street psychic told you something unsettlingly accurate about your life. You left with more confidence than you've had in years.",
+    effect: (g) => {
+      g.modStat("happiness", 8);
+      g.modStat("smarts", 4);
+    },
+    type: "info",
+  },
 ];
 
 /* ── Work Events ── */
@@ -11612,6 +12641,150 @@ const WORK_EVENTS = [
     },
     type: "success",
   },
+  /* ── WILD & FUNNY NEW WORK EVENTS ── */
+  {
+    title: "Reply-All Disaster",
+    desc: "You accidentally sent a personal rant to the entire company. HR is calling it 'refreshingly honest'. Everyone respects you more now.",
+    effect: (g) => {
+      g.modStat("happiness", 10);
+      g.state.job &&
+        (g.state.job.performance = Math.min(
+          100,
+          (g.state.job.performance || 50) + 8,
+        ));
+    },
+    type: "info",
+  },
+  {
+    title: "LinkedIn Goes Viral",
+    desc: "You wrote a 3-sentence post about 'hustle culture' and it hit 500K impressions. Recruiters are flooding your inbox. Leverage it.",
+    effect: (g) => {
+      g.modStat("happiness", 12);
+      g.modStat("smarts", 3);
+      g.state.job &&
+        (g.state.job.performance = Math.min(
+          100,
+          (g.state.job.performance || 50) + 12,
+        ));
+    },
+    type: "success",
+  },
+  {
+    title: "Fell Asleep in Meeting",
+    desc: "You dozed off mid-presentation, started snoring softly, and somehow the CEO called it 'zen-like poise under pressure'. You've been promoted.",
+    effect: (g, sal) => {
+      g.modCash(sal * 0.25);
+      g.modStat("happiness", 15);
+      g.state.job &&
+        (g.state.job.performance = Math.min(
+          100,
+          (g.state.job.performance || 50) + 15,
+        ));
+    },
+    type: "epic",
+  },
+  {
+    title: "Accidental Pay Raise",
+    desc: "HR entered the wrong number in the salary system and accidentally gave you a raise. Finance caught it but the CEO said 'good enough, keep it'.",
+    effect: (g, sal) => {
+      g.modCash(sal * 0.2);
+      g.modStat("happiness", 14);
+    },
+    type: "success",
+  },
+  {
+    title: "Fixed the Coffee Machine",
+    desc: "You fixed the office coffee machine that had been broken for 3 weeks. You are now universally adored. They baked you a cake.",
+    effect: (g) => {
+      g.modStat("happiness", 16);
+      g.modStat("health", 5);
+      g.state.job &&
+        (g.state.job.performance = Math.min(
+          100,
+          (g.state.job.performance || 50) + 5,
+        ));
+    },
+    type: "success",
+  },
+  {
+    title: "Stock Options Vested",
+    desc: "Those dusty stock options from 3 years ago finally vested. The market cooperated. This is the payday you forgot was coming.",
+    effect: (g, sal) => {
+      g.modCash(sal * 1.5 + Math.random() * sal);
+      g.modStat("happiness", 20);
+    },
+    type: "epic",
+  },
+  {
+    title: "Remote Work Forever",
+    desc: "Company announced permanent work-from-home. No more commute. No more pants. Your energy and sanity are fully restored.",
+    effect: (g) => {
+      g.modStat("happiness", 20);
+      g.modStat("energy", 40);
+      g.modStat("health", 8);
+    },
+    type: "success",
+  },
+  {
+    title: "Surprise Company Retreat",
+    desc: "The company flew everyone to a mountain resort for a surprise 3-day retreat. You didn't do a single work thing. Perfect.",
+    effect: (g) => {
+      g.modStat("happiness", 18);
+      g.modStat("health", 10);
+      g.modStat("energy", 35);
+    },
+    type: "success",
+  },
+  {
+    title: "Expense Report Approved",
+    desc: "Finance approved an expense report that absolutely should not have been approved. No questions asked. You're keeping quiet.",
+    effect: (g, sal) => {
+      g.modCash(sal * 0.18);
+      g.modStat("happiness", 8);
+    },
+    type: "success",
+  },
+  {
+    title: "Company Nap Pods Installed",
+    desc: "The company invested in wellness nap pods in the break room. You have been in one for most of the week. Performance is through the roof somehow.",
+    effect: (g) => {
+      g.modStat("energy", 50);
+      g.modStat("happiness", 12);
+      g.state.job &&
+        (g.state.job.performance = Math.min(
+          100,
+          (g.state.job.performance || 50) + 8,
+        ));
+    },
+    type: "info",
+  },
+  {
+    title: "Nemesis Got Fired",
+    desc: "That one coworker who made your life difficult every day got fired. You didn't even do anything. The universe just handled it.",
+    effect: (g) => {
+      g.modStat("happiness", 22);
+      g.modStat("energy", 20);
+    },
+    type: "epic",
+  },
+  {
+    title: "Pizza Party Announced",
+    desc: "Company smashed its quarterly goals. Free pizza for everyone — and they got the good stuff, not that cardboard chain garbage.",
+    effect: (g) => {
+      g.modStat("happiness", 10);
+      g.modStat("health", 5);
+    },
+    type: "success",
+  },
+  {
+    title: "Mystery Bonus",
+    desc: "A mysterious 'strategic alignment bonus' appeared in your paycheck. Finance has no record of authorising it. Nobody is investigating.",
+    effect: (g, sal) => {
+      g.modCash(sal * 0.3);
+      g.modStat("happiness", 10);
+    },
+    type: "success",
+  },
 ];
 
 /* ── Attach triggerWorkEvent to game ── */
@@ -11673,11 +12846,11 @@ game.triggerLifeEvent = function () {
   const origNextMonth = game.nextMonth.bind(game);
   game.nextMonth = function () {
     origNextMonth();
-    // 8% chance of random life event each month (only if alive)
+    // 22% chance of random life event each month (only if alive)
     if (
       !this.state.life.dead &&
       !this.state.life.retired &&
-      Math.random() < 0.08
+      Math.random() < 0.22
     ) {
       this.triggerLifeEvent();
     }
@@ -11705,8 +12878,18 @@ game.triggerLifeEvent = function () {
     FX.updateStreakFire();
     const streak = this.state.gameplay?.actionStreak || 0;
     if (streak > 0 && streak % 10 === 0) {
-      app.toast(`🔥 Hot Streak x${streak}!`, "epic");
+      const streakBonus = Math.min(
+        50000,
+        streak * 500 + Math.random() * streak * 300,
+      );
+      game.modCash(streakBonus);
+      game.modStat("happiness", 10);
+      app.toast(
+        `🔥 Hot Streak x${streak}! Momentum bonus +$${Math.round(streakBonus).toLocaleString()}!`,
+        "epic",
+      );
       FX.screenFlash("gain");
+      FX.confetti();
     }
   };
 })();
@@ -13332,8 +14515,7 @@ game.renderPets = function () {
     cat: "https://images.unsplash.com/photo-1574158622682-e40e69881006?w=700&h=240&fit=crop&auto=format",
     fish: "fishtank.png",
     bird: "https://images.unsplash.com/photo-1552728089-57bdde30beb3?w=700&h=240&fit=crop&auto=format",
-    reptile:
-      "reptile.png",
+    reptile: "reptile.png",
   };
   const petShop = document.getElementById("pet-shop");
   if (petShop) {
@@ -13631,131 +14813,300 @@ const SFX = (() => {
     o.stop(startTime + duration + 0.01);
   }
 
-  /* ── Sound library ── */
+  /* ── Noise burst helper (bandpass-filtered white noise for transients) ── */
+  function noiseBurst(vol, dur, freq, q, startTime) {
+    try {
+      const c = ctx();
+      const bufSz = Math.ceil(c.sampleRate * Math.max(0.01, dur));
+      const buf = c.createBuffer(1, bufSz, c.sampleRate);
+      const data = buf.getChannelData(0);
+      for (let i = 0; i < bufSz; i++) data[i] = Math.random() * 2 - 1;
+      const src = c.createBufferSource();
+      src.buffer = buf;
+      const filt = c.createBiquadFilter();
+      filt.type = "bandpass";
+      filt.frequency.value = freq;
+      filt.Q.value = q;
+      const g = c.createGain();
+      g.gain.setValueAtTime(vol, startTime);
+      g.gain.exponentialRampToValueAtTime(0.001, startTime + dur);
+      src.connect(filt);
+      filt.connect(g);
+      g.connect(c.destination);
+      src.start(startTime);
+      src.stop(startTime + dur + 0.02);
+    } catch (e) {
+      /* ignore */
+    }
+  }
+
+  /* ── Professional Sound Library ── */
   const sounds = {
     click() {
       const t = ctx().currentTime;
-      tone(680, "sine", 0.08, 0.001, 0.05, t);
+      noiseBurst(0.11, 0.022, 4200, 2.8, t);
+      tone(1400, "sine", 0.032, 0.001, 0.028, t + 0.002);
     },
 
     coin() {
       const t = ctx().currentTime;
-      [523, 659, 784, 1047].forEach((f, i) =>
-        tone(f, "sine", 0.12, 0.001, 0.09, t + i * 0.06),
-      );
+      // Metallic bell: fundamental + inharmonic upper partial
+      [
+        [1047, 0],
+        [1319, 0.042],
+        [1568, 0.082],
+      ].forEach(([f, d]) => {
+        tone(f, "sine", 0.1, 0.001, 0.2, t + d);
+        tone(f * 2.756, "sine", 0.028, 0.001, 0.09, t + d);
+      });
+      noiseBurst(0.055, 0.028, 7200, 10, t);
     },
 
     bigCoin() {
       const t = ctx().currentTime;
-      [523, 659, 784, 1047, 1319].forEach((f, i) =>
-        tone(f, "sine", 0.16, 0.001, 0.12, t + i * 0.07),
-      );
+      // Ascending pentatonic metallic shower
+      [523, 659, 784, 1047, 1319, 1568].forEach((f, i) => {
+        tone(f, "sine", 0.11, 0.001, 0.24, t + i * 0.058);
+        tone(f * 2.756, "sine", 0.03, 0.001, 0.1, t + i * 0.058);
+        noiseBurst(0.038, 0.025, 5500 + i * 420, 14, t + i * 0.058);
+      });
     },
 
-    crimeSuccess() {
+    salary() {
       const t = ctx().currentTime;
-      sweep(200, 680, "sawtooth", 0.14, 0.12, t);
-      tone(880, "sine", 0.1, 0.001, 0.18, t + 0.1);
+      // Cash register: metallic hit + short descending chime
+      noiseBurst(0.14, 0.028, 5800, 4, t);
+      tone(1319, "sine", 0.09, 0.001, 0.14, t + 0.024);
+      tone(1047, "sine", 0.06, 0.001, 0.1, t + 0.08);
     },
 
-    crimeFail() {
+    buy() {
       const t = ctx().currentTime;
-      sweep(600, 180, "sawtooth", 0.18, 0.3, t);
-      tone(120, "square", 0.1, 0.001, 0.25, t + 0.15);
+      // Warm thunk + rising note
+      noiseBurst(0.1, 0.04, 220, 1.8, t);
+      tone(330, "triangle", 0.07, 0.001, 0.13, t + 0.01);
+      tone(440, "sine", 0.06, 0.001, 0.1, t + 0.07);
     },
 
-    arrested() {
+    sell() {
       const t = ctx().currentTime;
-      /* Wailing police siren — two tones alternating */
+      sweep(440, 880, "triangle", 0.08, 0.18, t);
+      tone(1047, "sine", 0.05, 0.001, 0.1, t + 0.16);
+    },
+
+    error() {
+      const t = ctx().currentTime;
+      tone(200, "square", 0.1, 0.001, 0.09, t);
+      tone(180, "square", 0.08, 0.001, 0.09, t + 0.05);
+      noiseBurst(0.06, 0.06, 320, 1.5, t);
+    },
+
+    advance() {
+      const t = ctx().currentTime;
+      tone(480, "triangle", 0.048, 0.001, 0.065, t);
+      tone(600, "triangle", 0.03, 0.001, 0.048, t + 0.038);
+    },
+
+    modalOpen() {
+      const t = ctx().currentTime;
+      sweep(320, 900, "sine", 0.052, 0.18, t);
+      tone(1800, "sine", 0.02, 0.001, 0.07, t + 0.14);
+    },
+
+    casinoSpin() {
+      const t = ctx().currentTime;
+      // Mechanical reel clicks + rising sweep
       for (let i = 0; i < 5; i++) {
-        sweep(800, 550, "sawtooth", 0.15, 0.2, t + i * 0.22);
-        sweep(550, 800, "sawtooth", 0.15, 0.2, t + i * 0.22 + 0.11);
+        noiseBurst(0.07, 0.02, 1800 + i * 300, 3, t + i * 0.075);
+        tone(200 + i * 60, "square", 0.04, 0.001, 0.04, t + i * 0.075);
       }
-    },
-
-    achievement() {
-      const t = ctx().currentTime;
-      /* Rising fanfare */
-      [
-        [523, 0],
-        [659, 0.09],
-        [784, 0.18],
-        [1047, 0.28],
-        [1319, 0.38],
-      ].forEach(([f, d]) => tone(f, "sine", 0.16, 0.001, 0.28, t + d));
+      sweep(400, 1200, "sawtooth", 0.04, 0.38, t);
     },
 
     casinoWin() {
       const t = ctx().currentTime;
-      /* Slot-machine coins */
-      for (let i = 0; i < 6; i++) {
-        const f = 523 + i * 80 + Math.random() * 40;
-        tone(f, "sine", 0.12, 0.001, 0.08, t + i * 0.05);
+      // Bright ascending arpeggio with chorus + coin shower
+      [523, 659, 784, 1047].forEach((f, i) => {
+        tone(f, "sine", 0.12, 0.001, 0.28, t + i * 0.078);
+        tone(f * 1.008, "sine", 0.042, 0.001, 0.22, t + i * 0.078 + 0.01);
+      });
+      for (let i = 0; i < 8; i++) {
+        const f = 660 + Math.random() * 720;
+        tone(f, "sine", 0.055, 0.001, 0.08, t + 0.36 + i * 0.048);
+        noiseBurst(0.022, 0.022, f * 1.5, 16, t + 0.36 + i * 0.048);
       }
     },
 
     jackpot() {
       const t = ctx().currentTime;
-      /* Big fanfare + coin flood */
+      // Bass slam
+      sweep(95, 48, "sine", 0.22, 0.42, t);
+      noiseBurst(0.28, 0.07, 480, 0.9, t);
+      // Rising fanfare
       [
-        [330, 0],
-        [415, 0.1],
-        [494, 0.2],
-        [659, 0.32],
-        [880, 0.46],
-        [1047, 0.58],
-      ].forEach(([f, d]) => tone(f, "sine", 0.18, 0.001, 0.35, t + d));
-      for (let i = 0; i < 12; i++) {
-        const f = 523 + i * 60 + Math.random() * 80;
-        tone(f, "sine", 0.08, 0.001, 0.07, t + 0.55 + i * 0.04);
+        [330, 0.06],
+        [415, 0.15],
+        [523, 0.26],
+        [659, 0.39],
+        [784, 0.54],
+        [1047, 0.7],
+        [1319, 0.88],
+      ].forEach(([f, d]) => {
+        tone(f, "sine", 0.16, 0.001, 0.42, t + d);
+        tone(f * 1.005, "sine", 0.07, 0.001, 0.38, t + d + 0.012);
+      });
+      // Coin flood
+      for (let i = 0; i < 22; i++) {
+        const f = 480 + Math.random() * 1100;
+        const jitter = Math.random() * 0.035;
+        tone(f, "sine", 0.058, 0.001, 0.08, t + 0.88 + i * 0.042 + jitter);
+        noiseBurst(0.018, 0.018, f, 18, t + 0.88 + i * 0.042 + jitter);
       }
     },
 
     casinoLose() {
       const t = ctx().currentTime;
-      /* Sad descend */
+      // Sad descending minor phrase + low thud
+      [494, 415, 370, 311, 261].forEach((f, i) => {
+        tone(f, "triangle", 0.11, 0.001, 0.3, t + i * 0.115);
+      });
+      sweep(310, 90, "sine", 0.1, 0.48, t + 0.22);
+      noiseBurst(0.06, 0.12, 200, 1.2, t + 0.1);
+    },
+
+    crimeSuccess() {
+      const t = ctx().currentTime;
+      // Stealthy heist success — minor melodic sting
+      sweep(280, 640, "sawtooth", 0.09, 0.13, t);
+      tone(740, "sine", 0.09, 0.001, 0.2, t + 0.1);
+      tone(880, "sine", 0.11, 0.001, 0.24, t + 0.22);
+      noiseBurst(0.05, 0.038, 2200, 5, t + 0.1);
+    },
+
+    crimeFail() {
+      const t = ctx().currentTime;
+      // Alarm descend + bass thud
+      sweep(640, 140, "sawtooth", 0.15, 0.32, t);
+      tone(130, "square", 0.09, 0.001, 0.28, t + 0.18);
+      noiseBurst(0.1, 0.07, 350, 1.2, t);
+    },
+
+    arrested() {
+      const t = ctx().currentTime;
+      // Police siren: two-tone warble × 7
+      for (let i = 0; i < 7; i++) {
+        sweep(920, 620, "sawtooth", 0.13, 0.22, t + i * 0.25);
+        sweep(620, 920, "sawtooth", 0.13, 0.22, t + i * 0.25 + 0.125);
+      }
+    },
+
+    achievement() {
+      const t = ctx().currentTime;
+      // Bass chord anchor
+      [261, 329, 392].forEach((f) =>
+        tone(f * 0.5, "triangle", 0.09, 0.001, 0.55, t),
+      );
+      noiseBurst(0.11, 0.055, 3200, 2, t);
+      // Triumphant rising fanfare with chorus
       [
-        [494, 0],
-        [415, 0.12],
-        [370, 0.25],
-        [311, 0.4],
-      ].forEach(([f, d]) => tone(f, "sine", 0.14, 0.001, 0.22, t + d));
+        [523, 0],
+        [659, 0.09],
+        [784, 0.18],
+        [1047, 0.28],
+        [1319, 0.4],
+        [1047, 0.56],
+        [1319, 0.68],
+        [1568, 0.82],
+      ].forEach(([f, d]) => {
+        tone(f, "sine", 0.15, 0.001, 0.34, t + d);
+        tone(f * 1.005, "sine", 0.055, 0.001, 0.3, t + d + 0.012);
+      });
     },
 
-    death() {
+    hotStreak() {
       const t = ctx().currentTime;
-      /* Dark low descent */
-      sweep(220, 55, "sawtooth", 0.22, 1.2, t);
-      sweep(110, 40, "sine", 0.2, 1.0, t + 0.1);
-      tone(60, "square", 0.12, 0.001, 0.8, t + 0.5);
-    },
-
-    advance() {
-      const t = ctx().currentTime;
-      tone(420, "triangle", 0.06, 0.001, 0.06, t);
-      tone(560, "triangle", 0.04, 0.001, 0.05, t + 0.04);
-    },
-
-    buy() {
-      const t = ctx().currentTime;
-      tone(440, "sine", 0.1, 0.001, 0.09, t);
-      tone(550, "sine", 0.1, 0.001, 0.09, t + 0.08);
-    },
-
-    error() {
-      const t = ctx().currentTime;
-      tone(180, "square", 0.18, 0.001, 0.18, t);
+      // Power-up ascending cascade
+      [294, 370, 440, 554, 659, 880, 1047].forEach((f, i) => {
+        tone(f, "sawtooth", 0.078, 0.001, 0.13, t + i * 0.048);
+        tone(f * 2, "sine", 0.032, 0.001, 0.09, t + i * 0.048 + 0.018);
+      });
     },
 
     epic() {
       const t = ctx().currentTime;
-      sweep(220, 880, "sine", 0.15, 0.5, t);
+      // Bass hit + rising sweep + fanfare
+      sweep(95, 50, "sine", 0.2, 0.35, t);
+      noiseBurst(0.18, 0.065, 650, 1, t);
+      sweep(300, 1400, "sawtooth", 0.08, 0.52, t + 0.045);
       [
         [523, 0.1],
-        [659, 0.22],
-        [784, 0.34],
+        [659, 0.2],
+        [784, 0.32],
         [1047, 0.46],
-      ].forEach(([f, d]) => tone(f, "sine", 0.14, 0.001, 0.28, t + d));
+        [1319, 0.61],
+      ].forEach(([f, d]) => {
+        tone(f, "sine", 0.14, 0.001, 0.38, t + d);
+        tone(f * 1.005, "sine", 0.055, 0.001, 0.32, t + d + 0.012);
+      });
+    },
+
+    netWorthMilestone() {
+      const t = ctx().currentTime;
+      // MASSIVE orchestral stab — bass slam + full chord voicing + coin cascade
+      sweep(80, 44, "sine", 0.3, 0.55, t);
+      noiseBurst(0.38, 0.09, 520, 0.75, t);
+      sweep(380, 1800, "sawtooth", 0.12, 0.65, t + 0.055);
+      [523, 659, 784, 1047, 1319, 1568].forEach((f, i) => {
+        tone(f, "sine", 0.17, 0.001, 0.65, t + 0.07 + i * 0.035);
+        tone(
+          f * 1.004,
+          "sine",
+          0.065,
+          0.001,
+          0.58,
+          t + 0.07 + i * 0.035 + 0.01,
+        );
+        tone(f * 0.5, "triangle", 0.055, 0.001, 0.55, t + 0.07 + i * 0.03);
+      });
+      for (let i = 0; i < 20; i++) {
+        const f = 580 + Math.random() * 1300;
+        const jt = Math.random() * 0.04;
+        tone(f, "sine", 0.055, 0.001, 0.085, t + 0.85 + i * 0.045 + jt);
+        noiseBurst(0.018, 0.02, f, 20, t + 0.85 + i * 0.045 + jt);
+      }
+    },
+
+    dailyBonus() {
+      const t = ctx().currentTime;
+      // Sparkle cascade + mini fanfare
+      [1047, 1319, 1568, 2093, 2637, 3136].forEach((f, i) => {
+        tone(f, "sine", 0.08, 0.001, 0.22, t + i * 0.065);
+        tone(f * 1.5, "sine", 0.032, 0.001, 0.1, t + i * 0.065 + 0.025);
+        noiseBurst(0.035, 0.025, f * 0.8, 18, t + i * 0.065);
+      });
+      [523, 659, 784, 1047].forEach((f, i) => {
+        tone(f, "sine", 0.1, 0.001, 0.3, t + 0.52 + i * 0.075);
+      });
+    },
+
+    death() {
+      const t = ctx().currentTime;
+      // Cinematic dark stinger
+      sweep(220, 38, "sawtooth", 0.2, 1.6, t);
+      sweep(110, 28, "sine", 0.16, 1.4, t + 0.22);
+      tone(48, "square", 0.11, 0.001, 1.1, t + 0.62);
+      noiseBurst(0.14, 0.22, 190, 0.45, t + 0.1);
+      noiseBurst(0.07, 1.0, 75, 0.28, t + 0.55);
+    },
+
+    jobGet() {
+      const t = ctx().currentTime;
+      // Warm confident hire jingle
+      [523, 659, 784, 1047].forEach((f, i) =>
+        tone(f, "triangle", 0.1, 0.001, 0.24, t + i * 0.072),
+      );
+      noiseBurst(0.06, 0.04, 4000, 6, t + 0.02);
+      tone(1319, "sine", 0.08, 0.001, 0.2, t + 0.3);
     },
   };
 
@@ -13765,21 +15116,32 @@ const SFX = (() => {
       return muted;
     },
 
-    play(name, ...args) {
+    play(name) {
       if (muted) return;
       try {
-        sounds[name] && sounds[name](...args);
+        ctx();
+        if (sounds[name]) sounds[name]();
       } catch (e) {
-        /* ignore AudioContext errors */
+        /* ignore */
       }
     },
 
     toggle() {
       muted = !muted;
       localStorage.setItem("greedigo_mute", muted ? "1" : "0");
-      /* Sync background music */
       const bgm = document.getElementById("bg-music");
-      if (bgm) bgm.muted = muted;
+      if (bgm) {
+        /* Just flip the muted flag — no need to stop/restart */
+        bgm.muted = muted;
+        /* If unmuting and audio somehow stopped, restart it */
+        if (!muted && bgm.paused) bgm.play().catch(() => {});
+      }
+      if (muted) {
+        this.stopAmbient();
+      } else {
+        /* Restart ambient if no file is playing */
+        if (!bgm || bgm.paused) this.startAmbient();
+      }
       /* Update toggle button icon */
       const btn = document.getElementById("snd-toggle-btn");
       if (btn) {
@@ -13797,6 +15159,7 @@ const SFX = (() => {
       const bgm = document.getElementById("bg-music");
       if (bgm) {
         bgm.muted = muted;
+        bgm.loop = true;
       }
       /* Restore toggle button state */
       const btn = document.getElementById("snd-toggle-btn");
@@ -13806,6 +15169,25 @@ const SFX = (() => {
           : '<i class="fa-solid fa-volume-high"></i>';
         btn.classList.toggle("snd-muted", muted);
       }
+
+      /* Try to autoplay immediately (works if browser allows it) */
+      if (!muted && bgm) {
+        bgm.play().catch(() => {
+          /* Autoplay blocked — wait for first user interaction */
+          const startOnInteraction = () => {
+            if (!muted && bgm.paused) {
+              bgm.play().catch(() => {});
+            }
+            ["click", "keydown", "touchstart"].forEach((ev) =>
+              document.removeEventListener(ev, startOnInteraction),
+            );
+          };
+          ["click", "keydown", "touchstart"].forEach((ev) =>
+            document.addEventListener(ev, startOnInteraction, { once: true }),
+          );
+        });
+      }
+
       /* Global button click SFX */
       document.addEventListener("click", function (e) {
         const btn = e.target.closest(
@@ -13813,6 +15195,119 @@ const SFX = (() => {
         );
         if (btn && !btn.id.includes("snd-toggle")) api.play("click");
       });
+    },
+
+    /* ── Ambient procedural music fallback (used when bg file is missing) ── */
+    _ambientNodes: null,
+    _ambientRunning: false,
+
+    startAmbient() {
+      if (this._ambientRunning || muted) return;
+      try {
+        const c = ctx();
+        const master = c.createGain();
+        master.gain.setValueAtTime(0, c.currentTime);
+        master.gain.linearRampToValueAtTime(0.06, c.currentTime + 3);
+        master.connect(c.destination);
+
+        const nodes = [];
+        /* Soft pad: detuned sines */
+        [
+          [55, 0],
+          [82.5, 3],
+          [110, -4],
+          [165, 2],
+        ].forEach(([freq, detune]) => {
+          const o = c.createOscillator();
+          const g = c.createGain();
+          const lfo = c.createOscillator();
+          const lfoGain = c.createGain();
+          lfo.frequency.value = 0.05 + Math.random() * 0.08;
+          lfo.type = "sine";
+          lfoGain.gain.value = 1.5;
+          lfo.connect(lfoGain);
+          lfoGain.connect(o.frequency);
+          o.type = "sine";
+          o.frequency.value = freq;
+          o.detune.value = detune;
+          g.gain.value = 0.25;
+          o.connect(g);
+          g.connect(master);
+          o.start();
+          lfo.start();
+          nodes.push(o, g, lfo, lfoGain);
+        });
+        this._ambientNodes = { master, nodes, ctx: c };
+        this._ambientRunning = true;
+      } catch (e) {
+        /* ignore */
+      }
+    },
+
+    stopAmbient() {
+      if (!this._ambientRunning || !this._ambientNodes) return;
+      try {
+        const { master, nodes, ctx: c } = this._ambientNodes;
+        master.gain.linearRampToValueAtTime(0, c.currentTime + 1.5);
+        setTimeout(() => {
+          nodes.forEach((n) => {
+            try {
+              n.stop && n.stop();
+              n.disconnect();
+            } catch (e) {}
+          });
+          master.disconnect();
+        }, 1800);
+      } catch (e) {
+        /* ignore */
+      }
+      this._ambientRunning = false;
+      this._ambientNodes = null;
+    },
+
+    startBgMusicUnmuted() {
+      /* Force-unmute when entering a game so music always plays automatically.
+         This overrides any saved mute preference from a previous session. */
+      if (muted) {
+        muted = false;
+        localStorage.setItem("greedigo_mute", "0");
+        const bgmEl = document.getElementById("bg-music");
+        if (bgmEl) bgmEl.muted = false;
+        const btn = document.getElementById("snd-toggle-btn");
+        if (btn) {
+          btn.innerHTML = '<i class="fa-solid fa-volume-high"></i>';
+          btn.title = "Mute sounds";
+          btn.classList.remove("snd-muted");
+        }
+      }
+      this.startBgMusic();
+    },
+
+    startBgMusic() {
+      const bgm = document.getElementById("bg-music");
+      if (!bgm) {
+        /* No audio element — only start ambient if not muted */
+        if (!muted) this.startAmbient();
+        return;
+      }
+      if (!bgm.paused) {
+        /* Already running — just sync the muted state */
+        bgm.muted = muted;
+        return;
+      }
+      bgm.volume = 0.4;
+      bgm.loop = true; /* Ensure loop is always set */
+      bgm.muted = muted;
+      bgm.play().catch(() => {
+        /* File missing / browser blocked — fall back to ambient only if audible */
+        if (!muted && !this._ambientRunning) this.startAmbient();
+      });
+    },
+
+    stopBgMusic() {
+      const bgm = document.getElementById("bg-music");
+      if (bgm && !bgm.paused) bgm.pause();
+      this.stopAmbient();
     },
   };
 
@@ -15275,6 +16770,396 @@ const CHOICE_EVENTS = [
       app.toast("Patience prevails. Portfolio untouched.", "info");
     },
   },
+  // ── NEW SOCIAL DRAMA EVENTS ────────────────────────────────────
+  {
+    emoji: "😤",
+    title: "Coworker Insult",
+    desc: "A coworker humiliates you in front of the whole office. Everyone is watching. How do you respond?",
+    optA: "Insult back (public)",
+    optB: "Report to HR",
+    fxA(g) {
+      g.modStat("happiness", 8);
+      if (g.state.job)
+        g.state.job.performance = Math.max(
+          0,
+          (g.state.job.performance || 50) - 15,
+        );
+      app.toast(
+        "You clapped back. Everyone heard. Job performance took a hit.",
+        "warning",
+      );
+    },
+    fxB(g) {
+      g.modStat("happiness", -5);
+      if (Math.random() < 0.5) {
+        g.modCash(3000);
+        app.toast("HR sided with you. Settlement: +$3,000.", "success");
+      } else {
+        app.toast("HR did nothing. You're marked as difficult.", "error");
+        if (g.state.job)
+          g.state.job.performance = Math.max(
+            0,
+            (g.state.job.performance || 50) - 8,
+          );
+      }
+    },
+  },
+  {
+    emoji: "🕵️",
+    title: "Partner's Secret",
+    desc: "You find suspicious texts on your partner's phone. Are they cheating? Your gut says yes.",
+    optA: "Confront them",
+    optB: "Hire a PI ($800)",
+    gateFn(g) {
+      return g.state.relationship?.status !== "single";
+    },
+    fxA(g) {
+      const cheating = Math.random() < 0.45;
+      if (cheating) {
+        g.modStat("happiness", -25);
+        g.state.relationship.love = Math.max(
+          0,
+          (g.state.relationship.love || 50) - 30,
+        );
+        app.toast(
+          "They confessed. Trust shattered. Relationship in crisis.",
+          "error",
+        );
+        FX.screenShake("lg");
+      } else {
+        g.modStat("happiness", -8);
+        g.state.relationship.trust = Math.max(
+          0,
+          (g.state.relationship.trust || 50) - 10,
+        );
+        app.toast(
+          "They denied it. You feel guilty for accusing them.",
+          "warning",
+        );
+      }
+    },
+    fxB(g) {
+      if (g.state.cash < 800) {
+        app.toast("Not enough cash.", "error");
+        return;
+      }
+      g.modCash(-800);
+      const cheating = Math.random() < 0.5;
+      if (cheating) {
+        g.modStat("happiness", -20);
+        app.toast(
+          "The PI confirms it. Evidence in hand. What you do next is your choice.",
+          "error",
+        );
+      } else {
+        g.modStat("happiness", 5);
+        app.toast(
+          "They're innocent. You feel relieved — and a little ashamed.",
+          "info",
+        );
+      }
+    },
+  },
+  {
+    emoji: "🎟️",
+    title: "Lottery Ticket!",
+    desc: "You bought a scratch-off lottery ticket for $5. You feel lucky today.",
+    optA: "Scratch it!",
+    optB: "Save it for later",
+    fxA(g) {
+      const roll = Math.random();
+      if (roll < 0.03) {
+        const jackpot = 50000 + Math.floor(Math.random() * 150000);
+        g.modCash(jackpot);
+        app.toast(`JACKPOT! 🎉 You won $${jackpot.toLocaleString()}!`, "epic");
+        FX.confetti();
+        FX.screenShake("lg");
+      } else if (roll < 0.15) {
+        const win = 20 + Math.floor(Math.random() * 480);
+        g.modCash(win);
+        app.toast(`Small win! You got $${win} back.`, "success");
+      } else {
+        g.modCash(-5);
+        app.toast("Nothing. The lottery is just a tax on hope.", "info");
+      }
+    },
+    fxB(g) {
+      app.toast("You put the ticket in a drawer. Maybe later.", "info");
+    },
+  },
+  {
+    emoji: "🐾",
+    title: "Street Dog",
+    desc: "You find an injured stray dog. It looks at you with big eyes. Vet will cost ~$650.",
+    optA: "Take it to the vet",
+    optB: "Walk away",
+    fxA(g) {
+      if (g.state.cash < 650) {
+        app.toast("Not enough cash for vet bills.", "error");
+        return;
+      }
+      g.modCash(-650);
+      g.modStat("happiness", 18);
+      if (!g.state.pets) g.state.pets = [];
+      if (g.state.pets.length < 3) {
+        g.state.pets.push({
+          id: "dog_" + Date.now(),
+          name: "Buddy",
+          type: "dog",
+          ageMonths: 24,
+          maxAge: 180,
+          happiness: 80,
+        });
+        app.toast("You saved Buddy! New dog adopted. +18 Happiness.", "epic");
+        FX.confetti();
+      } else {
+        app.toast(
+          "You paid for its vet bills and found it a good home. +18 Happiness.",
+          "success",
+        );
+      }
+    },
+    fxB(g) {
+      g.modStat("happiness", -6);
+      app.toast("You kept walking. It haunts you a little.", "warning");
+    },
+  },
+  {
+    emoji: "🤝",
+    title: "Friend Needs a Loan",
+    desc: 'Your best friend calls, desperate. "I need $4,000 or I lose my apartment. You\'re the only one I can ask."',
+    optA: "Lend the money",
+    optB: "Can't help right now",
+    gateFn(g) {
+      return g.state.cash >= 4000;
+    },
+    fxA(g) {
+      g.modCash(-4000);
+      const repaid = Math.random() < 0.6;
+      if (repaid) {
+        setTimeout(() => {
+          g.modCash(4000);
+          app.toast(
+            "Your friend paid you back! Friendship and money intact.",
+            "success",
+          );
+        }, 3000);
+        app.toast(
+          "You lent $4,000. They say they'll pay back next month.",
+          "info",
+        );
+      } else {
+        app.toast(
+          "You lent $4,000. They vanished. Some friendships have a price.",
+          "error",
+        );
+      }
+      g.modStat("happiness", 10);
+    },
+    fxB(g) {
+      g.modStat("happiness", -8);
+      app.toast("You said no. The friendship is strained.", "warning");
+    },
+  },
+  {
+    emoji: "📋",
+    title: "Boss Wants Weekend Work",
+    desc: '"I need you this weekend," your boss says. "Big project. Obviously you\'ll be compensated — eventually."',
+    optA: "Agree to work",
+    optB: "Refuse (personal time)",
+    gateFn(g) {
+      return !!g.state.job;
+    },
+    fxA(g) {
+      g.modStat("happiness", -10);
+      if (g.state.job)
+        g.state.job.performance = Math.min(
+          100,
+          (g.state.job.performance || 50) + 15,
+        );
+      g.modCash(800);
+      app.toast(
+        "You worked the weekend. Performance up. +$800 bonus. But you're drained.",
+        "warning",
+      );
+    },
+    fxB(g) {
+      g.modStat("happiness", 8);
+      if (g.state.job)
+        g.state.job.performance = Math.max(
+          0,
+          (g.state.job.performance || 50) - 5,
+        );
+      app.toast(
+        "You refused. Your boss wasn't happy. But your weekend was yours.",
+        "info",
+      );
+    },
+  },
+  {
+    emoji: "👜",
+    title: "Found Wallet",
+    desc: "You found a wallet on the street with $340 cash and an ID card inside.",
+    optA: "Keep the cash",
+    optB: "Return it",
+    fxA(g) {
+      g.modCash(340);
+      g.state.life.legalRecord = (g.state.life.legalRecord || 0) + 0.1;
+      app.toast("You kept $340. Quick win. Legal record: tiny hit.", "warning");
+    },
+    fxB(g) {
+      g.modStat("happiness", 12);
+      if (Math.random() < 0.4) {
+        g.modCash(200);
+        app.toast("The owner rewarded you with $200! Karma is real.", "epic");
+        FX.confetti();
+      } else {
+        app.toast(
+          "You returned it. No reward, but you feel good about it.",
+          "success",
+        );
+      }
+    },
+  },
+  {
+    emoji: "💊",
+    title: "Suspicious Diagnosis",
+    desc: "A doctor says you need an expensive procedure — but a second opinion might save $12,000.",
+    optA: "Trust the doctor ($12,000)",
+    optB: "Get a second opinion",
+    gateFn(g) {
+      return g.state.cash >= 12000;
+    },
+    fxA(g) {
+      g.modCash(-12000);
+      g.modStat("health", 20);
+      app.toast("Procedure done. Health fully recovered: +20 HP.", "success");
+    },
+    fxB(g) {
+      if (Math.random() < 0.55) {
+        g.modCash(-3000);
+        g.modStat("health", 15);
+        app.toast(
+          "Second opinion: minor treatment only. Saved $9,000!",
+          "epic",
+        );
+        FX.confetti();
+      } else {
+        app.toast(
+          "Second doctor agrees: you need the full procedure.",
+          "warning",
+        );
+        g.modStat("health", -5);
+      }
+    },
+  },
+  {
+    emoji: "🏎️",
+    title: "Street Race Invitation",
+    desc: "A stranger at a red light revs their engine and nods. It's a $500 bet — winner takes.",
+    optA: "Accept the race ($500)",
+    optB: "Drive away safely",
+    gateFn(g) {
+      return (
+        g.state.cash >= 500 &&
+        (g.state.inventory || []).some((i) =>
+          ["civic", "tesla", "porsche"].includes(i),
+        )
+      );
+    },
+    fxA(g) {
+      g.modCash(-500);
+      if (Math.random() < 0.5) {
+        g.modCash(1000);
+        g.modStat("happiness", 14);
+        app.toast("You won! +$1,000 and serious street cred.", "epic");
+      } else {
+        g.modStat("happiness", -5);
+        g.modStat("health", -8);
+        app.toast(
+          "You lost — and nearly crashed. -$500 and a close call.",
+          "error",
+        );
+        FX.screenShake("lg");
+      }
+    },
+    fxB(g) {
+      app.toast("You drove away. Some risks aren't worth taking.", "info");
+    },
+  },
+  {
+    emoji: "📱",
+    title: "Viral Social Media Post",
+    desc: "A post you wrote is going viral. Brands are sliding into your DMs with sponsorship offers.",
+    optA: "Accept sponsorship ($3,000)",
+    optB: "Keep it organic",
+    fxA(g) {
+      g.modCash(3000);
+      g.modStat("happiness", 8);
+      app.toast("$3,000 from brand deal. Sponsored content is in.", "success");
+    },
+    fxB(g) {
+      g.modStat("happiness", 15);
+      g.state.crime &&
+        (g.state.crime.heat = Math.max(0, (g.state.crime.heat || 0) - 5));
+      app.toast("You stayed authentic. Your credibility grows.", "info");
+    },
+  },
+  {
+    emoji: "🔥",
+    title: "Kitchen Fire Scare",
+    desc: "A small fire started in your kitchen. Minor damage, but you need to choose how to handle repairs.",
+    optA: "File insurance claim",
+    optB: "Pay out of pocket ($1,200)",
+    fxA(g) {
+      g.modCash(-300);
+      g.modStat("happiness", -5);
+      g.modStat("health", -3);
+      app.toast(
+        "Insurance handled it. $300 deductible. Premiums may rise.",
+        "warning",
+      );
+    },
+    fxB(g) {
+      if (g.state.cash < 1200) {
+        app.toast("Not enough cash for repairs.", "error");
+        return;
+      }
+      g.modCash(-1200);
+      g.modStat("happiness", -3);
+      app.toast("Repairs done out of pocket. No insurance hassle.", "info");
+    },
+  },
+  {
+    emoji: "🎂",
+    title: "Surprise Office Party",
+    desc: "Your coworkers threw you a surprise birthday party. Everyone is watching — celebrate big or play it cool?",
+    optA: "Buy drinks for everyone ($200)",
+    optB: "Thank them and stay chill",
+    gateFn(g) {
+      return !!g.state.job;
+    },
+    fxA(g) {
+      g.modCash(-200);
+      g.modStat("happiness", 20);
+      if (g.state.job)
+        g.state.job.performance = Math.min(
+          100,
+          (g.state.job.performance || 50) + 10,
+        );
+      app.toast(
+        "Best day at work in a long time. Morale through the roof!",
+        "epic",
+      );
+    },
+    fxB(g) {
+      g.modStat("happiness", 12);
+      app.toast(
+        "You smiled and enjoyed the moment quietly. A good day.",
+        "success",
+      );
+    },
+  },
 ];
 
 /* ─────────────────────────────────────────────────────────────────
@@ -16086,12 +17971,12 @@ game.triggerChoiceEvent = function () {
       if (this.state.stats.health < 25) this.state.stats.health = 25;
     }
 
-    // --- 6. Flash opportunity (6% chance) ---
+    // --- 6. Flash opportunity (10% chance) ---
     if (
       !this.state.life.dead &&
       !this.state.life.retired &&
       !this.state.jail &&
-      Math.random() < 0.06
+      Math.random() < 0.1
     ) {
       const avail = FLASH_EVENTS.filter((e) => !e.gateFn || e.gateFn(this));
       if (avail.length) {
@@ -16125,12 +18010,12 @@ game.triggerChoiceEvent = function () {
       }
     }
 
-    // --- 7. Rare choice event (4% chance) ---
+    // --- 7. Rare choice event (8% chance) ---
     if (
       !this.state.life.dead &&
       !this.state.life.retired &&
       !this.state.jail &&
-      Math.random() < 0.04
+      Math.random() < 0.08
     ) {
       this.triggerChoiceEvent();
     }
@@ -16204,5 +18089,9 @@ game.triggerChoiceEvent = function () {
     }
     CHALLENGES.render();
     RIVAL.render();
+    if (this.state?.age > 18 * 12) {
+      this.renderMilestoneGoal();
+    }
+    FX.updateStreakFire();
   };
 })();
