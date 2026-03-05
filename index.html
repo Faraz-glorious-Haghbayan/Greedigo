@@ -91,9 +91,23 @@
         <div class="ts-bg-overlay"></div>
       </div>
 
+      <!-- Animated grid / matrix background -->
+      <div class="ts-grid"></div>
+
       <!-- Vignette + atmospheric rays -->
       <div class="title-vignette"></div>
       <div class="ts-rays"></div>
+
+      <!-- CRT scanlines overlay -->
+      <div class="ts-scanlines"></div>
+
+      <!-- Neon floor glow -->
+      <div class="ts-floor-glow"></div>
+
+      <!-- Decorative corner accents -->
+      <div class="ts-corner ts-corner-tl"></div>
+      <div class="ts-corner ts-corner-tr"></div>
+      <div class="ts-corner ts-corner-br"></div>
 
       <div class="title-content">
         <!-- Eyebrow badge -->
@@ -114,7 +128,9 @@
 
         <!-- Title -->
         <h1 class="title-main">
-          <span class="title-word title-word-1">GREEDIGO</span>
+          <span class="title-word title-word-1" id="title-glitch-text"
+            >GREEDIGO</span
+          >
         </h1>
 
         <!-- Subtitle -->
@@ -168,6 +184,9 @@
           <div class="showcase-card sc-market">
             <i class="fa-solid fa-chart-line"></i><span>Market</span>
           </div>
+          <div class="showcase-card sc-crime">
+            <i class="fa-solid fa-skull-crossbones"></i><span>Crime</span>
+          </div>
           <div class="showcase-card sc-politics">
             <i class="fa-solid fa-landmark-flag"></i><span>Politics</span>
           </div>
@@ -179,6 +198,39 @@
         <!-- Footer -->
         <div class="title-footer-info">
           v1.0.0 &nbsp;·&nbsp; Infinite Sandbox &nbsp;·&nbsp; Permadeath
+        </div>
+      </div>
+
+      <!-- Bottom live ticker -->
+      <div class="ts-ticker-bar">
+        <div class="ts-ticker-live">
+          <span class="ts-live-pulse"></span>LIVE
+        </div>
+        <div class="ts-ticker-track">
+          <div class="ts-ticker-inner" id="ts-ticker-inner">
+            <span
+              >💰 Start at 18 with $500 — make it last &nbsp;&nbsp;&nbsp;⚔️ 17
+              criminal operations &nbsp;&nbsp;&nbsp;🎰 Casinos, poker, slots
+              &nbsp;&nbsp;&nbsp;📈 Real stock market simulation
+              &nbsp;&nbsp;&nbsp;🏛️ Run for political office &nbsp;&nbsp;&nbsp;💊
+              Build a drug empire &nbsp;&nbsp;&nbsp;🏦 Buy real estate
+              &nbsp;&nbsp;&nbsp;💀 Permadeath — every choice matters
+              &nbsp;&nbsp;&nbsp;🌍 193 countries &nbsp;&nbsp;&nbsp;💍 Marriage,
+              children, divorce &nbsp;&nbsp;&nbsp;🚔 Arrest, prison, escape
+              &nbsp;&nbsp;&nbsp;</span
+            >
+            <span
+              >💰 Start at 18 with $500 — make it last &nbsp;&nbsp;&nbsp;⚔️ 17
+              criminal operations &nbsp;&nbsp;&nbsp;🎰 Casinos, poker, slots
+              &nbsp;&nbsp;&nbsp;📈 Real stock market simulation
+              &nbsp;&nbsp;&nbsp;🏛️ Run for political office &nbsp;&nbsp;&nbsp;💊
+              Build a drug empire &nbsp;&nbsp;&nbsp;🏦 Buy real estate
+              &nbsp;&nbsp;&nbsp;💀 Permadeath — every choice matters
+              &nbsp;&nbsp;&nbsp;🌍 193 countries &nbsp;&nbsp;&nbsp;💍 Marriage,
+              children, divorce &nbsp;&nbsp;&nbsp;🚔 Arrest, prison, escape
+              &nbsp;&nbsp;&nbsp;</span
+            >
+          </div>
         </div>
       </div>
     </div>
@@ -797,121 +849,199 @@
             <div class="grid-cards" id="job-list"></div>
           </div>
 
-          <div id="view-business" class="view-container">
-            <div class="view-hero">
-              <img
-                class="view-hero-img"
-                src="https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=1400&h=560&fit=crop&auto=format"
-                alt=""
-                loading="lazy"
-              />
-              <div class="view-hero-overlay"></div>
-              <div class="view-hero-content">
-                <i class="fa-solid fa-rocket"></i>
-                <h2>Business Empire</h2>
+          <div id="view-business" class="view-container biz-view-root">
+            <!-- ═══ EMPIRE COMMAND CENTER HEADER ═══ -->
+            <div class="biz-empire-hdr" id="biz-empire-hdr">
+              <canvas class="biz-empire-canvas" id="biz-empire-canvas"></canvas>
+              <div class="biz-empire-hdr-inner">
+                <div class="biz-empire-hdr-left">
+                  <div class="biz-empire-icon-ring">
+                    <div class="biz-empire-icon-ring-inner">
+                      <i class="fa-solid fa-rocket"></i>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="biz-empire-eyebrow">COMMAND CENTER</div>
+                    <h2 class="biz-empire-title">Business Empire</h2>
+                    <div class="biz-empire-subtitle">
+                      Build. Scale. Dominate.
+                    </div>
+                  </div>
+                </div>
+                <div class="biz-empire-grade-wrap">
+                  <div class="biz-empire-grade-ring">
+                    <svg viewBox="0 0 80 80" class="biz-grade-svg">
+                      <circle cx="40" cy="40" r="32" class="biz-grade-bg" />
+                      <circle
+                        cx="40"
+                        cy="40"
+                        r="32"
+                        class="biz-grade-fill"
+                        id="biz-grade-arc"
+                      />
+                    </svg>
+                    <div class="biz-empire-grade-label">
+                      <span class="biz-grade-letter" id="biz-grade-letter"
+                        >—</span
+                      >
+                      <span class="biz-grade-sub">GRADE</span>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
 
-            <!-- Business KPI Strip -->
-            <div class="biz-kpi-strip">
-              <div class="biz-kpi-cell">
-                <div
-                  class="biz-kpi-icon"
-                  style="color: #a78bfa; background: rgba(167, 139, 250, 0.1)"
-                >
+            <!-- ═══ LIVE KPI COMMAND STRIP ═══ -->
+            <div class="biz-cmd-strip">
+              <div class="biz-cmd-cell" id="biz-cmd-companies">
+                <div class="biz-cmd-icon" style="--cc: #a78bfa">
                   <i class="fa-solid fa-building"></i>
                 </div>
-                <div class="biz-kpi-body">
-                  <span class="biz-kpi-val" id="biz-count">0</span>
-                  <span class="biz-kpi-label">Companies</span>
+                <div class="biz-cmd-body">
+                  <span class="biz-cmd-val" id="biz-count">0</span>
+                  <span class="biz-cmd-lbl">COMPANIES</span>
                 </div>
+                <div class="biz-cmd-spark"></div>
               </div>
-              <div class="biz-kpi-cell">
-                <div
-                  class="biz-kpi-icon"
-                  style="color: #22d3ee; background: rgba(34, 211, 238, 0.1)"
-                >
+              <div class="biz-cmd-cell" id="biz-cmd-val">
+                <div class="biz-cmd-icon" style="--cc: #22d3ee">
                   <i class="fa-solid fa-chart-line"></i>
                 </div>
-                <div class="biz-kpi-body">
-                  <span class="biz-kpi-val" id="biz-total-val">$0</span>
-                  <span class="biz-kpi-label">Portfolio Value</span>
+                <div class="biz-cmd-body">
+                  <span class="biz-cmd-val" id="biz-total-val">$0</span>
+                  <span class="biz-cmd-lbl">PORTFOLIO VALUE</span>
                 </div>
+                <div class="biz-cmd-spark"></div>
               </div>
-              <div class="biz-kpi-cell">
-                <div
-                  class="biz-kpi-icon"
-                  style="color: #34d399; background: rgba(52, 211, 153, 0.1)"
-                >
+              <div class="biz-cmd-cell" id="biz-cmd-emp">
+                <div class="biz-cmd-icon" style="--cc: #34d399">
                   <i class="fa-solid fa-people-group"></i>
                 </div>
-                <div class="biz-kpi-body">
-                  <span class="biz-kpi-val" id="biz-employees">0</span>
-                  <span class="biz-kpi-label">Employees</span>
+                <div class="biz-cmd-body">
+                  <span class="biz-cmd-val" id="biz-employees">0</span>
+                  <span class="biz-cmd-lbl">EMPLOYEES</span>
                 </div>
+                <div class="biz-cmd-spark"></div>
               </div>
-              <div class="biz-kpi-cell">
-                <div
-                  class="biz-kpi-icon"
-                  style="color: #fbbf24; background: rgba(251, 191, 36, 0.1)"
-                >
+              <div class="biz-cmd-cell" id="biz-cmd-net">
+                <div class="biz-cmd-icon" style="--cc: #fbbf24">
                   <i class="fa-solid fa-money-bill-trend-up"></i>
                 </div>
-                <div class="biz-kpi-body">
-                  <span class="biz-kpi-val" id="biz-net">$0</span>
-                  <span class="biz-kpi-label">Monthly P/L</span>
+                <div class="biz-cmd-body">
+                  <span class="biz-cmd-val" id="biz-net">$0</span>
+                  <span class="biz-cmd-lbl">MONTHLY P/L</span>
                 </div>
+                <div class="biz-cmd-spark"></div>
               </div>
             </div>
+
+            <!-- ═══ ADVISOR / GUIDE PANEL ═══ -->
             <div id="biz-dashboard"></div>
 
-            <!-- Launch New Startup -->
-            <div class="biz-launch-section">
-              <h3 class="section-subtitle">
-                <i class="fa-solid fa-plus-circle"></i> Launch a New Company
-              </h3>
-              <p class="biz-launch-desc">
-                Pick an industry to start a company. <b>E-Commerce ($4K)</b> and
-                <b>EdTech ($5K)</b> are easiest to start. Hire Developers first,
-                then Sales once you have features built!
-              </p>
+            <!-- ═══ LAUNCH PAD ═══ -->
+            <div class="biz-launchpad">
+              <div class="biz-launchpad-hdr">
+                <div class="biz-launchpad-icon">
+                  <i class="fa-solid fa-satellite-dish"></i>
+                </div>
+                <div>
+                  <div class="biz-launchpad-title">LAUNCH A NEW COMPANY</div>
+                  <div class="biz-launchpad-desc">
+                    Pick your industry. E-Commerce &amp; EdTech are easiest to
+                    start. Hire developers first, then scale.
+                  </div>
+                </div>
+              </div>
               <div class="biz-type-grid" id="startup-type-grid"></div>
             </div>
 
-            <!-- Active Startups -->
-            <h3
-              class="section-subtitle"
+            <!-- ═══ ACTIVE COMPANIES ═══ -->
+            <div
+              class="biz-portfolio-hdr"
               id="active-startups-title"
               style="display: none"
             >
-              <i class="fa-solid fa-building"></i> Your Companies
-            </h3>
-            <div class="grid-cards" id="startup-list"></div>
+              <div class="biz-portfolio-hdr-left">
+                <i class="fa-solid fa-briefcase"></i>
+                <span>YOUR PORTFOLIO</span>
+              </div>
+              <div
+                class="biz-portfolio-hdr-right"
+                id="biz-portfolio-summary"
+              ></div>
+            </div>
+            <div id="startup-list"></div>
           </div>
 
           <div id="view-hustles" class="view-container">
-            <div class="view-hero">
-              <img
-                class="view-hero-img"
-                src="https://images.unsplash.com/photo-1432888498266-38ffec3eaf0a?w=1400&h=560&fit=crop&auto=format"
-                alt=""
-                loading="lazy"
-              />
-              <div class="view-hero-overlay"></div>
-              <div class="view-hero-content">
+            <!-- Hustle Board Header -->
+            <div class="hustle-hdr">
+              <div class="hustle-hdr-glow"></div>
+              <div class="hustle-hdr-inner">
+                <div class="hustle-hdr-left">
+                  <div class="hustle-hdr-icon-wrap">
+                    <i class="fa-solid fa-bolt"></i>
+                  </div>
+                  <div>
+                    <div class="hustle-hdr-eyebrow">INCOME MULTIPLIER</div>
+                    <div class="hustle-hdr-title">HUSTLE BOARD</div>
+                    <div class="hustle-hdr-sub">
+                      Turn time into cash. Every action earns.
+                    </div>
+                  </div>
+                </div>
+                <div class="hustle-hdr-stats">
+                  <div class="hustle-hdr-stat">
+                    <div class="hustle-hdr-stat-label">SESSIONS</div>
+                    <div class="hustle-hdr-stat-val" id="hh-sessions">—</div>
+                  </div>
+                  <div class="hustle-hdr-stat">
+                    <div class="hustle-hdr-stat-label">THIS YEAR</div>
+                    <div class="hustle-hdr-stat-val green" id="hh-age">—</div>
+                  </div>
+                </div>
+              </div>
+              <div class="hustle-hdr-bar">
+                <div class="hustle-hdr-bar-fill" id="hh-energy-bar"></div>
+              </div>
+              <div class="hustle-hdr-bar-label">
                 <i class="fa-solid fa-bolt"></i>
-                <h2>Side Hustles & Creator Economy</h2>
+                <span id="hh-energy-label">Energy</span>
               </div>
             </div>
 
-            <h3 class="section-subtitle">Active Side Hustle</h3>
-            <div class="grid-cards" id="hustle-list"></div>
+            <!-- Side Hustles -->
+            <div class="hustle-section-bar">
+              <div class="hsb-icon-wrap amber">
+                <i class="fa-solid fa-bolt"></i>
+              </div>
+              <span class="hsb-title">SIDE HUSTLES</span>
+              <span class="hsb-pill amber">Quick Cash</span>
+              <div class="hsb-line"></div>
+            </div>
+            <div class="hustle-grid" id="hustle-list"></div>
 
-            <h3 class="section-subtitle">High-Ticket Contracts</h3>
-            <div class="grid-cards" id="contract-list"></div>
+            <!-- High-Ticket Contracts -->
+            <div class="hustle-section-bar">
+              <div class="hsb-icon-wrap cyan">
+                <i class="fa-solid fa-file-signature"></i>
+              </div>
+              <span class="hsb-title">HIGH-TICKET CONTRACTS</span>
+              <span class="hsb-pill cyan">Elite</span>
+              <div class="hsb-line"></div>
+            </div>
+            <div class="hustle-grid" id="contract-list"></div>
 
-            <h3 class="section-subtitle">Creator Channels</h3>
-            <div class="grid-cards" id="creator-list"></div>
+            <!-- Creator Economy -->
+            <div class="hustle-section-bar">
+              <div class="hsb-icon-wrap purple">
+                <i class="fa-solid fa-circle-play"></i>
+              </div>
+              <span class="hsb-title">CREATOR ECONOMY</span>
+              <span class="hsb-pill purple">Passive Income</span>
+              <div class="hsb-line"></div>
+            </div>
+            <div class="hustle-grid" id="creator-list"></div>
           </div>
 
           <div id="view-market" class="view-container">
@@ -1111,11 +1241,107 @@
                   <div
                     style="
                       font-size: 0.88rem;
-                      color: rgba(255, 255, 255, 0.6);
-                      margin-top: 4px;
+                      color: rgba(255, 255, 255, 0.65);
+                      margin-top: 6px;
+                      max-width: 480px;
+                      line-height: 1.6;
                     "
                   >
-                    High-stakes gambling. Read the odds. Manage your bankroll.
+                    6 games. Real odds. Climb from Bronze to Diamond VIP. Can
+                    you beat the house?
+                  </div>
+                  <div
+                    style="
+                      display: flex;
+                      gap: 10px;
+                      margin-top: 12px;
+                      flex-wrap: wrap;
+                    "
+                  >
+                    <span
+                      style="
+                        padding: 4px 12px;
+                        border-radius: 99px;
+                        background: rgba(217, 70, 239, 0.15);
+                        border: 1px solid rgba(217, 70, 239, 0.35);
+                        font-size: 0.65rem;
+                        font-weight: 800;
+                        letter-spacing: 1.5px;
+                        color: #d946ef;
+                        text-transform: uppercase;
+                      "
+                      >🎰 Slots</span
+                    >
+                    <span
+                      style="
+                        padding: 4px 12px;
+                        border-radius: 99px;
+                        background: rgba(52, 211, 153, 0.12);
+                        border: 1px solid rgba(52, 211, 153, 0.3);
+                        font-size: 0.65rem;
+                        font-weight: 800;
+                        letter-spacing: 1.5px;
+                        color: #34d399;
+                        text-transform: uppercase;
+                      "
+                      >🃏 Blackjack</span
+                    >
+                    <span
+                      style="
+                        padding: 4px 12px;
+                        border-radius: 99px;
+                        background: rgba(239, 68, 68, 0.12);
+                        border: 1px solid rgba(239, 68, 68, 0.3);
+                        font-size: 0.65rem;
+                        font-weight: 800;
+                        letter-spacing: 1.5px;
+                        color: #f87171;
+                        text-transform: uppercase;
+                      "
+                      >🎡 Roulette</span
+                    >
+                    <span
+                      style="
+                        padding: 4px 12px;
+                        border-radius: 99px;
+                        background: rgba(96, 165, 250, 0.12);
+                        border: 1px solid rgba(96, 165, 250, 0.3);
+                        font-size: 0.65rem;
+                        font-weight: 800;
+                        letter-spacing: 1.5px;
+                        color: #60a5fa;
+                        text-transform: uppercase;
+                      "
+                      >🎲 Craps</span
+                    >
+                    <span
+                      style="
+                        padding: 4px 12px;
+                        border-radius: 99px;
+                        background: rgba(251, 191, 36, 0.12);
+                        border: 1px solid rgba(251, 191, 36, 0.3);
+                        font-size: 0.65rem;
+                        font-weight: 800;
+                        letter-spacing: 1.5px;
+                        color: #fbbf24;
+                        text-transform: uppercase;
+                      "
+                      >🏇 Horse</span
+                    >
+                    <span
+                      style="
+                        padding: 4px 12px;
+                        border-radius: 99px;
+                        background: rgba(34, 211, 238, 0.12);
+                        border: 1px solid rgba(34, 211, 238, 0.3);
+                        font-size: 0.65rem;
+                        font-weight: 800;
+                        letter-spacing: 1.5px;
+                        color: #22d3ee;
+                        text-transform: uppercase;
+                      "
+                      >🌟 Scratch</span
+                    >
                   </div>
                 </div>
               </div>
@@ -1126,9 +1352,9 @@
 
             <div class="casino-section-label">
               <i class="fa-solid fa-table-cells" style="color: var(--gold)"></i>
-              Game Tables
+              Choose Your Game
             </div>
-            <div class="grid-cards" id="casino-games-list"></div>
+            <div id="casino-games-list"></div>
 
             <div class="casino-section-label" style="margin-top: 20px">
               <i class="fa-solid fa-scroll" style="color: var(--gold)"></i>
@@ -1138,24 +1364,151 @@
           </div>
 
           <div id="view-crime" class="view-container">
-            <!-- Fun crime header -->
-            <div class="crime-simple-header">
-              <div class="csh-icon">
+            <!-- Hero banner -->
+            <div class="view-hero">
+              <img
+                class="view-hero-img"
+                src="https://images.unsplash.com/photo-1566438480900-0609be27a4be?w=1400&h=560&fit=crop&auto=format"
+                alt=""
+                loading="lazy"
+              />
+              <div class="view-hero-overlay"></div>
+              <div class="view-hero-content">
                 <i class="fa-solid fa-skull-crossbones"></i>
-              </div>
-              <div>
-                <h2>💀 Criminal Underworld</h2>
-                <p class="csh-sub">
-                  Pick a job. Take the risk. Get paid — or get caught. 🚔
-                </p>
+                <div>
+                  <h2>Criminal Underworld</h2>
+                  <div
+                    style="
+                      font-size: 0.88rem;
+                      color: rgba(255, 255, 255, 0.65);
+                      margin-top: 6px;
+                      max-width: 480px;
+                      line-height: 1.6;
+                    "
+                  >
+                    17 operations. Build rep, train skills, beat the heat.
+                    Kingpin or convict — your call.
+                  </div>
+                  <div
+                    style="
+                      display: flex;
+                      gap: 10px;
+                      margin-top: 12px;
+                      flex-wrap: wrap;
+                    "
+                  >
+                    <span
+                      style="
+                        padding: 4px 12px;
+                        border-radius: 99px;
+                        background: rgba(148, 163, 184, 0.12);
+                        border: 1px solid rgba(148, 163, 184, 0.3);
+                        font-size: 0.65rem;
+                        font-weight: 800;
+                        letter-spacing: 1.5px;
+                        color: #94a3b8;
+                        text-transform: uppercase;
+                      "
+                      >👊 Petty</span
+                    >
+                    <span
+                      style="
+                        padding: 4px 12px;
+                        border-radius: 99px;
+                        background: rgba(249, 115, 22, 0.12);
+                        border: 1px solid rgba(249, 115, 22, 0.3);
+                        font-size: 0.65rem;
+                        font-weight: 800;
+                        letter-spacing: 1.5px;
+                        color: #f97316;
+                        text-transform: uppercase;
+                      "
+                      >🔫 Street</span
+                    >
+                    <span
+                      style="
+                        padding: 4px 12px;
+                        border-radius: 99px;
+                        background: rgba(239, 68, 68, 0.12);
+                        border: 1px solid rgba(239, 68, 68, 0.3);
+                        font-size: 0.65rem;
+                        font-weight: 800;
+                        letter-spacing: 1.5px;
+                        color: #ef4444;
+                        text-transform: uppercase;
+                      "
+                      >⛓️ Felony</span
+                    >
+                    <span
+                      style="
+                        padding: 4px 12px;
+                        border-radius: 99px;
+                        background: rgba(59, 130, 246, 0.12);
+                        border: 1px solid rgba(59, 130, 246, 0.3);
+                        font-size: 0.65rem;
+                        font-weight: 800;
+                        letter-spacing: 1.5px;
+                        color: #3b82f6;
+                        text-transform: uppercase;
+                      "
+                      >💻 Cyber</span
+                    >
+                    <span
+                      style="
+                        padding: 4px 12px;
+                        border-radius: 99px;
+                        background: rgba(168, 85, 247, 0.12);
+                        border: 1px solid rgba(168, 85, 247, 0.3);
+                        font-size: 0.65rem;
+                        font-weight: 800;
+                        letter-spacing: 1.5px;
+                        color: #a855f7;
+                        text-transform: uppercase;
+                      "
+                      >💊 Drug Trade</span
+                    >
+                    <span
+                      style="
+                        padding: 4px 12px;
+                        border-radius: 99px;
+                        background: rgba(245, 158, 11, 0.12);
+                        border: 1px solid rgba(245, 158, 11, 0.3);
+                        font-size: 0.65rem;
+                        font-weight: 800;
+                        letter-spacing: 1.5px;
+                        color: #f59e0b;
+                        text-transform: uppercase;
+                      "
+                      >👑 Elite</span
+                    >
+                  </div>
+                </div>
               </div>
             </div>
 
-            <!-- Status (2 cards) -->
-            <div class="crime-status-row" id="crime-hud"></div>
+            <!-- HUD — 4 stat cards populated by JS -->
+            <div id="crime-hud"></div>
 
-            <!-- Operations list -->
+            <!-- Skills -->
+            <div class="crime-section-label">
+              <i class="fa-solid fa-dumbbell" style="color: var(--gold)"></i>
+              Your Skills
+            </div>
+            <div id="crime-skills-bar"></div>
+
+            <!-- Operations -->
+            <div class="crime-section-label">
+              <i class="fa-solid fa-skull" style="color: var(--gold)"></i>
+              Available Operations
+            </div>
             <div id="crime-list"></div>
+
+            <!-- Job History -->
+            <div class="crime-section-label" style="margin-top: 20px">
+              <i class="fa-solid fa-scroll" style="color: var(--gold)"></i> Job
+              History
+            </div>
+            <div id="crime-log"></div>
 
             <!-- Legacy elements kept hidden for JS compatibility -->
             <div id="drug-empire-panel" style="display: none"></div>
@@ -1243,6 +1596,108 @@
               Campaign Trail
             </div>
             <div class="grid-cards" id="politics-roles-list"></div>
+          </div>
+
+          <!-- ═══════════ PRISON VIEW ═══════════ -->
+          <div id="view-prison" class="view-container">
+            <!-- Hero (populated by renderPrison) -->
+            <div
+              id="prison-hero"
+              class="view-hero"
+              style="min-height: 220px"
+            ></div>
+
+            <!-- KPI Strip -->
+            <div id="prison-kpi" class="prison-kpi"></div>
+
+            <!-- Sentence Progress -->
+            <div
+              id="prison-progress"
+              style="padding: 0 2px; margin-bottom: 24px"
+            ></div>
+
+            <!-- JOBS -->
+            <div class="prison-section-label">
+              <i class="fa-solid fa-briefcase" style="color: #22d3ee"></i>
+              Prison Jobs
+              <span style="font-size: 0.7rem; opacity: 0.5; margin-left: 6px"
+                >Choose your work detail</span
+              >
+            </div>
+            <div class="grid-cards" id="prison-jobs"></div>
+
+            <!-- YARD ACTIVITIES -->
+            <div class="prison-section-label" style="margin-top: 28px">
+              <i class="fa-solid fa-sun" style="color: #f59e0b"></i>
+              Prison Yard
+              <span style="font-size: 0.7rem; opacity: 0.5; margin-left: 6px"
+                >One activity per month</span
+              >
+            </div>
+            <div class="grid-cards" id="prison-yard"></div>
+
+            <!-- CONTRABAND -->
+            <div class="prison-section-label" style="margin-top: 28px">
+              <i class="fa-solid fa-box-archive" style="color: #ef4444"></i>
+              Contraband Market
+              <span style="font-size: 0.7rem; opacity: 0.5; margin-left: 6px"
+                >Buy from the block. Keep it hidden.</span
+              >
+            </div>
+            <div class="grid-cards" id="prison-contraband-shop"></div>
+
+            <!-- GANGS -->
+            <div class="prison-section-label" style="margin-top: 28px">
+              <i class="fa-solid fa-users" style="color: #a855f7"></i>
+              Prison Gangs
+              <span style="font-size: 0.7rem; opacity: 0.5; margin-left: 6px"
+                >Join for protection &amp; income</span
+              >
+            </div>
+            <div class="grid-cards" id="prison-gangs"></div>
+
+            <!-- POKER -->
+            <div class="prison-section-label" style="margin-top: 28px">
+              <i class="fa-solid fa-cards" style="color: #fbbf24"></i>
+              Underground Poker
+              <span style="font-size: 0.7rem; opacity: 0.5; margin-left: 6px"
+                >High-stakes commissary games</span
+              >
+            </div>
+            <div id="prison-poker"></div>
+
+            <!-- BRIBE / ESCAPE -->
+            <div class="prison-section-label" style="margin-top: 28px">
+              <i
+                class="fa-solid fa-hand-holding-dollar"
+                style="color: #f59e0b"
+              ></i>
+              Bribe the Guards
+              <span style="font-size: 0.7rem; opacity: 0.5; margin-left: 6px"
+                >Pay for early release or privileges</span
+              >
+            </div>
+            <div class="grid-cards" id="prison-bribe"></div>
+
+            <div class="prison-section-label" style="margin-top: 28px">
+              <i class="fa-solid fa-person-running" style="color: #ef4444"></i>
+              Escape Routes
+              <span style="font-size: 0.7rem; opacity: 0.5; margin-left: 6px"
+                >Sprint, tunnel, or walk out in a uniform</span
+              >
+            </div>
+            <div class="grid-cards" id="prison-escape"></div>
+
+            <!-- EVENT LOG -->
+            <div class="prison-section-label" style="margin-top: 28px">
+              <i class="fa-solid fa-scroll" style="color: #94a3b8"></i>
+              Block Events Log
+            </div>
+            <div id="prison-event-log" style="margin-bottom: 20px"></div>
+
+            <!-- Legacy compatibility divs (hidden) -->
+            <div id="prison-status-card" style="display: none"></div>
+            <div id="prison-actions" style="display: none"></div>
           </div>
 
           <div id="view-pastlives" class="view-container">
