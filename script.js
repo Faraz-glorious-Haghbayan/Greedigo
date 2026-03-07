@@ -3038,6 +3038,7 @@ const game = {
     this.maybeStartOnboarding();
     this.bindHotkeys();
     this._checkDailyBonus();
+    this._checkOfflineProgress();
 
     if (this.state.life.dead || this.state.life.retired) {
       const end = this.state.life.endingSummary;
@@ -3457,11 +3458,18 @@ const game = {
     ov.className = "db-overlay";
     const banner = document.createElement("div");
     banner.className = "daily-bonus-banner";
+    const dayInCycle = ((streak - 1) % 7) + 1;
+    const dots = Array.from({ length: 7 }, (_, i) => {
+      const filled = i + 1 <= dayInCycle;
+      const isToday = i + 1 === dayInCycle;
+      return `<div class="db-day-dot${filled ? " db-day-filled" : ""}${isToday ? " db-day-today" : ""}">${i + 1}</div>`;
+    }).join("");
     banner.innerHTML = `
       <div class="db-emoji">${isMega ? "💎" : streak >= 3 ? "🔥" : "🌅"}</div>
       <div class="db-title">${isMega ? "MEGA BONUS UNLOCKED!" : "Daily Return Bonus!"}</div>
       <div class="db-sub">Day ${streak} streak — welcome back!</div>
       <div class="db-amount">+$${amount.toLocaleString()}</div>
+      <div class="db-days-row">${dots}</div>
       <div class="db-streak">${streak >= 7 ? "🏆 7-day streak achiever!" : streak >= 3 ? "🔥 On a hot streak!" : "Come back tomorrow for more!"}</div>
       <button class="db-btn" id="db-close-btn">Collect & Play!</button>
     `;
@@ -3475,6 +3483,292 @@ const game = {
     };
     document.getElementById("db-close-btn").addEventListener("click", close);
     ov.addEventListener("click", close);
+  },
+
+  // ─────────────────────────────────────────────────────────
+  //  OFFLINE PROGRESS SYSTEM
+  // ─────────────────────────────────────────────────────────
+  _checkOfflineProgress() {
+    const lastSeen = parseInt(localStorage.getItem("GreedigoLastSeen") || "0");
+    if (!lastSeen) return;
+    const now = Date.now();
+    const elapsedMs = now - lastSeen;
+    if (elapsedMs < 5 * 60 * 1000) return; // minimum 5 min
+
+    const cappedMs = Math.min(elapsedMs, 24 * 60 * 60 * 1000);
+    const offlineHours = cappedMs / (60 * 60 * 1000);
+
+    let monthlyIncome = 0;
+    if (this.state.job && !this.state.life.dead) {
+      monthlyIncome += (this.state.job.salary || 0) / 12;
+    }
+    if (this.state.startups && this.state.startups.length > 0) {
+      monthlyIncome += this.state.startups.reduce(
+        (s, st) => s + (st.revenue || 0) / 12,
+        0,
+      );
+    }
+
+    const months = Math.max(1, Math.floor(offlineHours / 2));
+    const earned = Math.floor(monthlyIncome * months * 0.5);
+    if (earned < 100) return;
+
+    setTimeout(() => {
+      this.modCash(earned);
+      this._showOfflineProgress(earned, offlineHours);
+    }, 2000);
+  },
+
+  _showOfflineProgress(amount, hours) {
+    const ov = document.createElement("div");
+    ov.className = "db-overlay";
+    const banner = document.createElement("div");
+    banner.className = "daily-bonus-banner offline-banner";
+    const hoursLabel =
+      hours < 1
+        ? `${Math.round(hours * 60)} minutes`
+        : `${hours.toFixed(1)} hours`;
+    banner.innerHTML = `
+      <div class="db-emoji">⏰</div>
+      <div class="db-title">Offline Earnings!</div>
+      <div class="db-sub">You were away for ${hoursLabel}</div>
+      <div class="db-amount">+$${amount.toLocaleString()}</div>
+      <div class="db-streak">Your hustle kept running while you were gone</div>
+      <button class="db-btn" id="offline-close-btn">Keep Hustling!</button>
+    `;
+    document.body.appendChild(ov);
+    document.body.appendChild(banner);
+    SFX.play("salary");
+    const close = () => {
+      ov.remove();
+      banner.remove();
+    };
+    document
+      .getElementById("offline-close-btn")
+      .addEventListener("click", close);
+    ov.addEventListener("click", close);
+  },
+
+  // ─────────────────────────────────────────────────────────
+  //  LOOT DROP SYSTEM
+  // ─────────────────────────────────────────────────────────
+  rollLootDrop(trigger) {
+    const baseChance = trigger === "crime" ? 0.25 : 0.12;
+    if (Math.random() > baseChance) return null;
+
+    const TIERS = [
+      {
+        id: "common",
+        name: "Common Find",
+        icon: "📦",
+        label: "COMMON",
+        color: "#94a3b8",
+        weight: 60,
+        reward: () => 500 + Math.floor(Math.random() * 1500),
+      },
+      {
+        id: "rare",
+        name: "Rare Opportunity",
+        icon: "💙",
+        label: "RARE",
+        color: "#3b82f6",
+        weight: 25,
+        reward: () => 2000 + Math.floor(Math.random() * 5000),
+      },
+      {
+        id: "epic",
+        name: "Epic Score",
+        icon: "💜",
+        label: "EPIC",
+        color: "#8b5cf6",
+        weight: 12,
+        reward: () => 8000 + Math.floor(Math.random() * 20000),
+      },
+      {
+        id: "legendary",
+        name: "Legendary Drop!",
+        icon: "🏆",
+        label: "LEGENDARY",
+        color: "#f59e0b",
+        weight: 3,
+        reward: () => 30000 + Math.floor(Math.random() * 70000),
+      },
+    ];
+
+    const total = TIERS.reduce((s, t) => s + t.weight, 0);
+    let rand = Math.random() * total;
+    let tier = TIERS[0];
+    for (const t of TIERS) {
+      rand -= t.weight;
+      if (rand <= 0) {
+        tier = t;
+        break;
+      }
+    }
+
+    const amount = tier.reward();
+    this.modCash(amount);
+    this._showLootDrop(tier, amount);
+    if (tier.id === "legendary") {
+      setTimeout(() => this.showShareCard("LEGENDARY DROP", amount), 1500);
+    }
+    return tier;
+  },
+
+  _showLootDrop(tier, amount) {
+    const el = document.createElement("div");
+    el.className = `loot-popup loot-${tier.id}`;
+    el.innerHTML = `
+      <div class="loot-glow-ring" style="border-color:${tier.color}"></div>
+      <div class="loot-label" style="color:${tier.color}">${tier.label}</div>
+      <div class="loot-icon">${tier.icon}</div>
+      <div class="loot-name">${tier.name}</div>
+      <div class="loot-amount">+$${amount.toLocaleString()}</div>
+    `;
+    document.body.appendChild(el);
+    if (tier.id === "legendary") {
+      SFX.play("casinoWin");
+      FX.confetti();
+      FX.screenFlash("epic");
+    } else if (tier.id === "epic") {
+      SFX.play("achievement");
+      FX.screenFlash("rgba(139,92,246,0.3)");
+    } else if (tier.id === "rare") {
+      SFX.play("bigCoin");
+    } else {
+      SFX.play("salary");
+    }
+    setTimeout(() => el.remove(), 1300);
+  },
+
+  // ─────────────────────────────────────────────────────────
+  //  SHAREABLE MOMENTS
+  // ─────────────────────────────────────────────────────────
+  showShareCard(title, amount) {
+    const existing = document.getElementById("share-card-overlay");
+    if (existing) existing.remove();
+
+    const nw = this.getNetWorth();
+    const age = Math.floor((this.state.age || 216) / 12);
+    const name = this.state.playerName || "Player";
+    const run = this.state.gameplay?.prestigeRun || 0;
+
+    const ov = document.createElement("div");
+    ov.id = "share-card-overlay";
+    ov.className = "share-overlay";
+    ov.innerHTML = `
+      <div class="share-card" id="share-card">
+        <div class="share-card-header">
+          <div class="share-card-brand">🏆 GREEDIGO</div>
+          ${run > 0 ? `<div class="share-card-run">Timeline #${run + 1}</div>` : ""}
+        </div>
+        <div class="share-card-achievement">${title}</div>
+        <div class="share-card-amount">+$${amount.toLocaleString()}</div>
+        <div class="share-card-stats">
+          <div class="share-stat"><span>Player</span><strong>${name}</strong></div>
+          <div class="share-stat"><span>Age</span><strong>${age}</strong></div>
+          <div class="share-stat"><span>Net Worth</span><strong>$${shortNumber(nw)}</strong></div>
+        </div>
+        <div class="share-card-footer">greedigo.com &bull; Can you beat this?</div>
+      </div>
+      <div class="share-actions">
+        <button class="share-btn-copy" id="share-copy-btn">📋 Copy Stats</button>
+        <button class="share-btn-close" id="share-close-btn">Close</button>
+      </div>
+    `;
+    document.body.appendChild(ov);
+
+    document.getElementById("share-copy-btn").addEventListener("click", () => {
+      const text = `🏆 Greedigo | ${title}\n+$${amount.toLocaleString()}\nPlayer: ${name} | Age: ${age} | Net Worth: $${shortNumber(nw)}\nPlay free at greedigo.com`;
+      navigator.clipboard.writeText(text).catch(() => {});
+      app.toast("Stats copied to clipboard!", "success");
+    });
+    document
+      .getElementById("share-close-btn")
+      .addEventListener("click", () => ov.remove());
+    ov.addEventListener("click", (e) => {
+      if (e.target === ov) ov.remove();
+    });
+  },
+
+  // ─────────────────────────────────────────────────────────
+  //  PRESTIGE / REBIRTH SYSTEM
+  // ─────────────────────────────────────────────────────────
+  getPrestigeMult() {
+    if (!this.state.prestige) return 1;
+    return this.state.prestige.incomeMult || 1;
+  },
+
+  prestige() {
+    const nw = this.getNetWorth();
+    const minNw = 500000;
+    if (nw < minNw) {
+      app.toast(
+        `Need $500K net worth to Prestige! (Current: $${shortNumber(nw)})`,
+        "error",
+      );
+      return;
+    }
+    const currentRun = this.state.gameplay?.prestigeRun || 0;
+    const newRun = currentRun + 1;
+    const startBonus = 3000 + (newRun - 1) * 5000;
+    const incomePct = newRun * 10;
+    const playerName = this.state.playerName;
+    const country = this.state.country;
+    const countryProfile = this.state.countryProfile;
+
+    app.modal(
+      "♻️ Prestige: New Timeline",
+      `<div class="prestige-modal">
+        <div class="prestige-run-badge-modal">Timeline #${newRun}</div>
+        <div class="prestige-bonus-list">
+          <div class="prestige-bonus-row">
+            <span>💰 Income multiplier</span><span class="prestige-bonus-val">+${incomePct}%</span>
+          </div>
+          <div class="prestige-bonus-row">
+            <span>🎯 Starting cash</span><span class="prestige-bonus-val">$${startBonus.toLocaleString()}</span>
+          </div>
+          <div class="prestige-bonus-row">
+            <span>⚡ Upgrade Shop bonuses</span><span class="prestige-bonus-val">Kept</span>
+          </div>
+        </div>
+        <p class="prestige-warning">All progress resets. Prestige bonuses stack permanently across every timeline.</p>
+      </div>`,
+      [
+        {
+          text: "⚡ Begin New Timeline",
+          cb: () => {
+            app.closeModal();
+            const savedRun = newRun;
+            const savedPrestige = {
+              startingCash: startBonus,
+              incomeMult: 1 + newRun * 0.1,
+            };
+            this.resetState();
+            this.state.gameplay.prestigeRun = savedRun;
+            this.state.prestige = savedPrestige;
+            this.state.cash += startBonus;
+            this.state.playerName = playerName || "Player";
+            this.state.country = country;
+            this.state.countryProfile = countryProfile;
+            this.saveGame(false);
+            FX.confetti();
+            FX.screenFlash("epic");
+            app.toast(
+              `♻️ Timeline #${savedRun} started! +${incomePct}% income.`,
+              "epic",
+            );
+            app.log(
+              `♻️ Timeline #${savedRun} begins. Income ×${(1 + savedRun * 0.1).toFixed(1)}. Starting cash $${startBonus.toLocaleString()}.`,
+              "epic",
+            );
+            this.renderAll();
+          },
+        },
+        { text: "Not Yet", cb: () => app.closeModal(), style: "secondary" },
+      ],
+      { html: true },
+    );
   },
 
   /* ── Milestone Goal Indicator ── */
@@ -4602,6 +4896,7 @@ const game = {
   saveGame(showToast = true) {
     try {
       localStorage.setItem("GreedigoSave", JSON.stringify(this.state));
+      localStorage.setItem("GreedigoLastSeen", Date.now().toString());
       if (showToast) app.toast("Game Saved!", "success");
     } catch (e) {
       app.toast(
@@ -4834,6 +5129,11 @@ const game = {
     const bankFlow = this.processBankMonthly();
     income += bankFlow.income;
     expenses += bankFlow.expenses;
+
+    // Apply prestige income multiplier
+    const prestigeMult = this.getPrestigeMult();
+    if (income > 0 && prestigeMult > 1) income *= prestigeMult;
+
     let taxes = 0;
     if (income > 0) {
       const annualizedIncome = income * 12;
@@ -4911,6 +5211,7 @@ const game = {
     this._checkFirstPurchaseNudges();
     this._checkNetWorthMilestone();
     this.renderMilestoneGoal();
+    this.rollLootDrop("monthly");
     if (this.state.age % 6 === 0) this.saveGame(false);
   },
 
@@ -10137,8 +10438,7 @@ const game = {
           "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=700&h=300&fit=crop&auto=format",
         gym_studio:
           "https://images.unsplash.com/photo-1571902943202-507ec2618e8f?w=700&h=300&fit=crop&auto=format",
-        storage_units:
-          "storage.png",
+        storage_units: "storage.png",
       };
       franchiseList.innerHTML = CONFIG.FRANCHISES.map((f) => {
         const owned = this.state.wealth.franchises?.[f.id] || 0;
@@ -10550,10 +10850,15 @@ const game = {
                 <input class="mkt-qin" id="mkt-qty-${def.id}" type="number" min="1" value="1" onclick="event.stopPropagation()" />
                 <button class="mkt-qbtn" onclick="event.stopPropagation();mktQtyAdj('${def.id}',1)">+</button>
               </div>
+              <div class="mkt-quick-qty-row">
+                <button class="mkt-qpbtn" onclick="event.stopPropagation();document.getElementById('mkt-qty-${def.id}').value=5">×5</button>
+                <button class="mkt-qpbtn" onclick="event.stopPropagation();document.getElementById('mkt-qty-${def.id}').value=10">×10</button>
+                <button class="mkt-qpbtn" onclick="event.stopPropagation();document.getElementById('mkt-qty-${def.id}').value=50">×50</button>
+                <button class="mkt-qpbtn mkt-qpbtn-max" onclick="event.stopPropagation();game.buyMax('${def.id}')">ALL IN</button>
+              </div>
               <div class="mkt-trade-row">
                 <button class="mkt-bbtn" onclick="event.stopPropagation();game.trade('${def.id}',true,parseInt(document.getElementById('mkt-qty-${def.id}').value||1))">BUY</button>
                 <button class="mkt-sbtn" onclick="event.stopPropagation();game.trade('${def.id}',false,parseInt(document.getElementById('mkt-qty-${def.id}').value||1))">SELL</button>
-                <button class="mkt-xbtn" onclick="event.stopPropagation();game.buyMax('${def.id}')">MAX</button>
               </div>
             </div>
           </div>
@@ -10714,8 +11019,7 @@ const game = {
       spa: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=700&h=300&fit=crop&auto=format",
       haircut:
         "https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=700&h=300&fit=crop&auto=format",
-      therapy:
-        "therapy.png",
+      therapy: "therapy.png",
       hike: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=700&h=300&fit=crop&auto=format",
       martial:
         "https://images.unsplash.com/photo-1555597673-b21d5c935865?w=700&h=300&fit=crop&auto=format",
@@ -11525,19 +11829,23 @@ const app = {
     const nav = document.getElementById("nav-tabs");
     const overlay = document.getElementById("mobile-nav-overlay");
     const moreBtn = document.querySelector(".mbn-more");
+    const hamBtn = document.getElementById("mtb-ham-btn");
     if (nav) nav.classList.toggle("nav-open", this.mobileNavOpen);
     if (overlay) overlay.classList.toggle("active", this.mobileNavOpen);
     if (moreBtn)
       moreBtn.classList.toggle("nav-open-active", this.mobileNavOpen);
+    if (hamBtn) hamBtn.classList.toggle("nav-open-active", this.mobileNavOpen);
   },
   closeMobileNav() {
     this.mobileNavOpen = false;
     const nav = document.getElementById("nav-tabs");
     const overlay = document.getElementById("mobile-nav-overlay");
     const moreBtn = document.querySelector(".mbn-more");
+    const hamBtn = document.getElementById("mtb-ham-btn");
     if (nav) nav.classList.remove("nav-open");
     if (overlay) overlay.classList.remove("active");
     if (moreBtn) moreBtn.classList.remove("nav-open-active");
+    if (hamBtn) hamBtn.classList.remove("nav-open-active");
   },
 
   showQuestsModal() {
@@ -11717,7 +12025,29 @@ const app = {
     });
     this.el("stat-cash").innerText = shortNumber(game.state.cash, 1);
     const netWorth = game.getNetWorth();
-    this.el("stat-networth").innerText = shortNumber(netWorth, 1);
+    // Animated net-worth tick-up
+    const nwEl = this.el("stat-networth");
+    if (nwEl) {
+      const prev = parseFloat(nwEl.dataset.raw || 0);
+      nwEl.dataset.raw = netWorth;
+      if (prev !== netWorth && Math.abs(netWorth - prev) < 1e9) {
+        const dur = 620,
+          steps = 24,
+          delta = netWorth - prev;
+        let step = 0;
+        const tick = setInterval(() => {
+          step++;
+          const ease = 1 - Math.pow(1 - step / steps, 3);
+          nwEl.innerText = shortNumber(prev + delta * ease, 1);
+          if (step >= steps) {
+            clearInterval(tick);
+            nwEl.innerText = shortNumber(netWorth, 1);
+          }
+        }, dur / steps);
+      } else {
+        nwEl.innerText = shortNumber(netWorth, 1);
+      }
+    }
     this.el("stat-age").innerText = Math.floor(game.state.age / 12);
     const statPlayerEl = this.el("stat-player-name");
     if (statPlayerEl)
@@ -11838,6 +12168,15 @@ const app = {
       const rel = game.state.relationships;
       const p = rel?.partner;
       mspPartner.innerText = p ? p.name.split(" ")[0] : "Single";
+    }
+
+    // -- Mobile: kids + pets chip --
+    const mspFam = document.getElementById("msp-fam");
+    if (mspFam) {
+      const rel2 = game.state.relationships;
+      const kids = rel2?.children?.length || 0;
+      const pets = rel2?.pets?.length || 0;
+      mspFam.innerText = `\u{1F476}${kids} \u{1F43E}${pets}`;
     }
 
     if (hudDeathRisk?.parentElement)
@@ -12121,6 +12460,37 @@ const app = {
       legendChip.innerText = `Legend ${Math.round(gameplay.legendScore || 0)} • Streak ${gameplay.actionStreak || 0}`;
     }
 
+    // -- Mobile: cashflow chip --
+    const mspCfEl = document.getElementById("msp-cf");
+    if (mspCfEl) {
+      const cf = Math.round(fm.netCashflow || 0);
+      mspCfEl.innerText = `${cf >= 0 ? "+" : ""}$${shortNumber(Math.abs(cf))}`;
+      const cfChip = document.getElementById("msp-cf-chip");
+      if (cfChip) {
+        cfChip.classList.toggle("msp-chip-green", cf >= 0);
+        cfChip.classList.toggle("msp-chip-red", cf < 0);
+      }
+    }
+    // -- Mobile: legend + streak chip --
+    const mspLegStr = document.getElementById("msp-leg-str");
+    if (mspLegStr) {
+      const s = gameplay.actionStreak || 0;
+      const leg = Math.round(gameplay.legendScore || 0);
+      const fireEmoji = s >= 10 ? "\uD83D\uDD25" : s >= 5 ? "\u26A1" : "";
+      mspLegStr.innerText = `\u2B50${leg} ${fireEmoji}\u26A1${s}`;
+    }
+    // -- Mobile: budget row --
+    const mspBmInc = document.getElementById("msp-bm-inc");
+    if (mspBmInc)
+      mspBmInc.innerText = `$${shortNumber(Math.round(fm.income || 0))}`;
+    const mspBmNet = document.getElementById("msp-bm-net");
+    if (mspBmNet) {
+      const cf = Math.round(fm.netCashflow || 0);
+      mspBmNet.innerText = `${cf >= 0 ? "+" : ""}$${shortNumber(Math.abs(cf))}`;
+      mspBmNet.classList.toggle("msp-cf-pos", cf >= 0);
+      mspBmNet.classList.toggle("msp-cf-neg", cf < 0);
+    }
+
     // Player name & country
     const hudPlayerName = document.getElementById("hud-player-name");
     if (hudPlayerName)
@@ -12165,6 +12535,18 @@ const app = {
       if (el) el.style.width = game.state.stats[s] + "%";
     });
 
+    // Prestige run badge
+    const prestigeRunDisplay = document.getElementById("prestige-run-display");
+    const prestigeRun = game.state.gameplay?.prestigeRun || 0;
+    if (prestigeRunDisplay) {
+      if (prestigeRun > 0) {
+        prestigeRunDisplay.style.display = "inline";
+        prestigeRunDisplay.textContent = `×${prestigeRun}`;
+      } else {
+        prestigeRunDisplay.style.display = "none";
+      }
+    }
+
     if (life.retired) {
       this.log("Retired. Your timeline is complete.");
     } else if (life.dead) {
@@ -12192,8 +12574,10 @@ const app = {
         ? "$" + (abs / 1000).toFixed(abs >= 10000 ? 0 : 1) + "k"
         : "$" + abs.toFixed(0);
     el.innerText = (val > 0 ? "+" : "-") + formatted;
-    el.style.left = Math.random() * 30 + 35 + "%";
+    const _mob = window.innerWidth <= 640;
+    el.style.left = _mob ? "50%" : Math.random() * 30 + 35 + "%";
     el.style.top = 40 + Math.random() * 20 + "%";
+    if (_mob) el.style.transform = "translateX(-50%)";
     document.body.appendChild(el);
     const dur = tier === "float-xl" ? 2200 : tier === "float-lg" ? 1800 : 1500;
     setTimeout(() => el.remove(), dur);
@@ -12225,6 +12609,17 @@ const app = {
         return `<div class="lj-entry ${cls}"><span class="lj-icon">${icons[e.type] || "📖"}</span><span class="lj-msg">${e.msg}</span></div>`;
       })
       .join("");
+    // Mirror last 2 entries to mobile journal
+    const mspJournal = document.getElementById("msp-journal");
+    if (mspJournal) {
+      const last2 = [...this._feedHistory].slice(-2).reverse();
+      mspJournal.innerHTML = last2
+        .map(
+          (e) =>
+            `<div class="msp-lj-entry">${icons[e.type] || "📖"} ${e.msg}</div>`,
+        )
+        .join("");
+    }
   },
   toast(msg, type = "success") {
     this.log(msg);
@@ -12245,13 +12640,10 @@ const app = {
     const icon = icons[type] || icons.success;
     t.innerHTML = `<i class="fa-solid ${icon}"></i><span>${msg}</span>`;
     container.appendChild(t);
-    setTimeout(
-      () => {
-        t.classList.add("toast-out");
-        setTimeout(() => t.remove(), 300);
-      },
-      type === "epic" ? 3000 : 1800,
-    );
+    setTimeout(() => {
+      t.classList.add("toast-out");
+      setTimeout(() => t.remove(), 300);
+    }, 1000);
   },
   modal(t, d, acts, opts = {}) {
     document.getElementById("modal-title").innerText = t;
@@ -13484,7 +13876,12 @@ const FX = {
   },
   updateHeartbeat() {
     const hp = game.state.stats?.health || 100;
-    document.body.classList.toggle("health-critical", hp < 25);
+    const dead = game.state?.life?.dead || false;
+    // Do NOT shake the sidebar after the player is dead — stop the heartbeat
+    document.body.classList.toggle("health-critical", hp < 25 && !dead);
+    if (dead) {
+      document.body.classList.remove("health-critical");
+    }
   },
   pulseNextMonth() {
     const btn = document.querySelector(".next-month-btn");
@@ -16235,261 +16632,531 @@ game.prisonSnitch = function () {
 };
 game.renderRelationships = function () {
   const r = this.state.relationship;
+
+  // ── KPI Strip ──
+  const kpiStrip = document.getElementById("soc-kpi-strip");
+  if (kpiStrip) {
+    const loveColor = !r.partner
+      ? "#f472b6"
+      : r.love >= 70
+        ? "#34d399"
+        : r.love >= 40
+          ? "#fbbf24"
+          : "#f87171";
+    const statusLabel =
+      r.status === "single"
+        ? "💔 Single"
+        : r.status === "married"
+          ? "💎 Married"
+          : r.status === "engaged"
+            ? "💍 Engaged"
+            : "💕 Dating";
+    const trustColor = !r.partner
+      ? "#a78bfa"
+      : r.trust >= 70
+        ? "#34d399"
+        : r.trust >= 40
+          ? "#fbbf24"
+          : "#f87171";
+    kpiStrip.innerHTML = `
+      <div class="soc-kpi-cell" style="--sc:#f472b6">
+        <i class="fa-solid fa-heart soc-kpi-icon"></i>
+        <div class="soc-kpi-body">
+          <span class="soc-kpi-val">${statusLabel}</span>
+          <span class="soc-kpi-lbl">Status</span>
+        </div>
+      </div>
+      <div class="soc-kpi-cell" style="--sc:#fb7185">
+        <i class="fa-solid fa-fire soc-kpi-icon" style="color:${loveColor}"></i>
+        <div class="soc-kpi-body">
+          <span class="soc-kpi-val" style="color:${loveColor}">${r.partner ? Math.round(r.love) + "%" : "—"}</span>
+          <span class="soc-kpi-lbl">Love</span>
+        </div>
+      </div>
+      <div class="soc-kpi-cell" style="--sc:#22d3ee">
+        <i class="fa-solid fa-baby soc-kpi-icon"></i>
+        <div class="soc-kpi-body">
+          <span class="soc-kpi-val">${r.children.length}</span>
+          <span class="soc-kpi-lbl">Children</span>
+        </div>
+      </div>
+      <div class="soc-kpi-cell" style="--sc:#a78bfa">
+        <i class="fa-solid fa-paw soc-kpi-icon"></i>
+        <div class="soc-kpi-body">
+          <span class="soc-kpi-val">${this.state.pets.length}</span>
+          <span class="soc-kpi-lbl">Pets</span>
+        </div>
+      </div>`;
+  }
+
+  // ── Status / Partner Card ──
   const statusCard = document.getElementById("relationship-status-card");
   if (statusCard) {
+    statusCard.className = "";
     const p = CONFIG.PARTNERS.find((x) => x.id === r.partner);
+
     if (r.status === "single") {
-      statusCard.innerHTML = `<div class="card-header"><h3>\u{1F494} Single</h3><span class="tag">${r.divorces > 0 ? "Divorced \u00D7" + r.divorces : "Looking for love"}</span></div><p style="opacity:0.7;margin-top:8px">Meet someone from the dating pool below. Dates cost $150 and energy.</p>`;
+      const dSection = document.getElementById("dating-section-hdr");
+      if (dSection) dSection.style.display = "";
+      statusCard.innerHTML = `
+        <div class="soc-single-card">
+          <div class="soc-single-icon">${r.divorces > 0 ? "💔" : "🌹"}</div>
+          <div class="soc-single-title">${r.divorces > 0 ? "Divorced ×" + r.divorces : "Unattached & Free"}</div>
+          <div class="soc-single-sub">Browse the dating pool below. Each date costs $150 and a little energy.</div>
+        </div>`;
     } else {
-      const statusEmoji = {
-        dating: "\u{1F495}",
-        engaged: "\u{1F48D}",
-        married: "\u{1F492}",
-      };
+      const dSection = document.getElementById("dating-section-hdr");
+      if (dSection) dSection.style.display = "none";
+
+      const statusEmoji = { dating: "💕", engaged: "💍", married: "💎" };
       const loveColor =
-        r.love >= 70
-          ? "var(--green)"
-          : r.love >= 40
-            ? "var(--amber)"
-            : "var(--red)";
+        r.love >= 70 ? "#34d399" : r.love >= 40 ? "#fbbf24" : "#f87171";
       const trustColor =
-        r.trust >= 70
-          ? "var(--green)"
-          : r.trust >= 40
-            ? "var(--amber)"
-            : "var(--red)";
-      let actions = "";
-      if (r.status === "dating")
-        actions = `<button class="btn btn-primary" onclick="game.proposeMarriage()"><i class="fa-solid fa-ring"></i> Propose</button>`;
-      if (r.status === "married")
-        actions = `<button class="btn btn-primary" onclick="game.tryForBaby()"><i class="fa-solid fa-baby"></i> Try for Baby</button> <button class="btn btn-outline" onclick="game.adoptChild()"><i class="fa-solid fa-hand-holding-heart"></i> Adopt ($${shortNumber(CONFIG.ADOPTION_COST)})</button>`;
-      statusCard.innerHTML = `<div class="card-header"><h3>${statusEmoji[r.status] || ""} ${r.partnerName}</h3><span class="tag ${r.status === "married" ? "safe" : ""}">${r.status.charAt(0).toUpperCase() + r.status.slice(1)}</span></div>
-        <p style="opacity:0.7">${p ? p.trait : ""} \u2022 Together ${Math.floor(r.monthsTogether / 12)}yr ${r.monthsTogether % 12}mo${r.prenup !== "none" && r.status === "married" ? " \u2022 Prenup: " + r.prenup : ""}</p>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0">
-          <div><span style="font-size:0.75rem;opacity:0.6">LOVE</span><div class="progress-bg" style="margin-top:4px"><div class="progress-fill" style="width:${r.love}%;background:${loveColor}"></div></div><span style="font-size:0.75rem">${Math.round(r.love)}%</span></div>
-          <div><span style="font-size:0.75rem;opacity:0.6">TRUST</span><div class="progress-bg" style="margin-top:4px"><div class="progress-fill" style="width:${r.trust}%;background:${trustColor}"></div></div><span style="font-size:0.75rem">${Math.round(r.trust)}%</span></div>
-        </div>
-        <div class="relationship-actions">
-          <div class="rel-actions-row">${actions}
-            <button class="btn btn-outline" onclick="game.dateNight()"><i class="fa-solid fa-wine-glass"></i> Date Night</button>
-            <button class="btn btn-outline" onclick="game.giveGift()"><i class="fa-solid fa-gift"></i> Give Gift</button>
-            <button class="btn btn-outline" onclick="game.qualityTime()"><i class="fa-solid fa-couch"></i> Quality Time</button>
-            <button class="btn btn-outline" onclick="game.couplesTherapy()"><i class="fa-solid fa-brain"></i> Therapy ($300)</button>
+        r.trust >= 70 ? "#34d399" : r.trust >= 40 ? "#fbbf24" : "#f87171";
+      const initials = (r.partnerName || "??")
+        .split(" ")
+        .map((x) => x[0])
+        .join("")
+        .slice(0, 2)
+        .toUpperCase();
+      const statusBadgeClass =
+        r.status === "married"
+          ? "soc-badge-married"
+          : r.status === "engaged"
+            ? "soc-badge-engaged"
+            : "soc-badge-dating";
+      const yrs = Math.floor(r.monthsTogether / 12);
+      const mos = r.monthsTogether % 12;
+      const togetherStr = yrs > 0 ? `${yrs}yr ${mos}mo` : `${mos}mo`;
+      const grade = Math.round((r.love + r.trust) / 2);
+      const gradeCirc = 201;
+      const gradeDash = Math.round((grade / 100) * gradeCirc);
+      const gradeColor =
+        grade >= 70 ? "#34d399" : grade >= 40 ? "#fbbf24" : "#f87171";
+      const avatarGlow = grade >= 70 ? " soc-avatar-glow" : "";
+      const prenupBadge =
+        r.prenup !== "none" && r.status === "married"
+          ? `<span class="soc-badge soc-badge-prenup">📋 Prenup: ${r.prenup}</span>`
+          : "";
+      const milestoneBadge =
+        r.monthsTogether >= 12
+          ? `<span class="soc-badge soc-badge-milestone">🏆 ${yrs > 0 ? yrs + " Year" : togetherStr}</span>`
+          : "";
+
+      let extraActions = "";
+      if (r.status === "dating") {
+        extraActions = `<button class="soc-act soc-act-propose" onclick="game.proposeMarriage()"><i class="fa-solid fa-ring"></i><span>Propose</span></button>`;
+      } else if (r.status === "married") {
+        extraActions = `
+          <button class="soc-act soc-act-family" onclick="game.tryForBaby()"><i class="fa-solid fa-baby"></i><span>Baby</span></button>
+          <button class="soc-act soc-act-family" onclick="game.adoptChild()"><i class="fa-solid fa-hand-holding-heart"></i><span>Adopt</span></button>`;
+      }
+
+      statusCard.innerHTML = `
+        <div class="soc-partner-card">
+          <div class="soc-partner-card-top">
+            <div class="soc-partner-avatar${avatarGlow}">
+              <span class="soc-partner-initials">${initials}</span>
+            </div>
+            <div class="soc-partner-info">
+              <div class="soc-partner-name">${statusEmoji[r.status] || ""} ${r.partnerName}</div>
+              <div class="soc-partner-trait">${p ? p.trait : ""} · ${togetherStr} together</div>
+              <div class="soc-partner-badges">
+                <span class="soc-badge ${statusBadgeClass}">${r.status.charAt(0).toUpperCase() + r.status.slice(1)}</span>
+                ${prenupBadge}${milestoneBadge}
+              </div>
+            </div>
+            <div class="soc-grade-wrap">
+              <div class="soc-grade-ring">
+                <svg class="soc-grade-svg" viewBox="0 0 72 72">
+                  <circle class="soc-grade-bg" cx="36" cy="36" r="32"/>
+                  <circle class="soc-grade-fill" cx="36" cy="36" r="32"
+                    stroke="${gradeColor}"
+                    stroke-dasharray="${gradeDash} ${gradeCirc - gradeDash}"/>
+                </svg>
+                <div class="soc-grade-center">
+                  <span class="soc-grade-val">${grade}</span>
+                  <span class="soc-grade-lbl">Bond</span>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="rel-actions-row">
-            <button class="btn btn-danger" onclick="game.breakup()"><i class="fa-solid fa-heart-crack"></i> ${r.status === "married" ? "Divorce" : "Break Up"}</button>
+
+          <div class="soc-love-bars">
+            <div class="soc-bar-row">
+              <span class="soc-bar-label">❤️ Love</span>
+              <div class="soc-bar-track">
+                <div class="soc-bar-fill" style="width:${r.love}%;background:${loveColor}"></div>
+              </div>
+              <span class="soc-bar-pct" style="color:${loveColor}">${Math.round(r.love)}%</span>
+            </div>
+            <div class="soc-bar-row">
+              <span class="soc-bar-label">🤝 Trust</span>
+              <div class="soc-bar-track">
+                <div class="soc-bar-fill" style="width:${r.trust}%;background:${trustColor}"></div>
+              </div>
+              <span class="soc-bar-pct" style="color:${trustColor}">${Math.round(r.trust)}%</span>
+            </div>
+          </div>
+
+          ${
+            p
+              ? `<div class="soc-partner-stats-row">
+            <div class="soc-pstat"><span class="soc-pstat-val">$${shortNumber(p.income)}</span><span class="soc-pstat-lbl">Income/mo</span></div>
+            <div class="soc-pstat"><span class="soc-pstat-val">${Math.round(p.loyalty * 100)}%</span><span class="soc-pstat-lbl">Loyalty</span></div>
+            <div class="soc-pstat"><span class="soc-pstat-val">${"⭐".repeat(Math.round(p.looks / 2))}</span><span class="soc-pstat-lbl">Looks</span></div>
+            <div class="soc-pstat"><span class="soc-pstat-val">${"😄".repeat(Math.round(p.humor / 2))}</span><span class="soc-pstat-lbl">Humor</span></div>
+          </div>`
+              : ""
+          }
+
+          <div class="soc-act-grid">
+            <button class="soc-act soc-act-date" onclick="game.dateNight()">
+              <i class="fa-solid fa-wine-glass"></i><span>Date Night</span><sub>$150</sub>
+            </button>
+            <button class="soc-act soc-act-gift" onclick="game.giveGift()">
+              <i class="fa-solid fa-gift"></i><span>Gift</span><sub>$200+</sub>
+            </button>
+            <button class="soc-act soc-act-time" onclick="game.qualityTime()">
+              <i class="fa-solid fa-couch"></i><span>Quality Time</span>
+            </button>
+            <button class="soc-act soc-act-therapy" onclick="game.couplesTherapy()">
+              <i class="fa-solid fa-brain"></i><span>Therapy</span><sub>$300</sub>
+            </button>
+            ${extraActions}
+            <button class="soc-act soc-act-break" onclick="game.breakup()">
+              <i class="fa-solid fa-heart-crack"></i><span>${r.status === "married" ? "Divorce" : "Break Up"}</span>
+            </button>
           </div>
         </div>`;
     }
   }
+
+  // ── Dating Pool ──
   const datingPool = document.getElementById("dating-pool");
   if (datingPool) {
     if (r.status === "single") {
       const available = this.getAvailablePartners();
-      datingPool.innerHTML = available
-        .map(
-          (p) => `<div class="card">
-          <div class="card-header"><h3>${p.name}</h3><span class="tag">${p.trait}</span></div>
-          <p style="opacity:0.7;font-size:0.8rem">Income: $${shortNumber(p.income)}/mo \u2022 Loyalty: ${Math.round(p.loyalty * 100)}%</p>
-          <div style="display:flex;gap:6px;margin-top:4px"><span style="font-size:0.75rem">Looks: ${"\u2B50".repeat(Math.round(p.looks / 2))}</span><span style="font-size:0.75rem">Humor: ${"\u{1F604}".repeat(Math.round(p.humor / 2))}</span></div>
-          <button class="btn btn-primary" style="margin-top:10px" onclick="game.startDating('${p.id}')"><i class="fa-solid fa-heart"></i> Ask Out ($150)</button></div>`,
-        )
-        .join("");
-    } else {
-      datingPool.innerHTML = "";
-    }
-  }
-  const childList = document.getElementById("children-list");
-  if (childList) {
-    if (r.children.length === 0) {
-      childList.innerHTML =
-        '<div class="card"><p style="opacity:0.5;text-align:center">No children yet.</p></div>';
-    } else {
-      childList.innerHTML = r.children
-        .map((c) => {
-          const ageYrs = Math.floor(c.ageMonths / 12);
-          const ageMo = c.ageMonths % 12;
-          const stage =
-            ageYrs < 1
-              ? "\u{1F476} Baby"
-              : ageYrs < 5
-                ? "\u{1F9D2} Toddler"
-                : ageYrs < 13
-                  ? "\u{1F466} Child"
-                  : ageYrs < 18
-                    ? "\u{1F9D1} Teen"
-                    : "\u{1F9D1}\u200D\u{1F393} Adult";
-          const cost =
-            ageYrs >= 18
-              ? CONFIG.CHILD_MONTHLY_COST * 0.3
-              : ageYrs >= 13
-                ? CONFIG.CHILD_MONTHLY_COST * 1.5
-                : CONFIG.CHILD_MONTHLY_COST;
-          return `<div class="card"><div class="card-header"><h3>${c.name}</h3><span class="tag">${stage}</span></div>
-          <p style="opacity:0.7;font-size:0.8rem">${c.adopted ? "Adopted \u2022 " : ""}Age ${ageYrs}yr${ageMo > 0 ? " " + ageMo + "mo" : ""} \u2022 Cost: $${shortNumber(Math.floor(cost))}/mo</p></div>`;
-        })
-        .join("");
-    }
-  }
-  const marriagePanel = document.getElementById("marriage-panel");
-  if (marriagePanel) {
-    marriagePanel.style.display = r.status === "engaged" ? "" : "none";
-    if (r.status === "engaged") {
-      marriagePanel.innerHTML = `<div class="card-header"><h3>\u{1F48D} Engaged to ${r.partnerName}</h3></div><p>Pick a date and plan the wedding!</p>
-        <button class="btn btn-primary" onclick="game._showWeddingOptions()" style="margin-top:10px"><i class="fa-solid fa-church"></i> Plan Wedding</button>`;
-    }
-  }
-  this.renderPets();
-
-  /* ── Side Relationships ── */
-  const sideHeader = document.getElementById("side-rel-header-card");
-  const sideList = document.getElementById("side-relationships-list");
-
-  if (sideHeader && sideList) {
-    const poly = this.isPolygamyAllowed();
-    const countryName = this.state.country || "your current country";
-
-    if (r.status === "single") {
-      sideHeader.style.display = "none";
-      sideList.innerHTML =
-        '<div class="card"><p style="opacity:0.5;text-align:center">Enter a relationship first to unlock this section.</p></div>';
-    } else {
-      sideHeader.style.display = "";
-      const polyBadge = poly
-        ? `<span class="tag safe" style="font-size:0.7rem">⚖️ Polygamy Legal</span>`
-        : `<span class="tag" style="font-size:0.7rem;background:var(--amber);color:#000">⚠️ Secret — High Risk</span>`;
-
-      const warnText = poly
-        ? `In ${countryName}, taking additional partners is permitted by law. Your main partner will know and <em>may react with jealousy</em>. Financial and emotional costs apply.`
-        : `Affairs are illegal or socially devastating in ${countryName}. Discovery risk grows every month. If found out, your relationship may never recover.`;
-
-      sideHeader.innerHTML = `
-        <div class="card-header" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
-          <h3 style="margin:0">💔 Side Relationships</h3>
-          ${polyBadge}
-        </div>
-        <p style="opacity:0.75;font-size:0.82rem;margin:8px 0">${warnText}</p>
-        <button class="btn btn-primary" onclick="game.openSideRelationshipMenu()" style="margin-top:6px">
-          <i class="fa-solid fa-plus"></i> Start a Side Affair
-        </button>`;
-
-      if (!r.sideRelationships || r.sideRelationships.length === 0) {
-        sideList.innerHTML =
-          '<div class="card"><p style="opacity:0.45;text-align:center;font-size:0.85rem">No active side relationships.</p></div>';
+      if (available.length === 0) {
+        datingPool.className = "";
+        datingPool.innerHTML =
+          '<div class="soc-empty-state">💔 No eligible partners right now. Advance a month and check back.</div>';
       } else {
-        sideList.innerHTML = r.sideRelationships
-          .map((sr) => {
-            const sp =
-              CONFIG.SIDE_PARTNERS.find((x) => x.id === sr.partnerId) || {};
-            const loveColor =
-              sr.love >= 60
-                ? "var(--green)"
-                : sr.love >= 35
-                  ? "var(--amber)"
-                  : "var(--red)";
-            const typeLabel =
-              sr.type === "fling"
-                ? "💋 Fling"
-                : sr.type === "girlfriend"
-                  ? "❤️ Girlfriend"
-                  : "💍 2nd Wife";
-            const typeClass = sr.type === "second_wife" ? "safe" : "";
-
-            let discInfo = "";
-            if (sr.type !== "second_wife" || !poly) {
-              const base =
-                sr.type === "fling"
-                  ? 0.014
-                  : sr.type === "girlfriend"
-                    ? 0.024
-                    : 0.034;
-              const growth = sr.type === "fling" ? 0.0008 : 0.0015;
-              const risk = Math.min(
-                28,
-                Math.round((base + sr.monthsTogether * growth) * 100),
-              );
-              const riskColor =
-                risk < 8
-                  ? "var(--green)"
-                  : risk < 18
-                    ? "var(--amber)"
-                    : "var(--red)";
-              discInfo = `<p style="font-size:0.75rem;margin:4px 0">
-              <span style="opacity:0.6">DISCOVERY RISK / MO</span>
-              <span style="color:${riskColor};font-weight:700;margin-left:6px">${risk}%</span>
-            </p>`;
-            } else {
-              discInfo = `<p style="font-size:0.75rem;margin:4px 0;opacity:0.6">Known arrangement — jealousy events possible</p>`;
-            }
-
-            return `<div class="card">
-            <div class="card-header">
-              <h3>${sr.partnerName}</h3>
-              <span class="tag ${typeClass}">${typeLabel}</span>
+        datingPool.className = "soc-date-grid";
+        datingPool.innerHTML = available
+          .map((p) => {
+            const compat = Math.round(
+              p.loyalty * 40 + (p.looks / 10) * 30 + (p.humor / 10) * 30,
+            );
+            const compatColor =
+              compat >= 70 ? "#34d399" : compat >= 50 ? "#fbbf24" : "#f87171";
+            const initials = p.name
+              .split(" ")
+              .map((x) => x[0])
+              .join("")
+              .slice(0, 2)
+              .toUpperCase();
+            const hue = (p.id.charCodeAt(0) * 47) % 360;
+            const looks = Math.round(p.looks / 2);
+            const humor = Math.round(p.humor / 2);
+            return `<div class="soc-date-card">
+            <div class="soc-date-card-top">
+              <div class="soc-date-avatar" style="background:linear-gradient(135deg,hsl(${hue},65%,58%),hsl(${(hue + 60) % 360},60%,42%))">${initials}</div>
+              <span class="soc-compat-badge" style="background:${compatColor}22;color:${compatColor};border:1px solid ${compatColor}55">${compat}% match</span>
             </div>
-            <p style="opacity:0.65;font-size:0.78rem">${sp.trait || ""} • Together ${Math.floor(sr.monthsTogether / 12)}yr ${sr.monthsTogether % 12}mo</p>
-            <div style="margin:8px 0">
-              <span style="font-size:0.72rem;opacity:0.6">LOVE</span>
-              <div class="progress-bg" style="margin-top:3px">
-                <div class="progress-fill" style="width:${sr.love}%;background:${loveColor}"></div>
-              </div>
-              <span style="font-size:0.72rem">${Math.round(sr.love)}%</span>
+            <div class="soc-date-name">${p.name}</div>
+            <span class="soc-trait-chip">${p.trait}</span>
+            <div class="soc-date-stats">
+              <div class="soc-dstat"><span>${"⭐".repeat(looks)}</span><span class="soc-dstat-lbl">Looks</span></div>
+              <div class="soc-dstat"><span>${"😄".repeat(humor)}</span><span class="soc-dstat-lbl">Humor</span></div>
             </div>
-            ${discInfo}
-            <p style="font-size:0.75rem;margin:4px 0;opacity:0.7">Cost: <b>$${shortNumber(sr.monthlyExpense)}/mo</b></p>
-            <button class="btn btn-danger" style="margin-top:8px;font-size:0.8rem" onclick="game.endSideRelationship('${sr.id}')">
-              <i class="fa-solid fa-heart-crack"></i> End It
+            <div style="font-size:0.71rem;color:rgba(255,255,255,0.45);margin:3px 0 6px">
+              💰 $${shortNumber(p.income)}/mo &nbsp;·&nbsp; 🤝 ${Math.round(p.loyalty * 100)}% loyal
+            </div>
+            <button class="soc-ask-btn" onclick="game.startDating('${p.id}')">
+              <i class="fa-solid fa-heart"></i> Ask Out — $150
             </button>
           </div>`;
           })
           .join("");
       }
+    } else {
+      datingPool.className = "";
+      datingPool.innerHTML = "";
+    }
+  }
+
+  // ── Engaged Wedding Panel ──
+  const marriagePanel = document.getElementById("marriage-panel");
+  if (marriagePanel) {
+    marriagePanel.style.display = r.status === "engaged" ? "" : "none";
+    if (r.status === "engaged") {
+      marriagePanel.className = "";
+      marriagePanel.innerHTML = `
+        <div class="soc-engaged-card">
+          <div class="soc-engaged-icon">💍</div>
+          <div class="soc-engaged-text">
+            <div class="soc-engaged-title">Engaged to ${r.partnerName}!</div>
+            <div class="soc-engaged-sub">Pick a venue and plan the perfect wedding.</div>
+          </div>
+          <button class="btn btn-primary" onclick="game._showWeddingOptions()">
+            <i class="fa-solid fa-church"></i> Plan Wedding
+          </button>
+        </div>`;
+    }
+  }
+
+  // ── Children ──
+  const childList = document.getElementById("children-list");
+  if (childList) {
+    childList.className = "";
+    if (r.children.length === 0) {
+      childList.innerHTML =
+        '<div class="soc-empty-state">🍼 No children yet.</div>';
+    } else {
+      childList.innerHTML =
+        '<div class="soc-child-grid">' +
+        r.children
+          .map((c) => {
+            const ageYrs = Math.floor(c.ageMonths / 12);
+            const ageMo = c.ageMonths % 12;
+            let stageEmoji, stageClass, stageLabel;
+            if (ageYrs < 1) {
+              stageEmoji = "👶";
+              stageClass = "soc-stage-baby";
+              stageLabel = "Baby";
+            } else if (ageYrs < 5) {
+              stageEmoji = "🧒";
+              stageClass = "soc-stage-toddler";
+              stageLabel = "Toddler";
+            } else if (ageYrs < 13) {
+              stageEmoji = "👦";
+              stageClass = "soc-stage-child";
+              stageLabel = "Child";
+            } else if (ageYrs < 18) {
+              stageEmoji = "🧑";
+              stageClass = "soc-stage-teen";
+              stageLabel = "Teen";
+            } else {
+              stageEmoji = "🧑‍🎓";
+              stageClass = "soc-stage-adult";
+              stageLabel = "Adult";
+            }
+            const cost =
+              ageYrs >= 18
+                ? CONFIG.CHILD_MONTHLY_COST * 0.3
+                : ageYrs >= 13
+                  ? CONFIG.CHILD_MONTHLY_COST * 1.5
+                  : CONFIG.CHILD_MONTHLY_COST;
+            return `<div class="soc-child-card">
+          <div class="soc-child-emoji">${stageEmoji}</div>
+          <div class="soc-child-info">
+            <div class="soc-child-name">${c.name}</div>
+            <div class="soc-child-age">${c.adopted ? "Adopted · " : ""}Age ${ageYrs}yr${ageMo > 0 ? " " + ageMo + "mo" : ""}</div>
+          </div>
+          <div class="soc-child-right">
+            <span class="soc-age-badge ${stageClass}">${stageLabel}</span>
+            <span class="soc-child-cost">$${shortNumber(Math.floor(cost))}/mo</span>
+          </div>
+        </div>`;
+          })
+          .join("") +
+        "</div>";
+    }
+  }
+
+  // ── Pets ──
+  this.renderPets();
+
+  // ── Side Relationships ──
+  const sideHeader = document.getElementById("side-rel-header-card");
+  const sideList = document.getElementById("side-relationships-list");
+  if (sideHeader && sideList) {
+    const poly = this.isPolygamyAllowed();
+    const countryName = this.state.country || "your country";
+    if (r.status === "single") {
+      sideHeader.style.display = "none";
+      sideList.innerHTML =
+        '<div class="soc-empty-state">Enter a relationship first to unlock this section.</div>';
+    } else {
+      sideHeader.style.display = "";
+      sideHeader.className = "";
+      const polyBadge = poly
+        ? `<span class="soc-badge soc-badge-poly">⚖️ Polygamy Legal</span>`
+        : `<span class="soc-badge soc-badge-risk">⚠️ Secret — High Risk</span>`;
+      const warnText = poly
+        ? `In ${countryName}, additional partners are legally permitted. Your main partner will know and may react with jealousy.`
+        : `Affairs in ${countryName} carry severe discovery risk. Exposure grows each month — your relationship may never recover.`;
+      sideHeader.innerHTML = `
+        <div class="soc-side-control-card">
+          <div class="soc-side-ctrl-top">
+            <div>
+              <div class="soc-side-ctrl-title">Side Relationships &nbsp;${polyBadge}</div>
+              <div class="soc-side-ctrl-sub">${warnText}</div>
+            </div>
+          </div>
+          <button class="soc-side-add-btn" onclick="game.openSideRelationshipMenu()">
+            <i class="fa-solid fa-plus"></i> Start a Side Affair
+          </button>
+        </div>`;
+      if (!r.sideRelationships || r.sideRelationships.length === 0) {
+        sideList.innerHTML =
+          '<div class="soc-empty-state">No active side relationships.</div>';
+      } else {
+        sideList.className = "";
+        sideList.innerHTML =
+          '<div class="soc-side-grid">' +
+          r.sideRelationships
+            .map((sr) => {
+              const sp =
+                CONFIG.SIDE_PARTNERS.find((x) => x.id === sr.partnerId) || {};
+              const loveColor =
+                sr.love >= 60
+                  ? "#34d399"
+                  : sr.love >= 35
+                    ? "#fbbf24"
+                    : "#f87171";
+              const typeLabel =
+                sr.type === "fling"
+                  ? "💋 Fling"
+                  : sr.type === "girlfriend"
+                    ? "❤️ Girlfriend"
+                    : "💍 2nd Wife";
+              const typeClass =
+                sr.type === "second_wife"
+                  ? "soc-badge-married"
+                  : "soc-badge-risk-type";
+              const sidInitials = (sr.partnerName || "??")
+                .split(" ")
+                .map((x) => x[0])
+                .join("")
+                .slice(0, 2)
+                .toUpperCase();
+              let discInfo = "";
+              if (sr.type !== "second_wife" || !poly) {
+                const base =
+                  sr.type === "fling"
+                    ? 0.014
+                    : sr.type === "girlfriend"
+                      ? 0.024
+                      : 0.034;
+                const growth = sr.type === "fling" ? 0.0008 : 0.0015;
+                const risk = Math.min(
+                  28,
+                  Math.round((base + sr.monthsTogether * growth) * 100),
+                );
+                const riskColor =
+                  risk < 8 ? "#34d399" : risk < 18 ? "#fbbf24" : "#f87171";
+                discInfo = `<div class="soc-risk-row">
+              <span class="soc-risk-label">Discovery/mo</span>
+              <div class="soc-risk-meter"><div class="soc-risk-fill" style="width:${risk}%;background:${riskColor}"></div></div>
+              <span class="soc-risk-pct" style="color:${riskColor}">${risk}%</span>
+            </div>`;
+              } else {
+                discInfo = `<div style="font-size:0.72rem;opacity:0.5;margin:6px 0">Known arrangement — jealousy events possible</div>`;
+              }
+              return `<div class="soc-side-card">
+            <div class="soc-side-card-top">
+              <div class="soc-side-avatar">${sidInitials}</div>
+              <div class="soc-side-info">
+                <div class="soc-side-name">${sr.partnerName}</div>
+                <div class="soc-side-meta">${sp.trait || ""} · ${Math.floor(sr.monthsTogether / 12)}yr ${sr.monthsTogether % 12}mo</div>
+              </div>
+              <span class="soc-badge ${typeClass}">${typeLabel}</span>
+            </div>
+            <div class="soc-bar-row">
+              <span class="soc-bar-label">❤️ Love</span>
+              <div class="soc-bar-track"><div class="soc-bar-fill" style="width:${sr.love}%;background:${loveColor}"></div></div>
+              <span class="soc-bar-pct" style="color:${loveColor}">${Math.round(sr.love)}%</span>
+            </div>
+            ${discInfo}
+            <div class="soc-side-cost">💸 $${shortNumber(sr.monthlyExpense)}/mo</div>
+            <button class="soc-end-btn" onclick="game.endSideRelationship('${sr.id}')">
+              <i class="fa-solid fa-heart-crack"></i> End It
+            </button>
+          </div>`;
+            })
+            .join("") +
+          "</div>";
+      }
     }
   }
 };
-
 game.renderPets = function () {
   const PET_IMGS = {
     dog: "https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=700&h=240&fit=crop&auto=format",
     cat: "https://images.unsplash.com/photo-1574158622682-e40e69881006?w=700&h=240&fit=crop&auto=format",
     fish: "fishtank.png",
-    bird: "https://images.unsplash.com/photo-1552728089-57bdde30beb3?w=700&h=240&fit=crop&auto=format",
+    bird: "parrot.jpg",
     reptile: "reptile.png",
   };
-  const petShop = document.getElementById("pet-shop");
-  if (petShop) {
-    petShop.innerHTML =
-      '<h4 style="grid-column:1/-1;opacity:0.6;font-size:0.8rem;margin:0">ADOPT A PET</h4>' +
-      CONFIG.PETS.map(
-        (p) => `<div class="card">
-          <img class="card-img" src="${PET_IMGS[p.id] || PET_IMGS.dog}" alt="${p.name}" loading="lazy">
-          <div class="card-header"><h3>${p.emoji} ${p.name}</h3><span class="tag">$${shortNumber(p.cost)}</span></div>
-          <p style="opacity:0.7;font-size:0.8rem">Monthly: $${p.monthlyCost}/mo \u2022 Happiness +${p.happinessBonus} \u2022 Lifespan ${p.lifespan[0]}-${p.lifespan[1]}yr</p>
-          <button class="btn btn-primary" style="margin-top:8px" onclick="game.adoptPet('${p.id}')"><i class="fa-solid fa-paw"></i> Adopt</button></div>`,
-      ).join("");
-  }
+
+  // ── Owned Pets ──
   const petList = document.getElementById("pet-list");
   if (petList) {
     if (this.state.pets.length === 0) {
       petList.innerHTML =
-        '<div class="card"><p style="opacity:0.5;text-align:center">No pets yet. Adopt one below!</p></div>';
+        '<div class="soc-empty-state" style="grid-column:1/-1">🐾 No pets yet. Adopt one below!</div>';
     } else {
       petList.innerHTML = this.state.pets
         .map((pet) => {
-          const config = CONFIG.PETS.find((p) => p.id === pet.type);
+          const cfg = CONFIG.PETS.find((p) => p.id === pet.type);
           const ageYrs = Math.floor(pet.ageMonths / 12);
           const ageMo = pet.ageMonths % 12;
           const moodEmoji =
+            pet.happiness >= 70 ? "😊" : pet.happiness >= 40 ? "😐" : "😢";
+          const happyColor =
             pet.happiness >= 70
-              ? "\u{1F60A}"
+              ? "#34d399"
               : pet.happiness >= 40
-                ? "\u{1F610}"
-                : "\u{1F622}";
-          return `<div class="card"><img class="card-img" src="${PET_IMGS[pet.type] || PET_IMGS.dog}" alt="${pet.name}" loading="lazy"><div class="card-header"><h3>${pet.emoji} ${pet.name}</h3><span class="tag">${moodEmoji} ${Math.round(pet.happiness)}%</span></div>
-          <p style="opacity:0.7;font-size:0.8rem">Age: ${ageYrs}yr ${ageMo}mo \u2022 Cost: $${config ? config.monthlyCost : 0}/mo</p></img>`;
+                ? "#fbbf24"
+                : "#f87171";
+          return `<div class="soc-pet-card">
+          <div class="soc-pet-img-wrap">
+            <img src="${PET_IMGS[pet.type] || PET_IMGS.dog}" alt="${pet.name}" loading="lazy"/>
+          </div>
+          <div class="soc-pet-emoji-badge">${pet.emoji}</div>
+          <div class="soc-pet-name">${pet.name}</div>
+          <div class="soc-pet-age">${ageYrs}yr ${ageMo}mo old</div>
+          <div class="soc-pet-happy-row">
+            ${moodEmoji}
+            <div class="soc-pet-happy-bar">
+              <div class="soc-pet-happy-fill" style="width:${pet.happiness}%;background:${happyColor}"></div>
+            </div>
+            <span class="soc-pet-happy-pct">${Math.round(pet.happiness)}%</span>
+          </div>
+          <div class="soc-pet-cost">${cfg ? "$" + cfg.monthlyCost + "/mo" : ""}</div>
+        </div>`;
         })
         .join("");
     }
+  }
+
+  // ── Pet Shop ──
+  const petShop = document.getElementById("pet-shop");
+  if (petShop) {
+    petShop.innerHTML = CONFIG.PETS.map((p) => {
+      const canAfford = this.state.cash >= p.cost;
+      const bonuses = [];
+      if (p.happinessBonus) bonuses.push(`+${p.happinessBonus} happiness`);
+      if (p.healthBonus) bonuses.push(`+${p.healthBonus} health`);
+      if (p.stressReduction) bonuses.push(`-${p.stressReduction} stress`);
+      return `<div class="soc-pet-card soc-pet-shop-card">
+        <div class="soc-pet-img-wrap">
+          <img src="${PET_IMGS[p.id] || PET_IMGS.dog}" alt="${p.name}" loading="lazy"/>
+        </div>
+        <div class="soc-pet-emoji-badge">${p.emoji}</div>
+        <div class="soc-pet-name">${p.name}</div>
+        <div class="soc-pet-shop-meta">
+          <span class="soc-pet-price">$${shortNumber(p.cost)}</span>
+          <span class="soc-pet-monthly">$${p.monthlyCost}/mo</span>
+        </div>
+        <div class="soc-pet-bonuses">${bonuses.join(" · ")} · ${p.lifespan[0]}-${p.lifespan[1]}yr lifespan</div>
+        <button class="soc-adopt-btn" onclick="game.adoptPet('${p.id}')" ${!canAfford ? 'disabled style="opacity:0.45"' : ""}>
+          <i class="fa-solid fa-paw"></i> ${canAfford ? "Adopt" : "Need $" + shortNumber(p.cost)}
+        </button>
+      </div>`;
+    }).join("");
   }
 };
 
@@ -17266,14 +17933,8 @@ const SFX = (() => {
       return muted;
     },
 
-    play(name) {
-      if (muted) return;
-      try {
-        ctx();
-        if (sounds[name]) sounds[name]();
-      } catch (e) {
-        /* ignore */
-      }
+    play(_name) {
+      /* SFX removed — background music only */
     },
 
     toggle() {
@@ -17337,14 +17998,6 @@ const SFX = (() => {
           );
         });
       }
-
-      /* Global button click SFX */
-      document.addEventListener("click", function (e) {
-        const btn = e.target.closest(
-          ".btn, .mbn-tab, .speed-btn, .next-month-btn, .crime-execute-btn, .bank-action-btn, .bank-apply-btn",
-        );
-        if (btn && !btn.id.includes("snd-toggle")) api.play("click");
-      });
     },
 
     /* ── Ambient procedural music fallback (used when bg file is missing) ── */
@@ -17492,23 +18145,7 @@ const SFX = (() => {
     };
   })();
 
-  /* ── Patch game.die for death SFX ── */
-  (function () {
-    const _origDie = game.die.bind(game);
-    game.die = function (reason) {
-      api.play("death");
-      _origDie(reason);
-    };
-  })();
-
-  /* ── Patch the advance button for month-tick SFX ── */
-  (function () {
-    const advBtn = document.getElementById("main-advance-btn");
-    if (advBtn) {
-      const _orig = advBtn.onclick;
-      advBtn.addEventListener("click", () => api.play("advance"), true);
-    }
-  })();
+  /* SFX patches removed */
 
   return api;
 })();
@@ -20060,13 +20697,893 @@ const NEW_ACHIEVEMENTS = [
 })();
 
 /* ─────────────────────────────────────────────────────────────────
+   MEGA CHOICE EVENTS EXPANSION  — 28 new dramatic events
+   ───────────────────────────────────────────────────────────────── */
+CHOICE_EVENTS.push(
+  // ── PET & FAMILY DRAMA ──────────────────────────────────────────
+  {
+    emoji: "🐾",
+    title: "Your Pet Passed Away",
+    desc: "You come home to find your pet has peacefully passed away. They were your companion through the good times and bad. How do you cope?",
+    optA: "Grieve properly (take time off)",
+    optB: "Get a new pet right away ($400)",
+    gateFn: (g) => (g.state.pets || []).length > 0,
+    fxA(g) {
+      // Remove one pet
+      if (g.state.pets?.length > 0) g.state.pets.shift();
+      g.modStat("happiness", -22);
+      g.modStat("energy", -15);
+      app.toast(
+        "💔 You said your final goodbye. Some losses take time.",
+        "error",
+      );
+      FX.screenShake("sm");
+    },
+    fxB(g) {
+      if (g.state.pets?.length > 0) g.state.pets.shift();
+      if (g.state.cash >= 400) {
+        g.modCash(-400);
+        g.state.pets = g.state.pets || [];
+        g.state.pets.push({
+          id: "pet_" + Date.now(),
+          name: "Lucky",
+          type: "dog",
+          ageMonths: 12,
+          maxAge: 180,
+          happiness: 90,
+        });
+        g.modStat("happiness", -8);
+        app.toast(
+          "You adopted a new pet — but the old one is still in your heart.",
+          "warning",
+        );
+      } else {
+        g.modStat("happiness", -22);
+        app.toast("💔 Your companion is gone.", "error");
+      }
+    },
+  },
+  {
+    emoji: "🏥",
+    title: "Terminal Diagnosis",
+    desc: "The doctor sits you down. 'You have a serious condition. With treatment, we give you a strong chance. Without it, you have 12 months.' Treatment costs $48,000.",
+    optA: "Fight it — treatment ($48k)",
+    optB: "Accept it, bucket list mode",
+    gateFn: (g) => g.state.stats.health < 55 && g.state.age / 12 > 30,
+    fxA(g) {
+      if (g.state.cash < 48000) {
+        app.toast(
+          "Not enough funds for treatment. Consider taking out a loan.",
+          "error",
+        );
+        return;
+      }
+      g.modCash(-48000);
+      g.modStat("health", 30);
+      g.modStat("happiness", 10);
+      app.toast(
+        "You fought back. Health restored. Every day is a gift now.",
+        "success",
+      );
+      FX.confetti();
+    },
+    fxB(g) {
+      g.modStat("happiness", 15);
+      g.modStat("health", -10);
+      g.state.life.riskDebt = (g.state.life.riskDebt || 0) + 20;
+      app.toast(
+        "You chose to live fully. No regrets — but the clock is ticking.",
+        "warning",
+      );
+    },
+  },
+  {
+    emoji: "💰",
+    title: "Unknown Inheritance",
+    desc: "A lawyer contacts you. A distant relative you never knew existed has died and left everything to you — you're the last of the family line. The estate is valued at $85,000.",
+    optA: "Accept the inheritance",
+    optB: "Demand MORE — contest the will",
+    fxA(g) {
+      g.modCash(85000);
+      g.modStat("happiness", 20);
+      app.toast("$85,000 inheritance received. Unexpected wealth.", "epic");
+      FX.confetti();
+    },
+    fxB(g) {
+      if (Math.random() < 0.35) {
+        g.modCash(180000);
+        g.modStat("happiness", 25);
+        app.toast(
+          "The contested will paid off — $180,000! You're the last heir.",
+          "epic",
+        );
+        FX.confetti();
+        FX.screenShake("lg");
+      } else {
+        g.modCash(-8000);
+        g.modStat("happiness", -15);
+        app.toast(
+          "Contest failed. Legal fees: -$8,000. You got nothing.",
+          "error",
+        );
+      }
+    },
+  },
+  // ── JOB & CAREER DRAMA ──────────────────────────────────────────────────────
+  {
+    emoji: "🚀",
+    title: "Promotion — But There's a Catch",
+    desc: "Your boss offers you a promotion with a 35% raise — but it comes with a relocation to another city, longer hours, and leaving your current life behind.",
+    optA: "Take the promotion",
+    optB: "Decline — life > job",
+    gateFn: (g) => !!g.state.job,
+    fxA(g) {
+      const boost = Math.round((g.state.job?.salary || 50000) * 0.35);
+      if (g.state.job) g.state.job.salary += boost;
+      g.modStat("happiness", -10);
+      g.modStat("smarts", 5);
+      if (g.state.relationship?.status !== "single") {
+        g.state.relationship.love = Math.max(
+          0,
+          (g.state.relationship.love || 60) - 15,
+        );
+        app.toast(
+          `Promotion accepted. Salary +$${shortNumber(boost)}/yr. Your partner isn't thrilled.`,
+          "warning",
+        );
+      } else {
+        app.toast(
+          `Promotion accepted. Salary +$${shortNumber(boost)}/yr. New chapter begins.`,
+          "success",
+        );
+      }
+    },
+    fxB(g) {
+      g.modStat("happiness", 14);
+      if (g.state.job)
+        g.state.job.performance = Math.min(
+          100,
+          (g.state.job.performance || 50) - 5,
+        );
+      app.toast(
+        "You said no. Your boss respected it. Your energy restored.",
+        "info",
+      );
+    },
+  },
+  {
+    emoji: "😤",
+    title: "Wrongfully Accused at Work",
+    desc: "A colleague blamed YOU for a major project failure in front of the entire company. You're furious. HR is watching. Everyone is waiting to see what you do.",
+    optA: "Defend yourself publicly",
+    optB: "Go straight to HR with evidence",
+    optC: "Stay silent — let it play out",
+    gateFn: (g) => !!g.state.job,
+    fxA(g) {
+      if (Math.random() < 0.55) {
+        g.modStat("happiness", 16);
+        app.toast(
+          "You spoke truth to power. The team rallied behind you. Cleared.",
+          "success",
+        );
+      } else {
+        if (g.state.job)
+          g.state.job.performance = Math.max(
+            0,
+            (g.state.job.performance || 50) - 20,
+          );
+        g.modStat("happiness", -12);
+        app.toast(
+          "It backfired. You looked defensive. Performance hit.",
+          "error",
+        );
+      }
+    },
+    fxB(g) {
+      if (Math.random() < 0.65) {
+        g.modCash(4500);
+        g.modStat("happiness", 8);
+        app.toast(
+          "HR found the truth. Settlement + apology. +$4,500.",
+          "success",
+        );
+      } else {
+        g.modStat("happiness", -8);
+        app.toast(
+          "HR did nothing. You're marked as the 'difficult one'.",
+          "error",
+        );
+      }
+    },
+  },
+  {
+    emoji: "🤫",
+    title: "NDA Offer from Competitor",
+    desc: "A headhunter slides into your DMs: '60% pay increase, sign this NDA, start Monday.' Your current employer would lose their best engineer. This is a betrayal — but also life-changing.",
+    optA: "Jump ship — take the offer",
+    optB: "Negotiate counter-offer at current job",
+    optC: "Decline — loyalty matters",
+    gateFn: (g) => !!g.state.job && (g.state.job?.salary || 0) > 40000,
+    fxA(g) {
+      const newSalary = Math.round((g.state.job?.salary || 60000) * 1.6);
+      if (g.state.job) {
+        g.state.job.salary = newSalary;
+        g.state.job.performance = 40; // starting fresh
+      }
+      g.modStat("smarts", 3);
+      app.toast(
+        `You jumped. New salary: $${shortNumber(newSalary)}/yr. Fresh start.`,
+        "epic",
+      );
+    },
+    fxB(g) {
+      if (Math.random() < 0.5) {
+        const raise = Math.round((g.state.job?.salary || 60000) * 0.22);
+        if (g.state.job) g.state.job.salary += raise;
+        g.modStat("happiness", 12);
+        app.toast(
+          `Counter-offer worked! Raise: +$${shortNumber(raise)}/yr. Loyalty rewarded.`,
+          "success",
+        );
+      } else {
+        g.modStat("happiness", -8);
+        app.toast(
+          "Counter-offer rejected. You stayed anyway. Tension high.",
+          "warning",
+        );
+      }
+    },
+  },
+  // ── RELATIONSHIP DRAMA ──────────────────────────────────────────────────────
+  {
+    emoji: "💍",
+    title: "Your Partner Proposes",
+    desc: "Out of nowhere, your partner gets down on one knee. You weren't expecting this at all. The world stops. Everyone around you is watching.",
+    optA: "Yes — let's do this",
+    optB: "Not yet — I need more time",
+    optC: "No — this isn't right",
+    gateFn: (g) =>
+      g.state.relationship?.status === "dating" &&
+      (g.state.relationship?.monthsTogether || 0) > 6,
+    fxA(g) {
+      g.state.relationship.status = "engaged";
+      g.modStat("happiness", 30);
+      g.modCash(-2000); // ring contribution
+      app.toast(
+        "You said YES! 💍 Engaged! The happiest day of your life so far.",
+        "epic",
+      );
+      FX.confetti();
+      FX.screenShake("sm");
+    },
+    fxB(g) {
+      g.state.relationship.love = Math.max(
+        0,
+        (g.state.relationship.love || 60) - 20,
+      );
+      g.modStat("happiness", -8);
+      app.toast(
+        "You asked for time. They're hurt but understanding. For now.",
+        "warning",
+      );
+    },
+    fxC(g) {
+      g.state.relationship.love = 0;
+      g.state.relationship.status = "single";
+      g.state.relationship.partner = null;
+      g.modStat("happiness", -25);
+      app.toast(
+        "You said no. It's over. They walked away. You sit alone in the silence.",
+        "error",
+      );
+      FX.screenShake("sm");
+    },
+  },
+  {
+    emoji: "💔",
+    title: "Your Partner Is Leaving",
+    desc: "They sit you down. 'I love you, but I'm not in love with you anymore.' The relationship has been fading. They're asking for space — maybe permanently.",
+    optA: "Fight for it — couples therapy",
+    optB: "Let them go with dignity",
+    gateFn: (g) =>
+      (g.state.relationship?.status === "dating" ||
+        g.state.relationship?.status === "married") &&
+      (g.state.relationship?.love || 50) < 35,
+    fxA(g) {
+      const cost = 3200;
+      if (g.state.cash < cost) {
+        app.toast("Not enough for therapy right now.", "error");
+        return;
+      }
+      g.modCash(-cost);
+      if (Math.random() < 0.55) {
+        g.state.relationship.love = Math.min(
+          100,
+          (g.state.relationship.love || 20) + 35,
+        );
+        g.state.relationship.trust = Math.min(
+          100,
+          (g.state.relationship.trust || 40) + 20,
+        );
+        g.modStat("happiness", 18);
+        app.toast(
+          "Therapy worked. Love rekindled. Something shifted.",
+          "success",
+        );
+        FX.confetti();
+      } else {
+        g.modStat("happiness", -20);
+        g.state.relationship.status = "single";
+        g.state.relationship.partner = null;
+        app.toast("Even therapy couldn't save it. They're gone.", "error");
+        FX.screenShake("sm");
+      }
+    },
+    fxB(g) {
+      g.modStat("happiness", -15);
+      g.state.relationship.status = "single";
+      g.state.relationship.partner = null;
+      app.toast(
+        "You let them go. It hurt — but sometimes love means doing that.",
+        "warning",
+      );
+    },
+  },
+  {
+    emoji: "📩",
+    title: "An Ex Comes Back",
+    desc: "A message arrives from your ex. 'I made a mistake. I haven't stopped thinking about you. Can we talk?' You're currently single.",
+    optA: "Give them another chance",
+    optB: "Leave the past where it belongs",
+    gateFn: (g) => g.state.relationship?.status === "single",
+    fxA(g) {
+      const partners = CONFIG.PARTNERS;
+      const p = partners[Math.floor(Math.random() * partners.length)];
+      g.state.relationship.status = "dating";
+      g.state.relationship.partner = p.id;
+      g.state.relationship.partnerName = p.name;
+      g.state.relationship.love = 45;
+      g.state.relationship.trust = 30;
+      g.state.relationship.monthsTogether = 0;
+      g.modStat("happiness", 15);
+      app.toast(
+        `You and ${p.name} are trying again. Old love reignited. Trust is earned, not given.`,
+        "success",
+      );
+    },
+    fxB(g) {
+      g.modStat("happiness", 10);
+      app.toast(
+        "You closed that chapter for good. Some stories end for a reason.",
+        "info",
+      );
+    },
+  },
+  // ── FINANCIAL DRAMA ──────────────────────────────────────────────────────────
+  {
+    emoji: "📉",
+    title: "Market CRASH — Your Portfolio Is Bleeding",
+    desc: "The market just dropped 30% in 48 hours. Your portfolio is in freefall. Panic is everywhere. What do you do?",
+    optA: "Hold the line — don't sell",
+    optB: "Cut your losses — sell 50%",
+    optC: "Buy more — buy the dip",
+    gateFn: (g) =>
+      CONFIG.ASSETS.some((a) => (g.state.assets[a.id]?.owned || 0) > 0),
+    fxA(g) {
+      g.modStat("happiness", -8);
+      app.toast(
+        "You held. Blood in the streets — but the long game belongs to the patient.",
+        "info",
+      );
+    },
+    fxB(g) {
+      let totalLoss = 0;
+      CONFIG.ASSETS.forEach((a) => {
+        const ast = g.state.assets[a.id];
+        if (ast && ast.owned > 0) {
+          const sellQty = Math.floor(ast.owned / 2);
+          const proceeds = sellQty * ast.price * 0.7; // selling at 30% loss
+          ast.owned -= sellQty;
+          g.modCash(proceeds);
+          totalLoss += sellQty * ast.price * 0.3;
+        }
+      });
+      g.modStat("happiness", -12);
+      app.toast(
+        `Sold 50% of holdings. Realized loss: ~$${shortNumber(Math.round(totalLoss))}. Pain now, survival later.`,
+        "warning",
+      );
+    },
+    fxC(g) {
+      if (g.state.cash < 2000) {
+        app.toast("Not enough cash to buy the dip!", "error");
+        return;
+      }
+      const buyAmount = Math.min(g.state.cash * 0.3, 50000);
+      g.modCash(-buyAmount);
+      const asset = g.state.assets["spy"];
+      if (asset) asset.owned += Math.floor(buyAmount / asset.price);
+      g.modStat("happiness", 5);
+      app.toast(
+        `You bought the dip — $${shortNumber(Math.round(buyAmount))} into SPY. Either genius or crazy.`,
+        "epic",
+      );
+    },
+  },
+  {
+    emoji: "🎰",
+    title: "High Roller Table — Private Invite",
+    desc: "A stranger passes you a black card. 'Private game. $10,000 buy-in. Winner takes $90,000 or more.' No name. No address. Just a time.",
+    optA: "Show up — go all in",
+    optB: "Investigate first (lose the invite)",
+    optC: "Walk away — smells like a trap",
+    gateFn: (g) => g.state.cash >= 10000,
+    fxA(g) {
+      g.modCash(-10000);
+      const roll = Math.random();
+      if (roll < 0.25) {
+        g.modCash(90000);
+        g.modStat("happiness", 30);
+        app.toast(
+          "YOU WON THE PRIVATE TABLE! +$90,000 in cash. Nobody talks about this.",
+          "epic",
+        );
+        FX.confetti();
+        FX.screenShake("lg");
+      } else if (roll < 0.55) {
+        app.toast(
+          "Lost everything at the table. -$10,000 and your dignity.",
+          "error",
+        );
+        g.modStat("happiness", -15);
+        FX.screenShake("sm");
+      } else {
+        // It was a setup
+        g.modCash(-8000); // robbed
+        g.modStat("health", -12);
+        g.state.crime &&
+          (g.state.crime.heat = Math.min(100, (g.state.crime.heat || 0) + 10));
+        app.toast(
+          "It WAS a trap. You were robbed. -$18k total. Get out of there.",
+          "error",
+        );
+        FX.screenShake("lg");
+      }
+    },
+    fxB(g) {
+      g.modStat("happiness", -3);
+      app.toast(
+        "You dug around. The invite expired. The game happened without you.",
+        "info",
+      );
+    },
+    fxC(g) {
+      g.modStat("happiness", 5);
+      app.toast(
+        "You walked away. The ones who went weren't seen again.",
+        "warning",
+      );
+    },
+  },
+  {
+    emoji: "💸",
+    title: "Angel Investment Opportunity",
+    desc: "A friend is launching a startup. They need $15,000 from you for a 12% equity stake. It's pre-revenue, but the idea is wild. Could be the next billion-dollar company.",
+    optA: "Invest $15k for 12% equity",
+    optB: "Negotiate — $10k for 15%",
+    optC: "Pass on this one",
+    gateFn: (g) => g.state.cash >= 10000,
+    fxA(g) {
+      g.modCash(-15000);
+      if (Math.random() < 0.3) {
+        setTimeout(() => {
+          const payout = 80000 + Math.random() * 200000;
+          g.modCash(payout);
+          app.toast(
+            `🚀 Your startup investment exited! +$${shortNumber(Math.round(payout))} returned!`,
+            "epic",
+          );
+          FX.confetti();
+        }, 5000);
+        app.toast(
+          "Invested $15k. Company looks promising. Waiting for the exit...",
+          "info",
+        );
+      } else {
+        app.toast(
+          "Invested $15k. Company went sideways 6 months later. Total loss.",
+          "error",
+        );
+      }
+    },
+    fxB(g) {
+      if (g.state.cash < 10000) {
+        app.toast("Not enough cash.", "error");
+        return;
+      }
+      g.modCash(-10000);
+      if (Math.random() < 0.25) {
+        setTimeout(() => {
+          const payout = 90000 + Math.random() * 250000;
+          g.modCash(payout);
+          app.toast(
+            `🚀 Startup EXITED! Better deal too — +$${shortNumber(Math.round(payout))}!`,
+            "epic",
+          );
+          FX.confetti();
+        }, 5000);
+        app.toast(
+          "Negotiated harder. They agreed. $10k for 15%. Game time.",
+          "success",
+        );
+      } else {
+        app.toast(
+          "They took someone else's money. You lost the deal entirely.",
+          "error",
+        );
+      }
+    },
+    fxC(g) {
+      g.modStat("happiness", 3);
+      app.toast(
+        "You passed. Sometimes conviction means watching from the sidelines.",
+        "info",
+      );
+    },
+  },
+  // ── PERSONAL GROWTH & RANDOM LIFE ─────────────────────────────────────────
+  {
+    emoji: "🧳",
+    title: "Quit Everything — Backpack Asia",
+    desc: "You've been grinding for years. One morning you wake up and think: what if I just left? $3,000.  A backpack. Three months across Southeast Asia. No laptop.",
+    optA: "Quit. Just go. ($3,000)",
+    optB: "Take a week off instead",
+    optC: "This is one of those regrets in the making — stay",
+    fxA(g) {
+      if (g.state.cash < 3000) {
+        app.toast("Not enough to go.", "error");
+        return;
+      }
+      g.modCash(-3000);
+      g.modStat("happiness", 40);
+      g.modStat("health", 15);
+      g.modStat("energy", 50);
+      g.modStat("smarts", 8);
+      if (g.state.job) g.state.job = null; // quit job
+      app.toast(
+        "You quit EVERYTHING and bought a one-way ticket. Best decision you ever made.",
+        "epic",
+      );
+      FX.confetti();
+      FX.screenFlash("rgba(251,191,36,0.3)");
+    },
+    fxB(g) {
+      g.modStat("happiness", 18);
+      g.modStat("energy", 30);
+      g.modCash(-400);
+      app.toast("A long weekend. Recharged. Monday came too fast.", "success");
+    },
+    fxC(g) {
+      g.modStat("happiness", -5);
+      g.state.life.chronicStress = (g.state.life.chronicStress || 0) + 5;
+      app.toast(
+        "You stayed. You'll think about that Asia trip for years.",
+        "warning",
+      );
+    },
+  },
+  {
+    emoji: "📚",
+    title: "Late Night Obsession — Learn Something New",
+    desc: "You've been binge-watching videos at 2am about quantum physics / behavioral economics / AI / programming. One of them clicks HARD. You're hooked.",
+    optA: "Go deep — obsessive study ($800 course)",
+    optB: "Weekend YouTube rabbit hole (free)",
+    optC: "Sleep. You have work tomorrow.",
+    fxA(g) {
+      if (g.state.cash < 800) {
+        app.toast("Can't afford the course right now.", "error");
+        return;
+      }
+      g.modCash(-800);
+      g.modStat("smarts", 15);
+      g.modStat("happiness", 8);
+      app.toast(
+        "Deep dive complete. +15 Smarts. You see the world differently now.",
+        "success",
+      );
+    },
+    fxB(g) {
+      g.modStat("smarts", 5);
+      g.modStat("energy", -10);
+      app.toast("+5 Smarts. Eyes burning. Worth it. Probably.", "info");
+    },
+    fxC(g) {
+      g.modStat("energy", 15);
+      g.modStat("happiness", 5);
+      app.toast("You slept. Weird dreams about supply chains.", "info");
+    },
+  },
+  {
+    emoji: "🎙️",
+    title: "Podcast Offer — Tell Your Story",
+    desc: "A popular finance podcast wants to interview you about your life journey. Millions of listeners. It could make you famous — or expose you.",
+    optA: "Do the interview",
+    optB: "Stay anonymous — decline",
+    gateFn: (g) => g.getNetWorth() >= 50000,
+    fxA(g) {
+      g.modStat("happiness", 20);
+      if (Math.random() < 0.5) {
+        g.modCash(5000); // sponsorship
+        g.state.gameplay &&
+          (g.state.gameplay.legendScore =
+            (g.state.gameplay.legendScore || 0) + 15);
+        app.toast(
+          "The episode went viral. Brand deal: +$5,000. Legend score +15!",
+          "epic",
+        );
+        FX.confetti();
+      } else {
+        g.state.crime &&
+          (g.state.crime.heat = Math.min(100, (g.state.crime.heat || 0) + 8));
+        app.toast(
+          "Episode aired. Some uncomfortable questions about your past. Heat +8.",
+          "warning",
+        );
+      }
+    },
+    fxB(g) {
+      g.modStat("happiness", 5);
+      app.toast("You declined. Your story stays yours. For now.", "info");
+    },
+  },
+  {
+    emoji: "⚡",
+    title: "Burnout Is Real",
+    desc: "You can't focus. You can't sleep. You snap at everyone. Your body is sending red signals. You've been going too hard for too long.",
+    optA: "Force yourself — push through",
+    optB: "Mandatory rest — take the week off",
+    optC: "See a therapist ($1,200)",
+    gateFn: (g) => g.state.life.burnout > 55 || g.state.stats.energy < 20,
+    fxA(g) {
+      g.state.life.burnout = Math.min(100, (g.state.life.burnout || 0) + 15);
+      g.modStat("health", -8);
+      g.modStat("happiness", -12);
+      app.toast(
+        "You pushed. Your body is starting to break down. This won't end well.",
+        "error",
+      );
+      FX.screenShake("sm");
+    },
+    fxB(g) {
+      g.state.life.burnout = Math.max(0, (g.state.life.burnout || 0) - 30);
+      g.modStat("energy", 50);
+      g.modStat("health", 8);
+      g.modStat("happiness", 15);
+      app.toast(
+        "You rested. The world didn't end. You feel human again.",
+        "success",
+      );
+    },
+    fxC(g) {
+      if (g.state.cash < 1200) {
+        app.toast("Can't afford therapy right now.", "error");
+        return;
+      }
+      g.modCash(-1200);
+      g.state.life.burnout = Math.max(0, (g.state.life.burnout || 0) - 40);
+      g.state.life.chronicStress = Math.max(
+        0,
+        (g.state.life.chronicStress || 0) - 20,
+      );
+      g.modStat("happiness", 18);
+      g.modStat("energy", 30);
+      app.toast(
+        "Therapy helped. You finally talked about things you'd buried. A weight lifted.",
+        "success",
+      );
+    },
+  },
+  {
+    emoji: "🏆",
+    title: "Opportunity to Mentor a Startup",
+    desc: "A young founder begs you for mentorship. One hour a week. No pay — but they've offered you 3% equity. Their idea might be brilliant.",
+    optA: "Say yes — equity deal",
+    optB: "Charge $500/session instead",
+    optC: "You don't have time",
+    gateFn: (g) => g.getNetWorth() >= 25000,
+    fxA(g) {
+      g.modStat("smarts", 6);
+      g.state.gameplay &&
+        (g.state.gameplay.legendScore =
+          (g.state.gameplay.legendScore || 0) + 10);
+      if (Math.random() < 0.2) {
+        setTimeout(() => {
+          const payout = 30000 + Math.random() * 70000;
+          g.modCash(payout);
+          app.toast(
+            `📈 The startup you mentored was acquired! Your 3% equity: +$${shortNumber(Math.round(payout))}!`,
+            "epic",
+          );
+          FX.confetti();
+        }, 6000);
+        app.toast(
+          "Mentorship started. Equity secured. Watching this one closely.",
+          "success",
+        );
+      } else {
+        app.toast(
+          "Great conversations every week. +6 Smarts, +10 Legend. Worth it.",
+          "success",
+        );
+      }
+    },
+    fxB(g) {
+      g.modCash(500);
+      g.modStat("smarts", 3);
+      app.toast(
+        "First session done. +$500. Professional relationship established.",
+        "success",
+      );
+    },
+    fxC(g) {
+      g.modStat("happiness", -4);
+      app.toast(
+        "You passed. They found someone else. The opportunity came and went.",
+        "info",
+      );
+    },
+  },
+  {
+    emoji: "🌐",
+    title: "Viral Moment — Can You Handle Fame?",
+    desc: "Something you said or did hit the internet. 4 million views in 12 hours. Brands, journalists, and trolls are all flooding your inbox.",
+    optA: "Monetize it — capitalize now",
+    optB: "Go dark — protect your privacy",
+    fxA(g) {
+      g.modCash(8000 + Math.random() * 12000);
+      g.modStat("happiness", 14);
+      g.state.gameplay &&
+        (g.state.gameplay.legendScore =
+          (g.state.gameplay.legendScore || 0) + 20);
+      if (Math.random() < 0.3) {
+        g.state.crime &&
+          (g.state.crime.heat = Math.min(100, (g.state.crime.heat || 0) + 12));
+        app.toast(
+          "Fame monetized — but old enemies surfaced. Heat +12.",
+          "warning",
+        );
+      } else {
+        app.toast(
+          "Monetized virality. +$8k–20k. Internet loved you today.",
+          "epic",
+        );
+        FX.confetti();
+      }
+    },
+    fxB(g) {
+      g.modStat("happiness", 8);
+      g.state.crime &&
+        (g.state.crime.heat = Math.max(0, (g.state.crime.heat || 0) - 5));
+      app.toast(
+        "You went dark. Privacy preserved. The internet moved on. So did you.",
+        "info",
+      );
+    },
+  },
+  // ── CRIME & STREET ─────────────────────────────────────────────────────────
+  {
+    emoji: "👮",
+    title: "Someone Tipped Off the Cops",
+    desc: "You hear through the grapevine that someone close to you — maybe a friend, maybe a business associate — went to the cops. You don't know who.",
+    optA: "Lay low immediately",
+    optB: "Find out who and confront them",
+    optC: "Get a lawyer on the phone NOW",
+    gateFn: (g) => (g.state.crime?.heat || 0) > 15,
+    fxA(g) {
+      g.state.crime.heat = Math.max(0, (g.state.crime.heat || 0) - 20);
+      g.modStat("happiness", -8);
+      app.toast(
+        "You went quiet. Heat dropped. The informant dried up. Smart move.",
+        "success",
+      );
+    },
+    fxB(g) {
+      if (Math.random() < 0.5) {
+        g.state.crime.heat = Math.max(0, (g.state.crime.heat || 0) - 10);
+        app.toast(
+          "You found the rat. Dealt with it. Heat reduced. Street rep: +5.",
+          "warning",
+        );
+        g.state.crime.rep = (g.state.crime.rep || 0) + 5;
+      } else {
+        g.state.crime.heat = Math.min(100, (g.state.crime.heat || 0) + 15);
+        g.modStat("health", -10);
+        app.toast(
+          "Wrong target. Got into a fight. Heat ROSE. You made it worse.",
+          "error",
+        );
+        FX.screenShake("sm");
+      }
+    },
+    fxC(g) {
+      const lawyerCost = g.state.crime?.lawyer === "cartel_attorney" ? 0 : 3000;
+      if (g.state.cash < lawyerCost) {
+        app.toast("Not enough for a lawyer right now.", "error");
+        return;
+      }
+      g.modCash(-lawyerCost);
+      g.state.crime.heat = Math.max(0, (g.state.crime.heat || 0) - 25);
+      app.toast(
+        `Lawyer called. Heat -25. They're handling it. Cost: $${shortNumber(lawyerCost)}.`,
+        "success",
+      );
+    },
+  },
+  {
+    emoji: "🔪",
+    title: "Someone Wants You Dead",
+    desc: "A message arrives at your apartment. No return address. 'You took something that wasn't yours. Now we're taking it back.' You recognize the style.",
+    optA: "Purchase protection ($5,000)",
+    optB: "Hit first — eliminate the threat",
+    optC: "Flee the city",
+    gateFn: (g) => (g.state.crime?.rep || 0) >= 100,
+    fxA(g) {
+      if (g.state.cash < 5000) {
+        app.toast("Not enough for protection.", "error");
+        return;
+      }
+      g.modCash(-5000);
+      g.modStat("happiness", -10);
+      g.state.crime.heat = Math.max(0, (g.state.crime.heat || 0) - 10);
+      app.toast(
+        "Hired protection. The threat was neutralized quietly. For now.",
+        "success",
+      );
+    },
+    fxB(g) {
+      if (Math.random() < 0.45) {
+        g.state.crime.rep = (g.state.crime.rep || 0) + 30;
+        g.state.crime.heat = Math.min(100, (g.state.crime.heat || 0) + 30);
+        app.toast(
+          "You struck first. The threat is gone. Rep +30. Heat +30. The streets know.",
+          "epic",
+        );
+      } else {
+        g.modStat("health", -30);
+        g.modStat("happiness", -20);
+        g.state.crime.heat = Math.min(100, (g.state.crime.heat || 0) + 45);
+        app.toast(
+          "Ambushed. You were nearly killed. -30 Health. Heat exploded.",
+          "error",
+        );
+        FX.screenShake("lg");
+      }
+    },
+    fxC(g) {
+      const cost = 8000;
+      if (g.state.cash < cost) {
+        app.toast("Not enough to relocate.", "error");
+        return;
+      }
+      g.modCash(-cost);
+      g.state.crime.heat = 0;
+      g.modStat("happiness", -15);
+      app.toast(
+        "You left everything. New city. Heat reset to 0. Starting over.",
+        "warning",
+      );
+    },
+  },
+);
+
+/* ─────────────────────────────────────────────────────────────────
    CHOICE EVENT TRIGGER  (attaches to game)
    ───────────────────────────────────────────────────────────────── */
 game.triggerChoiceEvent = function () {
   const available = CHOICE_EVENTS.filter((e) => !e.gateFn || e.gateFn(this));
   if (!available.length) return;
   const evt = available[Math.floor(Math.random() * available.length)];
-  app.modal(`${evt.emoji} ${evt.title}`, evt.desc, [
+  const btns = [
     {
       text: evt.optA,
       cb: () => {
@@ -20082,7 +21599,18 @@ game.triggerChoiceEvent = function () {
         app.closeModal();
       },
     },
-  ]);
+  ];
+  if (evt.optC) {
+    btns.push({
+      text: evt.optC,
+      style: "secondary",
+      cb: () => {
+        evt.fxC && evt.fxC(this);
+        app.closeModal();
+      },
+    });
+  }
+  app.modal(`${evt.emoji} ${evt.title}`, evt.desc, btns);
 };
 
 /* ─────────────────────────────────────────────────────────────────
@@ -20245,3 +21773,747 @@ game.triggerChoiceEvent = function () {
     FX.updateStreakFire();
   };
 })();
+
+/* ═══════════════════════════════════════════════════════════════════
+   ADDICTION ENGINE v3 — Maximum Engagement Systems
+   ───────────────────────────────────────────────────────────────────
+   System 1: Lucky Month       — variable ratio income multiplier
+   System 2: Streak Shields    — loss-aversion protection
+   System 3: Comeback Jackpot  — retention hook when losing
+   System 4: Milestone Pulse   — near-miss urgency messages
+   System 5: Season Challenge  — 12-month commitment arc
+   System 6: While You Slept   — passive income satisfaction popup
+   System 7: Lucky Bounce      — random paycheck bonus
+   System 8: Rival Taunts      — emotionally charged competition
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ─────────────────────────────────────────────────────────────────
+   1. LUCKY MONTH
+   6% chance = 2× income bonus   |   10% chance = +30% boost
+   The slot-machine effect: every month advance might be a jackpot.
+   ───────────────────────────────────────────────────────────────── */
+const LUCKY_MONTH = {
+  roll() {
+    const r = Math.random();
+    if (r < 0.06) return "jackpot";
+    if (r < 0.16) return "boost";
+    return "normal";
+  },
+  announce(type) {
+    if (type === "jackpot") {
+      SFX.play("epic");
+      FX.confetti();
+      FX.milestoneOverlay(
+        "⭐ LUCKY MONTH!",
+        "Fortune smiles — all income doubled!",
+      );
+      FX.screenFlash("rgba(255,215,0,0.28)");
+      app.log(
+        "⭐ LUCKY MONTH! The stars aligned — your income is doubled this month!",
+        "epic",
+      );
+    } else {
+      FX.screenFlash("rgba(255,215,0,0.1)");
+      SFX.play("bigCoin");
+      app.log(
+        "✨ Fortunate winds! Your income gets a +30% boost this month.",
+        "success",
+      );
+    }
+  },
+  getBonusPct(type) {
+    if (type === "jackpot") return 1.0; // +100% on top = 2×
+    if (type === "boost") return 0.3; // +30%
+    return 0;
+  },
+};
+
+/* ─────────────────────────────────────────────────────────────────
+   2. STREAK SHIELDS — loss-aversion protection
+   Earned at streak milestones (5, 10, 20, 35, 55).
+   Absorb one missed-month streak break. Players hate losing streaks.
+   ───────────────────────────────────────────────────────────────── */
+const STREAK_SHIELDS = {
+  MILESTONES: [5, 10, 20, 35, 55],
+  earnCheck(g) {
+    const streak = g.state.gameplay?.actionStreak ?? 0;
+    for (const m of this.MILESTONES) {
+      if (streak >= m && !g.state.gameplay[`_shieldAt${m}`]) {
+        g.state.gameplay[`_shieldAt${m}`] = true;
+        g.state.gameplay.streakShields =
+          (g.state.gameplay.streakShields || 0) + 1;
+        SFX.play("achievement");
+        app.toast(
+          `🛡️ Streak Shield earned at x${m} streak! One future break is protected.`,
+          "epic",
+        );
+        app.log(
+          `🛡️ STREAK SHIELD UNLOCKED at x${m} streak. Your next missed month won't break your streak.`,
+          "epic",
+        );
+        return;
+      }
+    }
+  },
+  tryAbsorb(g, beforeStreak) {
+    if (
+      (g.state.gameplay.streakShields || 0) > 0 &&
+      (g.state.gameplay.actionStreak ?? 0) < beforeStreak
+    ) {
+      g.state.gameplay.streakShields -= 1;
+      g.state.gameplay.actionStreak = beforeStreak;
+      SFX.play("bigCoin");
+      app.toast(
+        `🛡️ Streak Shield activated! Your x${beforeStreak} streak survives. ${g.state.gameplay.streakShields} shield(s) left.`,
+        "warning",
+      );
+    }
+  },
+};
+
+/* ─────────────────────────────────────────────────────────────────
+   3. COMEBACK JACKPOT
+   After 3 consecutive months near broke, a dramatic windfall fires.
+   The #1 quit-prevention mechanic — rescues players just before they give up.
+   ───────────────────────────────────────────────────────────────── */
+const COMEBACK_JACKPOT = {
+  check(g) {
+    if (g.state.life.dead || g.state.life.retired) return;
+    const nw = g.getNetWorth();
+    if (nw < 300 && g.state.cash < 300) {
+      g.state.gameplay._brokeMonths = (g.state.gameplay._brokeMonths || 0) + 1;
+    } else if (nw > 600) {
+      g.state.gameplay._brokeMonths = 0;
+      g.state.gameplay._comebackCooldown = Math.max(
+        0,
+        (g.state.gameplay._comebackCooldown || 0) - 1,
+      );
+    }
+    const broke = g.state.gameplay._brokeMonths || 0;
+    const cooldown = g.state.gameplay._comebackCooldown || 0;
+    if (broke >= 3 && cooldown === 0) {
+      g.state.gameplay._brokeMonths = 0;
+      g.state.gameplay._comebackCooldown = 10;
+      const age = g.state.age / 12;
+      const base = Math.max(800, Math.min(6000, age * 120));
+      const payout = Math.round(base + Math.random() * base * 1.5);
+      setTimeout(() => {
+        g.modCash(payout);
+        g.modStat("happiness", 15);
+        g.modStat("health", 5);
+        SFX.play("dailyBonus");
+        FX.confetti();
+        FX.milestoneOverlay(
+          "💥 COMEBACK JACKPOT!",
+          `+$${payout.toLocaleString()} — The universe isn't done with you yet!`,
+        );
+        FX.screenFlash("rgba(52, 211, 153, 0.22)");
+        app.log(
+          `💥 COMEBACK JACKPOT! A stroke of luck changes everything. +$${payout.toLocaleString()} — Get back in the game!`,
+          "epic",
+        );
+      }, 700);
+    }
+  },
+};
+
+/* ─────────────────────────────────────────────────────────────────
+   4. MILESTONE PROXIMITY PULSE
+   Fires "SO CLOSE!" at 92% and 98% toward major net worth targets.
+   The near-miss effect compels players to push one more month.
+   ───────────────────────────────────────────────────────────────── */
+const MILESTONE_PULSE = {
+  TARGETS: [
+    1000, 5000, 10000, 25000, 50000, 100000, 250000, 500000, 1000000, 5000000,
+    10000000,
+  ],
+  check(g) {
+    if (g.state.life.dead || g.state.life.retired) return;
+    const nw = g.getNetWorth();
+    const next = this.TARGETS.find((m) => nw < m);
+    if (!next) return;
+    const pct = nw / next;
+    const crossed = g.state.gameplay._pulsedMilestones || {};
+    const label =
+      next >= 1000000
+        ? `$${(next / 1000000).toFixed(0)}M`
+        : `$${(next / 1000).toFixed(0)}K`;
+    if (pct >= 0.92 && !crossed[`n${next}`]) {
+      crossed[`n${next}`] = true;
+      const rem = Math.round(next - nw);
+      app.log(
+        `⚡ SO CLOSE! Only $${rem.toLocaleString()} away from ${label}!`,
+        "success",
+      );
+      app.toast(
+        `💡 Just $${rem.toLocaleString()} more to hit ${label}!`,
+        "info",
+      );
+    }
+    if (pct >= 0.98 && !crossed[`x${next}`]) {
+      crossed[`x${next}`] = true;
+      const rem = Math.round(next - nw);
+      FX.screenFlash("rgba(245,158,11,0.18)");
+      SFX.play("hotStreak");
+      app.log(
+        `🔥 ONE LAST PUSH! $${rem.toLocaleString()} from ${label} — ONE GOOD MONTH IS ALL IT TAKES!`,
+        "epic",
+      );
+      app.toast(
+        `🔥 $${rem.toLocaleString()} to ${label}! You're basically there!`,
+        "success",
+      );
+    }
+    g.state.gameplay._pulsedMilestones = crossed;
+  },
+};
+
+/* ─────────────────────────────────────────────────────────────────
+   5. SEASON CHALLENGE — 12-month commitment arc
+   A rotating themed challenge that creates 12-month play commitments.
+   Urgency countdowns + early-finish bonuses drive sustained engagement.
+   ───────────────────────────────────────────────────────────────── */
+const SEASON_CHALLENGE = {
+  POOL: [
+    {
+      id: "sc_grind",
+      e: "⚙️",
+      title: "The Grind Season",
+      goal: "Work 12+ career months",
+      reward: 8000,
+      leg: 12,
+      check: (s, g) =>
+        g.state.runStats.careerMonths - (s.careerBase || 0) >= 12,
+    },
+    {
+      id: "sc_hustle",
+      e: "⚡",
+      title: "Hustle Season",
+      goal: "Complete 8+ hustles or trades",
+      reward: 10000,
+      leg: 14,
+      check: (s, g) =>
+        (g.state.runStats.hustleActions || 0) -
+          (s.hustleBase || 0) +
+          (g.state.runStats.marketTrades - (s.marketBase || 0)) >=
+        8,
+    },
+    {
+      id: "sc_wealth",
+      e: "💰",
+      title: "Wealth Season",
+      goal: "Grow net worth by $20K",
+      reward: 14000,
+      leg: 16,
+      check: (s, g) => g.getNetWorth() - (s.nwBase || 0) >= 20000,
+    },
+    {
+      id: "sc_invest",
+      e: "📈",
+      title: "Investor Season",
+      goal: "Make 6+ market trades",
+      reward: 11000,
+      leg: 14,
+      check: (s, g) => g.state.runStats.marketTrades - (s.marketBase || 0) >= 6,
+    },
+    {
+      id: "sc_crime",
+      e: "💀",
+      title: "Criminal Season",
+      goal: "Execute 5 crime operations",
+      reward: 18000,
+      leg: 18,
+      check: (s, g) => g.state.runStats.crimeActions - (s.crimeBase || 0) >= 5,
+    },
+    {
+      id: "sc_vitality",
+      e: "🧘",
+      title: "Vitality Season",
+      goal: "Keep health ≥60 for 12 months",
+      reward: 7000,
+      leg: 10,
+      check: (s, g) =>
+        g.state.stats.health >= 60 &&
+        g.state.runStats.monthsPlayed - (s.monthBase || 0) >= 12,
+    },
+    {
+      id: "sc_empire",
+      e: "🏛️",
+      title: "Empire Season",
+      goal: "Own 2+ passive income sources",
+      reward: 20000,
+      leg: 20,
+      check: (s, g) => {
+        let c = 0;
+        if (
+          Object.values(g.state.wealth?.properties || {}).reduce(
+            (a, b) => a + b,
+            0,
+          ) > 0
+        )
+          c++;
+        if (
+          Object.values(g.state.wealth?.franchises || {}).reduce(
+            (a, b) => a + b,
+            0,
+          ) > 0
+        )
+          c++;
+        if ((g.state.wealth?.channels || []).length > 0) c++;
+        if (CONFIG.ASSETS.some((a) => (g.state.assets?.[a.id]?.owned || 0) > 0))
+          c++;
+        return c >= 2;
+      },
+    },
+    {
+      id: "sc_social",
+      e: "❤️",
+      title: "Social Season",
+      goal: "Have a partner + 1 child",
+      reward: 9000,
+      leg: 11,
+      check: (s, g) =>
+        ["married", "dating"].includes(g.state.relationship?.status) &&
+        (g.state.relationship?.children?.length || 0) >= 1,
+    },
+    {
+      id: "sc_cash",
+      e: "🤑",
+      title: "Cash Season",
+      goal: "Accumulate $50K+ liquid cash",
+      reward: 12000,
+      leg: 15,
+      check: (s, g) => g.state.cash >= 50000,
+    },
+    {
+      id: "sc_startup",
+      e: "🚀",
+      title: "Founder Season",
+      goal: "Launch 1+ startup",
+      reward: 9500,
+      leg: 12,
+      check: (s, g) => (g.state.startups || []).length > 0,
+    },
+  ],
+
+  _inject() {
+    if (document.getElementById("season-challenge-panel")) return;
+    const qp = document.getElementById("quest-panel");
+    if (!qp) return;
+    const div = document.createElement("div");
+    div.id = "season-challenge-panel";
+    div.className = "season-panel";
+    div.style.display = "none";
+    qp.parentNode.insertBefore(div, qp);
+  },
+
+  startNew(g) {
+    let pool = this.POOL.filter(
+      (s) => s.id !== (g.state.gameplay._lastSeasonId || ""),
+    );
+    const tpl = pool[Math.floor(Math.random() * pool.length)];
+    const snap = {
+      nwBase: g.getNetWorth(),
+      careerBase: g.state.runStats.careerMonths,
+      hustleBase: g.state.runStats.hustleActions || 0,
+      marketBase: g.state.runStats.marketTrades,
+      crimeBase: g.state.runStats.crimeActions,
+      monthBase: g.state.runStats.monthsPlayed,
+    };
+    g.state.gameplay._seasonChallenge = {
+      id: tpl.id,
+      title: tpl.title,
+      e: tpl.e,
+      goal: tpl.goal,
+      reward: tpl.reward,
+      leg: tpl.leg,
+      totalMonths: 12,
+      monthsLeft: 12,
+      completed: false,
+      snap,
+    };
+    g.state.gameplay._lastSeasonId = tpl.id;
+    setTimeout(() => {
+      this._inject();
+      this.render();
+      app.log(
+        `${tpl.e} NEW SEASON: "${tpl.title}" — ${tpl.goal} in 12 months for +$${shortNumber(tpl.reward)}!`,
+        "epic",
+      );
+      app.toast(
+        `${tpl.e} Season started: "${tpl.title}"! 12 months on the clock.`,
+        "success",
+      );
+      SFX.play("achievement");
+    }, 500);
+  },
+
+  tick(g) {
+    if (g.state.life.dead || g.state.life.retired) return;
+    if (!g.state.gameplay._seasonChallenge) {
+      this.startNew(g);
+      return;
+    }
+    const sc = g.state.gameplay._seasonChallenge;
+    const tpl = this.POOL.find((s) => s.id === sc.id);
+
+    if (!sc.completed && tpl) {
+      try {
+        if (tpl.check(sc.snap, g)) {
+          sc.completed = true;
+          const earlyBonus =
+            sc.monthsLeft > 6 ? Math.round(sc.reward * 0.25) : 0;
+          const total = sc.reward + earlyBonus;
+          g.modCash(total);
+          g.state.gameplay.legendScore += sc.leg;
+          g.state.gameplay._seasonStreak =
+            (g.state.gameplay._seasonStreak || 0) + 1;
+          FX.confetti();
+          FX.milestoneOverlay(
+            `${sc.e} SEASON COMPLETE!`,
+            `"${sc.title}" — +$${shortNumber(total)}${earlyBonus ? " (early bird!)" : ""}`,
+          );
+          SFX.play("netWorthMilestone");
+          app.log(
+            `${sc.e} SEASON COMPLETE: "${sc.title}"! +$${shortNumber(total)}${earlyBonus ? ` (+$${shortNumber(earlyBonus)} early finish bonus)` : ""}`,
+            "epic",
+          );
+          setTimeout(() => this.startNew(g), 2500);
+          return;
+        }
+      } catch (e) {
+        /* guard */
+      }
+    }
+
+    sc.monthsLeft = Math.max(0, (sc.monthsLeft || 1) - 1);
+
+    if (sc.monthsLeft === 6 && !sc.completed) {
+      app.toast(`⏳ Halfway: "${sc.title}" — 6 months left!`, "warning");
+    } else if (sc.monthsLeft === 2 && !sc.completed) {
+      SFX.play("hotStreak");
+      app.log(
+        `🚨 FINAL STRETCH: 2 months left in Season "${sc.title}"! Complete it NOW!`,
+        "error",
+      );
+      app.toast(`🚨 Season ends soon! 2 months for "${sc.title}"`, "error");
+    } else if (sc.monthsLeft <= 0 && !sc.completed) {
+      app.toast(
+        `⌛ Season "${sc.title}" expired. Fresh season incoming...`,
+        "warning",
+      );
+      app.log(
+        `⌛ Season "${sc.title}" expired. A new challenge begins.`,
+        "warning",
+      );
+      setTimeout(() => this.startNew(g), 800);
+    }
+  },
+
+  render() {
+    const el = document.getElementById("season-challenge-panel");
+    if (!el) return;
+    const g = game;
+    const sc = g.state.gameplay?._seasonChallenge;
+    if (!sc || g.state.life?.dead || g.state.life?.retired) {
+      el.style.display = "none";
+      return;
+    }
+    el.style.display = "";
+    const done = sc.totalMonths - (sc.monthsLeft || 0);
+    const pct = sc.completed
+      ? 100
+      : Math.min(100, Math.round((done / sc.totalMonths) * 100));
+    const urgent = !sc.completed && (sc.monthsLeft || 0) <= 2;
+    const warn = !sc.completed && (sc.monthsLeft || 0) <= 5;
+    el.innerHTML = `
+      <div class="hud-title">
+        <i class="fa-solid fa-trophy" style="color:#f59e0b"></i> Season Challenge
+        <span class="sc-months-left ${urgent ? "sc-urgent" : warn ? "sc-warn" : ""}">${sc.completed ? "✅" : (sc.monthsLeft || 0) + "mo"}</span>
+      </div>
+      <div class="sc-title">${sc.e} ${sc.title}</div>
+      <div class="sc-goal">${sc.goal}</div>
+      <div class="sc-track">
+        <div class="sc-fill ${sc.completed ? "sc-done" : urgent ? "sc-fill-urgent" : ""}" style="width:${pct}%"></div>
+      </div>
+      <div class="sc-footer">
+        <span class="sc-reward">$${shortNumber(sc.reward)}</span>
+        ${sc.completed ? '<span class="sc-complete-tag">COMPLETE ✅</span>' : `<span class="sc-pct">${pct}%</span>`}
+      </div>`;
+  },
+};
+
+/* ─────────────────────────────────────────────────────────────────
+   6. "WHILE YOU SLEPT" — passive income satisfaction popup
+   Slides in from bottom-right to celebrate passive income gains.
+   Trains players to crave more passive income sources.
+   ───────────────────────────────────────────────────────────────── */
+const WHILE_YOU_SLEPT = {
+  LINES: [
+    "Your investments worked while you rested.",
+    "Passive income never takes a day off.",
+    "Money making money — the real flex.",
+    "While you lived, your assets hustled for you.",
+    "Compounding in action. This is the way.",
+    "The richest people earn while they sleep.",
+  ],
+  show(amount) {
+    const msg = this.LINES[Math.floor(Math.random() * this.LINES.length)];
+    const b = document.createElement("div");
+    b.className = "wys-banner";
+    b.innerHTML = `
+      <div class="wys-icon">💤</div>
+      <div class="wys-text">
+        <div class="wys-title">While You Slept</div>
+        <div class="wys-sub">${msg}</div>
+      </div>
+      <div class="wys-amount">+$${Math.round(amount).toLocaleString()}</div>`;
+    document.body.appendChild(b);
+    requestAnimationFrame(() =>
+      requestAnimationFrame(() => b.classList.add("wys-visible")),
+    );
+    setTimeout(() => {
+      b.classList.remove("wys-visible");
+      setTimeout(() => b.remove(), 500);
+    }, 4200);
+  },
+  check(g) {
+    const passive =
+      (g.state.wealth?.lastMonthly?.income || 0) +
+      (g.state.bank?.lastMonthly?.income || 0);
+    if (passive < 100) return;
+    const now = g.state.runStats.monthsPlayed;
+    if (now - (g.state.gameplay._lastSleepPopup || 0) < 3) return;
+    if (Math.random() > 0.5) return;
+    g.state.gameplay._lastSleepPopup = now;
+    setTimeout(() => this.show(passive), 1800);
+  },
+};
+
+/* ─────────────────────────────────────────────────────────────────
+   7. LUCKY BOUNCE — random paycheck multiplier
+   8% chance of a surprise income boost per month.
+   Pure variable ratio schedule — the most addictive of all.
+   ───────────────────────────────────────────────────────────────── */
+const LUCKY_BOUNCE = {
+  check(g) {
+    if (!g.state.job || Math.random() > 0.08) return;
+    const mult = 1.25 + Math.random() * 0.75;
+    const bonus = Math.round((g.state.job.salary / 12) * (mult - 1));
+    if (bonus <= 0) return;
+    g.modCash(bonus);
+    g.state.gameplay.legendScore = (g.state.gameplay.legendScore || 0) + 2;
+    const tier =
+      mult > 1.7
+        ? "🔥 INCREDIBLE LUCK"
+        : mult > 1.5
+          ? "⭐ Great Fortune"
+          : "✨ Lucky Break";
+    app.log(
+      `${tier}! Your paycheck was boosted ${Math.round((mult - 1) * 100)}% — +$${bonus.toLocaleString()}!`,
+      "success",
+    );
+    SFX.play("bigCoin");
+    FX.screenFlash("rgba(255,215,0,0.1)");
+  },
+};
+
+/* ─────────────────────────────────────────────────────────────────
+   8. RIVAL EMOTIONAL ESCALATION
+   More charged, personal rival messages every 3-4 months.
+   Fear of losing to a rival is a primal motivator.
+   ───────────────────────────────────────────────────────────────── */
+const RIVAL_ESCALATION = {
+  BEHIND: [
+    (r) =>
+      `😤 ${r.name} just crossed $${shortNumber(r.netWorth)}. They're celebrating. You weren't invited.`,
+    (r) =>
+      `🏎️ ${r.name} just bought a luxury car. You're still walking. What's your excuse?`,
+    (r) =>
+      `📈 The gap between you and ${r.name} is $${shortNumber(r.netWorth - game.getNetWorth())}. Every month you wait, it grows.`,
+    (r) =>
+      `👑 ${r.name} told a mutual friend they're "ahead of everyone they know." You know who they mean.`,
+    (r) =>
+      `🏠 ${r.name} owns property now. You're still paying someone else's mortgage.`,
+    (r) =>
+      `💼 ${r.name} got a raise and reinvested it immediately. You haven't moved in months. Time to act.`,
+    (r) =>
+      `🤑 ${r.name} is pulling away fast. This is your moment to stop them. Will you?`,
+    (r) =>
+      `📣 Word on the street: ${r.name} is on a heater. Are you even in the game?`,
+  ],
+  AHEAD: [
+    (r) =>
+      `😏 ${r.name} checks your net worth obsessively. Keep that pressure on.`,
+    (r) =>
+      `💪 You lead ${r.name} by $${shortNumber(game.getNetWorth() - r.netWorth)}. Don't let them close the gap.`,
+    (r) =>
+      `🏆 ${r.name} knows you're winning. That's the only motivation you need today.`,
+    (r) =>
+      `🔥 ${r.name} doubled down this month trying to catch up. Build faster.`,
+    (r) =>
+      `📣 Word is ${r.name} is "making changes." Translation: they're scared of you.`,
+  ],
+  check(g) {
+    const rv = g.state.rival;
+    if (!rv || g.state.life.dead || g.state.life.retired) return;
+    if (g.state.runStats.monthsPlayed % 3 !== 0 && Math.random() > 0.18) return;
+    const nw = g.getNetWorth();
+    const ahead = nw > rv.netWorth;
+    const pool = ahead ? this.AHEAD : this.BEHIND;
+    app.log(
+      pool[Math.floor(Math.random() * pool.length)](rv),
+      ahead ? "success" : "warning",
+    );
+    if (!ahead && rv.netWorth > nw * 2 && Math.random() < 0.5) {
+      setTimeout(
+        () =>
+          app.toast(
+            `📣 ${rv.name}: "Some people just don't have what it takes." Prove them wrong.`,
+            "warning",
+          ),
+        900,
+      );
+    }
+  },
+};
+
+/* ─────────────────────────────────────────────────────────────────
+   WIRE ALL SYSTEMS INTO nextMonth
+   ───────────────────────────────────────────────────────────────── */
+(function () {
+  /* Patch decayActionStreak to support streak shields */
+  const origDecay = game.decayActionStreak.bind(game);
+  game.decayActionStreak = function () {
+    const beforeStreak = this.state.gameplay?.actionStreak ?? 0;
+    const beforeActions = this.state.gameplay?.currentMonthActions ?? 0;
+    origDecay.call(this);
+    if (beforeActions === 0) STREAK_SHIELDS.tryAbsorb(this, beforeStreak);
+    STREAK_SHIELDS.earnCheck(this);
+  };
+
+  /* Patch nextMonth — outermost layer */
+  const orig = game.nextMonth.bind(game);
+  game.nextMonth = function () {
+    if (this.state.life?.dead || this.state.life?.retired) {
+      orig.call(this);
+      return;
+    }
+    if ((this.state.jail || 0) > 0) {
+      orig.call(this);
+      return;
+    }
+
+    /* ① Roll lucky month before the tick */
+    const luckyType = LUCKY_MONTH.roll();
+    if (luckyType !== "normal") LUCKY_MONTH.announce(luckyType);
+
+    /* ② Advance the month (all inner patches run here) */
+    orig.call(this);
+
+    if (this.state.life?.dead) return;
+
+    /* ③ Apply lucky income bonus (extra cash on top of normal income) */
+    const bonusPct = LUCKY_MONTH.getBonusPct(luckyType);
+    if (bonusPct > 0) {
+      const income = this.state.finance?.lastMonth?.income || 0;
+      const bonus = Math.round(income * bonusPct);
+      if (bonus > 0) {
+        this.modCash(bonus);
+        if (luckyType === "jackpot")
+          app.log(
+            `⭐ Lucky Month bonus: +$${bonus.toLocaleString()} (100% income match!)`,
+            "epic",
+          );
+      }
+    }
+
+    /* ④ Lucky bounce paycheck */
+    LUCKY_BOUNCE.check(this);
+
+    /* ⑤ Milestone proximity urgency */
+    MILESTONE_PULSE.check(this);
+
+    /* ⑥ Comeback jackpot */
+    COMEBACK_JACKPOT.check(this);
+
+    /* ⑦ Season challenge tick */
+    SEASON_CHALLENGE.tick(this);
+
+    /* ⑧ "While you slept" passive income popup */
+    WHILE_YOU_SLEPT.check(this);
+
+    /* ⑨ Rival emotional escalation */
+    RIVAL_ESCALATION.check(this);
+  };
+})();
+
+/* ─────────────────────────────────────────────────────────────────
+   PATCH renderAll — inject season panel and shields HUD
+   ───────────────────────────────────────────────────────────────── */
+(function () {
+  const orig = game.renderAll.bind(game);
+  game.renderAll = function () {
+    orig.call(this);
+    SEASON_CHALLENGE._inject();
+    SEASON_CHALLENGE.render();
+    /* Update streak shields display */
+    const shEl = document.getElementById("hud-streak-shields");
+    if (shEl) {
+      const s = this.state.gameplay?.streakShields || 0;
+      shEl.textContent = s > 0 ? ` 🛡️${s}` : "";
+    }
+  };
+})();
+
+/* ─────────────────────────────────────────────────────────────────
+   INJECT SHIELDS INDICATOR INTO STREAK ROW (one-time DOM tweak)
+   ───────────────────────────────────────────────────────────────── */
+(function () {
+  const tryInject = () => {
+    const streakEl = document.getElementById("hud-action-streak");
+    if (!streakEl || document.getElementById("hud-streak-shields")) return;
+    const sup = document.createElement("span");
+    sup.id = "hud-streak-shields";
+    sup.style.cssText =
+      "font-size:0.72rem;color:#93c5fd;margin-left:4px;font-family:var(--font-mono);";
+    streakEl.parentNode.appendChild(sup);
+  };
+  if (document.readyState === "complete") tryInject();
+  else window.addEventListener("load", tryInject, { once: true });
+  setTimeout(tryInject, 1200);
+})();
+
+/* ─────────────────────────────────────────────────────────────────
+   MIGRATE EXISTING SAVES + BOOT SEASON
+   ───────────────────────────────────────────────────────────────── */
+(function () {
+  if (!game.state?.gameplay) return;
+  const gp = game.state.gameplay;
+  gp._brokeMonths = gp._brokeMonths ?? 0;
+  gp._comebackCooldown = gp._comebackCooldown ?? 0;
+  gp._pulsedMilestones = gp._pulsedMilestones ?? {};
+  gp.streakShields = gp.streakShields ?? 0;
+  gp._seasonStreak = gp._seasonStreak ?? 0;
+  gp._lastSleepPopup = gp._lastSleepPopup ?? 0;
+
+  /* Start first Season if none exists and player has begun */
+  if (
+    !gp._seasonChallenge &&
+    !game.state.life?.dead &&
+    !game.state.life?.retired
+  ) {
+    SEASON_CHALLENGE.startNew(game);
+  }
+
+  /* Inject panel immediately (DOM may be ready) */
+  SEASON_CHALLENGE._inject();
+  SEASON_CHALLENGE.render();
+})();
+
+/* ─────────────────────────────────────────────────────────────────
+   OFFLINE PROGRESS — save timestamp on page unload
+   ───────────────────────────────────────────────────────────────── */
+window.addEventListener("beforeunload", () => {
+  localStorage.setItem("GreedigoLastSeen", Date.now().toString());
+});

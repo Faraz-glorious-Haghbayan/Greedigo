@@ -2,7 +2,10 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+    />
     <title>Greedigo: The Free Wealth Simulator Game</title>
     <meta
       name="description"
@@ -46,7 +49,7 @@
     <meta name="twitter:image" content="poster.png" />
 
     <link
-      href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;700&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;700&family=Space+Grotesk:wght@400;500;600;700&family=Bebas+Neue&family=Cinzel:wght@400;600;700;900&family=Oxanium:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
     <link
@@ -54,6 +57,9 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
     <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="retention.css" />
+    <link rel="stylesheet" href="viral.css" />
+    <link rel="stylesheet" href="mobile.css" />
   </head>
   <body>
     <noscript>
@@ -76,6 +82,32 @@
     </noscript>
     <canvas id="bg-canvas"></canvas>
     <div class="toast-container" id="toast-container"></div>
+
+    <!-- ═══ RETENTION: Combo Widget ═══ -->
+    <div class="rs-combo-widget" id="rs-combo-widget"></div>
+
+    <!-- ═══ RETENTION: Random Event Banner ═══ -->
+    <div class="rs-event-banner" id="rs-event-banner"></div>
+
+    <!-- ═══ CHAOS MODE: Overlay Elements ═══ -->
+    <!-- Live HUD (timer, multiplier, earnings) -->
+    <div id="chaos-hud" class="chaos-hud" style="display: none"></div>
+
+    <!-- Activation slam banner -->
+    <div id="chaos-activate-banner" class="chaos-activate-banner">
+      <div class="chaos-activate-inner">
+        <div class="chaos-activate-main">🌀 CHAOS MODE</div>
+        <div class="chaos-activate-sub">
+          MULTIPLIERS ESCALATING · REWARDS SKYROCKETING
+        </div>
+      </div>
+    </div>
+
+    <!-- INSANE RUN moment freeze banner -->
+    <div id="chaos-insane-banner" class="chaos-insane-banner"></div>
+
+    <!-- Screen hue-shift overlay (CSS-only, toggled by body.chaos-active) -->
+    <div class="chaos-screen-overlay" aria-hidden="true"></div>
 
     <!-- ═══════════════ CINEMATIC TITLE SCREEN ═══════════════ -->
     <div id="title-screen" class="title-screen">
@@ -386,6 +418,11 @@
           <!-- compat: stat-player-name referenced by JS -->
           <span id="stat-player-name" style="display: none"></span>
 
+          <!-- ═══ PROGRESSION (XP / LEVEL) ═══ -->
+          <div class="rs-xp-section" id="rs-xp-bar-container">
+            <!-- populated by retention.js -->
+          </div>
+
           <!-- ═══ WEALTH BLOCK ═══ -->
           <div class="sb-wealth-block">
             <div class="stat-row hero">
@@ -400,6 +437,20 @@
             </div>
             <button class="btn btn-outline btn-save" onclick="game.saveGame()">
               <i class="fa-solid fa-floppy-disk"></i> Save Game
+            </button>
+            <!-- Prestige Button -->
+            <button
+              class="btn prestige-btn"
+              id="prestige-btn"
+              onclick="game.prestige()"
+              title="Reset timeline for permanent bonuses"
+            >
+              <i class="fa-solid fa-rotate"></i> Prestige
+              <span
+                class="prestige-run-badge"
+                id="prestige-run-display"
+                style="display: none"
+              ></span>
             </button>
             <!-- Next Milestone Goal -->
             <div
@@ -487,6 +538,33 @@
                 <div class="smarts-iq" id="smarts-iq">IQ: ~100</div>
               </div>
             </div>
+          </div>
+
+          <!-- ═══ UNLOCKABLE ABILITIES ═══ -->
+          <div class="rs-abilities-section">
+            <div class="hud-title">
+              <i class="fa-solid fa-bolt" style="color: #a78bfa"></i>
+              Powers
+            </div>
+            <div class="rs-abilities-container" id="rs-abilities-container">
+              <!-- populated by retention.js -->
+            </div>
+          </div>
+
+          <!-- ═══ CHAOS MODE BUTTON ═══ -->
+          <div class="chaos-btn-section">
+            <button
+              class="chaos-mode-btn chaos-btn-locked"
+              id="chaos-mode-btn"
+              onclick="RS.activateChaos()"
+              disabled
+              title="Unlocks at Level 5"
+            >
+              <span class="chaos-btn-icon">🌀</span>
+              <span class="chaos-btn-label"
+                >Chaos<br /><small>Lv 5</small></span
+              >
+            </button>
           </div>
 
           <!-- ═══ RISK MONITOR ═══ -->
@@ -625,18 +703,26 @@
         <main class="main-area">
           <!-- ═══ Mobile Top Bar ═══ -->
           <div class="mobile-top-bar" id="mobile-top-bar">
-            <div class="mtb-brand">Greedigo</div>
+            <button
+              class="mtb-btn mtb-ham"
+              id="mtb-ham-btn"
+              onclick="app.toggleMobileNav()"
+              aria-label="Open navigation"
+            >
+              <i class="fa-solid fa-bars" id="mtb-ham-icon"></i>
+            </button>
             <div class="mtb-info">
-              <span class="mtb-name" id="mtb-name">Player</span>
-              <span class="mtb-dot">&middot;</span>
               <span class="mtb-age" id="mtb-age">Age 18</span>
               <span class="mtb-dot">&middot;</span>
               <span class="mtb-nw" id="mtb-nw">$0</span>
+              <span class="mtb-dot">&middot;</span>
+              <span class="mtb-name" id="mtb-name">Player</span>
             </div>
             <button
               class="mtb-btn"
               id="mtb-stats-btn"
               onclick="app.toggleMobileStats()"
+              aria-label="Toggle stats"
             >
               <i class="fa-solid fa-chart-simple" id="mtb-stats-icon"></i>
             </button>
@@ -698,6 +784,11 @@
                 <span class="msp-player-name" id="msp-player-name">Player</span>
                 <span class="msp-player-country" id="msp-player-country"></span>
               </div>
+              <!-- Mobile XP / Level Bar -->
+              <div
+                class="rs-xp-section msp-xp-bar"
+                id="rs-xp-bar-container-m"
+              ></div>
               <div class="msp-chips">
                 <span class="msp-chip"
                   ><i class="fa-solid fa-wallet"></i>
@@ -715,10 +806,51 @@
                   ><i class="fa-solid fa-heart"></i>
                   <b id="msp-partner">Single</b></span
                 >
+                <span class="msp-chip" id="msp-cf-chip"
+                  ><i class="fa-solid fa-chart-line"></i>
+                  <b id="msp-cf">+$0</b></span
+                >
+                <span class="msp-chip"><b id="msp-fam">👶0 🐾0</b></span>
+                <span class="msp-chip"><b id="msp-leg-str">⭐0 ⚡0</b></span>
               </div>
+              <!-- Mobile Budget Row -->
+              <div class="msp-budget-row">
+                <span class="msp-bm-cell"
+                  ><i class="fa-solid fa-sack-dollar"></i
+                  ><b id="msp-bm-inc">$0</b
+                  ><span class="msp-bm-lbl">income</span></span
+                >
+                <span class="msp-bm-sep">→</span>
+                <span class="msp-bm-cell"
+                  ><i class="fa-solid fa-arrow-trend-up"></i
+                  ><b id="msp-bm-net" class="msp-cf-pos">+$0</b
+                  ><span class="msp-bm-lbl">net/mo</span></span
+                >
+              </div>
+              <!-- Mobile Abilities Row -->
+              <div
+                class="rs-abilities-container msp-abilities-row"
+                id="rs-abilities-container-m"
+              ></div>
+              <!-- Mobile Life Journal -->
+              <div class="msp-journal" id="msp-journal"></div>
               <div class="msp-foot">
                 <button class="msp-save" onclick="game.saveGame()">
-                  <i class="fa-solid fa-floppy-disk"></i> Save Game
+                  <i class="fa-solid fa-floppy-disk"></i> Save
+                </button>
+                <button class="msp-prestige-btn" onclick="game.prestige()">
+                  <i class="fa-solid fa-rotate"></i> Prestige
+                </button>
+                <button
+                  class="chaos-mode-btn chaos-btn-locked msp-chaos-btn"
+                  id="chaos-mode-btn-m"
+                  onclick="RS.activateChaos()"
+                  disabled
+                >
+                  <span class="chaos-btn-icon">🌀</span
+                  ><span class="chaos-btn-label"
+                    >Chaos<br /><small>Lv 5</small></span
+                  >
                 </button>
               </div>
             </div>
@@ -1112,7 +1244,21 @@
               <div class="view-hero-overlay"></div>
               <div class="view-hero-content">
                 <i class="fa-solid fa-cart-shopping"></i>
-                <h2>Inventory & Shop</h2>
+                <div>
+                  <h2>Inventory & Shop</h2>
+                  <div
+                    style="
+                      font-size: 0.88rem;
+                      color: rgba(255, 255, 255, 0.65);
+                      margin-top: 6px;
+                      max-width: 480px;
+                      line-height: 1.6;
+                    "
+                  >
+                    Dress for the life you want. Cars, clothes, and luxury that
+                    boost your status and happiness.
+                  </div>
+                </div>
               </div>
             </div>
             <div class="grid-cards inventory-block" id="inventory-list"></div>
@@ -1132,7 +1278,21 @@
               <div class="view-hero-overlay"></div>
               <div class="view-hero-content">
                 <i class="fa-solid fa-spa"></i>
-                <h2>Health & Wellness</h2>
+                <div>
+                  <h2>Health & Wellness</h2>
+                  <div
+                    style="
+                      font-size: 0.88rem;
+                      color: rgba(255, 255, 255, 0.65);
+                      margin-top: 6px;
+                      max-width: 480px;
+                      line-height: 1.6;
+                    "
+                  >
+                    Your body is your real asset. Stay fit, rest up, and keep
+                    your mind sharp — live longer, earn more.
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -1153,7 +1313,21 @@
               <div class="view-hero-overlay"></div>
               <div class="view-hero-content">
                 <i class="fa-solid fa-plane-departure"></i>
-                <h2>Travel & Migration</h2>
+                <div>
+                  <h2>Travel & Migration</h2>
+                  <div
+                    style="
+                      font-size: 0.88rem;
+                      color: rgba(255, 255, 255, 0.65);
+                      margin-top: 6px;
+                      max-width: 480px;
+                      line-height: 1.6;
+                    "
+                  >
+                    See the world or start over somewhere new. Every destination
+                    is an opportunity — or an escape.
+                  </div>
+                </div>
               </div>
             </div>
             <div id="travel-panel"></div>
@@ -1170,7 +1344,21 @@
               <div class="view-hero-overlay"></div>
               <div class="view-hero-content">
                 <i class="fa-solid fa-landmark"></i>
-                <h2>Wealth Engines</h2>
+                <div>
+                  <h2>Wealth Engines</h2>
+                  <div
+                    style="
+                      font-size: 0.88rem;
+                      color: rgba(255, 255, 255, 0.65);
+                      margin-top: 6px;
+                      max-width: 480px;
+                      line-height: 1.6;
+                    "
+                  >
+                    Money makes money. Real estate, franchises, bonds — put your
+                    capital to work while you sleep.
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -1200,7 +1388,21 @@
               <div class="view-hero-overlay"></div>
               <div class="view-hero-content">
                 <i class="fa-solid fa-building-columns"></i>
-                <h2>Banking</h2>
+                <div>
+                  <h2>Banking</h2>
+                  <div
+                    style="
+                      font-size: 0.88rem;
+                      color: rgba(255, 255, 255, 0.65);
+                      margin-top: 6px;
+                      max-width: 480px;
+                      line-height: 1.6;
+                    "
+                  >
+                    Manage accounts, build credit, and take out loans. Your
+                    financial foundation, one smart move at a time.
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -1368,7 +1570,7 @@
             <div class="view-hero">
               <img
                 class="view-hero-img"
-                src="https://images.unsplash.com/photo-1566438480900-0609be27a4be?w=1400&h=560&fit=crop&auto=format"
+                src="crime.png"
                 alt=""
                 loading="lazy"
               />
@@ -1517,6 +1719,7 @@
           </div>
 
           <div id="view-relationships" class="view-container">
+            <!-- Hero -->
             <div class="view-hero">
               <img
                 class="view-hero-img"
@@ -1527,35 +1730,211 @@
               <div class="view-hero-overlay"></div>
               <div class="view-hero-content">
                 <i class="fa-solid fa-heart"></i>
-                <h2>Relationships & Family</h2>
+                <div>
+                  <h2>Relationships & Family</h2>
+                  <div
+                    style="
+                      font-size: 0.88rem;
+                      color: rgba(255, 255, 255, 0.65);
+                      margin-top: 6px;
+                      max-width: 480px;
+                      line-height: 1.6;
+                    "
+                  >
+                    Date, fall in love, get married, start a family. Or live
+                    dangerously.
+                  </div>
+                  <div
+                    style="
+                      display: flex;
+                      gap: 10px;
+                      margin-top: 12px;
+                      flex-wrap: wrap;
+                    "
+                  >
+                    <span
+                      style="
+                        padding: 4px 12px;
+                        border-radius: 99px;
+                        background: rgba(244, 114, 182, 0.15);
+                        border: 1px solid rgba(244, 114, 182, 0.35);
+                        font-size: 0.65rem;
+                        font-weight: 800;
+                        letter-spacing: 1.5px;
+                        color: #f472b6;
+                        text-transform: uppercase;
+                      "
+                      >💕 Dating</span
+                    >
+                    <span
+                      style="
+                        padding: 4px 12px;
+                        border-radius: 99px;
+                        background: rgba(167, 139, 250, 0.12);
+                        border: 1px solid rgba(167, 139, 250, 0.3);
+                        font-size: 0.65rem;
+                        font-weight: 800;
+                        letter-spacing: 1.5px;
+                        color: #a78bfa;
+                        text-transform: uppercase;
+                      "
+                      >💍 Marriage</span
+                    >
+                    <span
+                      style="
+                        padding: 4px 12px;
+                        border-radius: 99px;
+                        background: rgba(251, 191, 36, 0.12);
+                        border: 1px solid rgba(251, 191, 36, 0.3);
+                        font-size: 0.65rem;
+                        font-weight: 800;
+                        letter-spacing: 1.5px;
+                        color: #fbbf24;
+                        text-transform: uppercase;
+                      "
+                      >👶 Family</span
+                    >
+                    <span
+                      style="
+                        padding: 4px 12px;
+                        border-radius: 99px;
+                        background: rgba(248, 113, 113, 0.12);
+                        border: 1px solid rgba(248, 113, 113, 0.3);
+                        font-size: 0.65rem;
+                        font-weight: 800;
+                        letter-spacing: 1.5px;
+                        color: #f87171;
+                        text-transform: uppercase;
+                      "
+                      >🔥 Affairs</span
+                    >
+                    <span
+                      style="
+                        padding: 4px 12px;
+                        border-radius: 99px;
+                        background: rgba(167, 139, 250, 0.12);
+                        border: 1px solid rgba(167, 139, 250, 0.3);
+                        font-size: 0.65rem;
+                        font-weight: 800;
+                        letter-spacing: 1.5px;
+                        color: #c4b5fd;
+                        text-transform: uppercase;
+                      "
+                      >🐾 Pets</span
+                    >
+                  </div>
+                </div>
               </div>
             </div>
 
-            <div class="card" id="relationship-status-card"></div>
+            <!-- KPI Strip -->
+            <div id="soc-kpi-strip" class="soc-kpi-strip"></div>
 
-            <h3 class="section-subtitle">Dating Pool</h3>
-            <div class="grid-cards" id="dating-pool"></div>
+            <!-- Partner / Status -->
+            <div id="relationship-status-card"></div>
 
-            <div class="card" id="marriage-panel" style="display: none"></div>
+            <!-- Engaged Wedding Banner -->
+            <div id="marriage-panel" style="display: none"></div>
 
-            <h3 class="section-subtitle">Children</h3>
-            <div class="grid-cards" id="children-list"></div>
-
-            <h3 class="section-subtitle">
-              <i class="fa-solid fa-mask"></i> Side Relationships
-            </h3>
+            <!-- Dating Pool -->
             <div
-              id="side-rel-header-card"
-              class="card"
+              class="soc-section-hdr"
+              id="dating-section-hdr"
               style="display: none"
-            ></div>
-            <div class="grid-cards" id="side-relationships-list"></div>
+            >
+              <div
+                class="soc-section-icon"
+                style="
+                  background: rgba(244, 114, 182, 0.12);
+                  color: #f472b6;
+                  border-color: rgba(244, 114, 182, 0.25);
+                "
+              >
+                <i class="fa-solid fa-magnifying-glass-heart"></i>
+              </div>
+              <div>
+                <div class="soc-section-title">Dating Pool</div>
+                <div class="soc-section-sub">Find someone special</div>
+              </div>
+            </div>
+            <div id="dating-pool"></div>
 
-            <h3 class="section-subtitle">
-              <i class="fa-solid fa-paw"></i> Pets
-            </h3>
-            <div class="grid-cards" id="pet-list"></div>
-            <div class="grid-cards" id="pet-shop"></div>
+            <!-- Children -->
+            <div class="soc-section-hdr">
+              <div
+                class="soc-section-icon"
+                style="
+                  background: rgba(251, 191, 36, 0.1);
+                  color: #fbbf24;
+                  border-color: rgba(251, 191, 36, 0.2);
+                "
+              >
+                <i class="fa-solid fa-baby"></i>
+              </div>
+              <div>
+                <div class="soc-section-title">Children</div>
+                <div class="soc-section-sub">Your little ones</div>
+              </div>
+            </div>
+            <div id="children-list"></div>
+
+            <!-- Side Relationships -->
+            <div class="soc-section-hdr">
+              <div
+                class="soc-section-icon"
+                style="
+                  background: rgba(248, 113, 113, 0.1);
+                  color: #f87171;
+                  border-color: rgba(248, 113, 113, 0.2);
+                "
+              >
+                <i class="fa-solid fa-mask"></i>
+              </div>
+              <div>
+                <div class="soc-section-title">Side Relationships</div>
+                <div class="soc-section-sub">High risk, high reward</div>
+              </div>
+            </div>
+            <div id="side-rel-header-card"></div>
+            <div id="side-relationships-list"></div>
+
+            <!-- Pets -->
+            <div class="soc-section-hdr">
+              <div
+                class="soc-section-icon"
+                style="
+                  background: rgba(167, 139, 250, 0.1);
+                  color: #a78bfa;
+                  border-color: rgba(167, 139, 250, 0.2);
+                "
+              >
+                <i class="fa-solid fa-paw"></i>
+              </div>
+              <div>
+                <div class="soc-section-title">Pets</div>
+                <div class="soc-section-sub">Your furry companions</div>
+              </div>
+            </div>
+            <div class="soc-pet-grid" id="pet-list"></div>
+
+            <!-- Pet Shop -->
+            <div class="soc-section-hdr">
+              <div
+                class="soc-section-icon"
+                style="
+                  background: rgba(34, 211, 238, 0.1);
+                  color: #22d3ee;
+                  border-color: rgba(34, 211, 238, 0.2);
+                "
+              >
+                <i class="fa-solid fa-store"></i>
+              </div>
+              <div>
+                <div class="soc-section-title">Pet Shop</div>
+                <div class="soc-section-sub">Adopt a new companion</div>
+              </div>
+            </div>
+            <div class="soc-pet-grid" id="pet-shop"></div>
           </div>
 
           <div id="view-politics" class="view-container">
@@ -1711,10 +2090,25 @@
               <div class="view-hero-overlay"></div>
               <div class="view-hero-content">
                 <i class="fa-solid fa-skull"></i>
-                <h2>Past Lives</h2>
+                <div>
+                  <h2>Past Lives</h2>
+                  <div
+                    style="
+                      font-size: 0.88rem;
+                      color: rgba(255, 255, 255, 0.65);
+                      margin-top: 6px;
+                      max-width: 480px;
+                      line-height: 1.6;
+                    "
+                  >
+                    Every life you've lived. Every choice you made. A ledger of
+                    ambition, failure, and the legacy you left behind.
+                  </div>
+                </div>
               </div>
             </div>
             <div
+              class="past-lives-action-bar"
               style="
                 display: flex;
                 align-items: center;
@@ -1752,7 +2146,21 @@
               <div class="view-hero-overlay"></div>
               <div class="view-hero-content">
                 <i class="fa-solid fa-hourglass-end"></i>
-                <h2>Timeline Ending</h2>
+                <div>
+                  <h2>Timeline Ending</h2>
+                  <div
+                    style="
+                      font-size: 0.88rem;
+                      color: rgba(255, 255, 255, 0.65);
+                      margin-top: 6px;
+                      max-width: 480px;
+                      line-height: 1.6;
+                    "
+                  >
+                    Your chapter closes. See how you played — your final wealth,
+                    your legacy score, and what you leave behind.
+                  </div>
+                </div>
               </div>
             </div>
             <div class="ending-panel" id="ending-panel"></div>
@@ -1770,25 +2178,28 @@
             <div class="control-center">
               <div class="speed-controls">
                 <button
-                  class="btn btn-outline speed-btn active"
+                  class="speed-btn active"
                   id="speed-1"
                   onclick="game.setFastForward(1)"
+                  title="Advance 1 month"
                 >
-                  1m
+                  <b>1</b><small>mo</small>
                 </button>
                 <button
-                  class="btn btn-outline speed-btn"
+                  class="speed-btn"
                   id="speed-6"
                   onclick="game.setFastForward(6)"
+                  title="Advance 6 months"
                 >
-                  6m
+                  <b>6</b><small>mo</small>
                 </button>
                 <button
-                  class="btn btn-outline speed-btn"
+                  class="speed-btn"
                   id="speed-12"
                   onclick="game.setFastForward(12)"
+                  title="Advance 12 months"
                 >
-                  12m
+                  <b>12</b><small>mo</small>
                 </button>
               </div>
             </div>
@@ -1884,7 +2295,7 @@
 
     <!-- Background Music -->
     <audio id="bg-music" loop preload="auto" style="display: none">
-      <source src="music/background.mp3" type="audio/mpeg" />
+      <source src="background.mp3" type="audio/mpeg" />
     </audio>
 
     <div id="modal-overlay" class="modal-overlay">
@@ -1995,5 +2406,8 @@
     </div>
 
     <script src="script.js"></script>
+    <script src="retention.js"></script>
+    <script src="viral.js"></script>
+    <script src="mobile.js"></script>
   </body>
 </html>

@@ -1,0 +1,546 @@
+/* ============================================================
+   MOBILE PREMIUM EXPERIENCE — Greedigo
+   Touch Animations · FAB · Swipe Transitions · Particles
+   Landscape · Keyboard · Quick Actions · Tab Indicator
+   ============================================================ */
+
+/* ── SWIPE VIEW TRANSITIONS ─────────────────────────────── */
+@keyframes mobileSlideInLeft {
+  from {
+    opacity: 0.6;
+    transform: translateX(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+@keyframes mobileSlideInRight {
+  from {
+    opacity: 0.6;
+    transform: translateX(-40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* ── TOUCH FEEDBACK ─────────────────────────────────────── */
+@media (max-width: 980px) {
+  .mob-touch-active {
+    transform: scale(0.96) !important;
+    opacity: 0.85 !important;
+    transition:
+      transform 0.08s ease,
+      opacity 0.08s ease !important;
+  }
+
+  /* Larger tap targets for all interactive elements */
+  button,
+  .btn,
+  [onclick] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Smooth tap highlight instead of browser default */
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Better active states */
+  .btn:active,
+  button:active {
+    transform: scale(0.95);
+    transition: transform 0.08s ease;
+  }
+}
+
+/* ── FLOATING ACTION BUTTON (FAB) ───────────────────────── */
+.mob-fab-container {
+  display: none;
+}
+@media (max-width: 980px) {
+  .mob-fab-container {
+    display: block;
+    position: fixed;
+    bottom: calc(130px + env(safe-area-inset-bottom, 0px));
+    right: 14px;
+    z-index: 88;
+  }
+
+  .mob-fab-btn {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #f59e0b, #ef4444);
+    border: none;
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+    box-shadow:
+      0 4px 20px rgba(245, 158, 11, 0.4),
+      0 2px 8px rgba(0, 0, 0, 0.3);
+    transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 2;
+    animation: fabPulse 3s ease infinite;
+  }
+  @keyframes fabPulse {
+    0%,
+    100% {
+      box-shadow:
+        0 4px 20px rgba(245, 158, 11, 0.4),
+        0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+    50% {
+      box-shadow:
+        0 4px 30px rgba(245, 158, 11, 0.6),
+        0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+  }
+  .mob-fab-btn:active {
+    transform: scale(0.9);
+  }
+  .mob-fab-active {
+    transform: rotate(45deg) !important;
+    background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+  }
+  .mob-fab-active:active {
+    transform: rotate(45deg) scale(0.9) !important;
+  }
+
+  /* FAB Menu */
+  .mob-fab-menu {
+    position: absolute;
+    bottom: 60px;
+    right: 0;
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 8px;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(10px) scale(0.9);
+    transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .mob-fab-open {
+    pointer-events: auto !important;
+    opacity: 1 !important;
+    transform: translateY(0) scale(1) !important;
+  }
+  .mob-fab-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+    background: rgba(7, 11, 28, 0.95);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 12px;
+    color: var(--text-main, #edf2ff);
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.15s ease;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+    min-height: 44px;
+  }
+  .mob-fab-item i {
+    width: 20px;
+    text-align: center;
+    font-size: 0.9rem;
+    color: #fbbf24;
+  }
+  .mob-fab-item:active {
+    transform: scale(0.95);
+    background: rgba(245, 158, 11, 0.15);
+  }
+}
+
+/* ── QUICK ACTION INDICATOR ─────────────────────────────── */
+.mob-quick-action {
+  position: fixed;
+  top: 70px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(245, 158, 11, 0.2);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  color: #fbbf24;
+  padding: 8px 20px;
+  border-radius: 20px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  z-index: 9998;
+  animation: quickActionPop 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  pointer-events: none;
+}
+@keyframes quickActionPop {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(10px) scale(0.9);
+  }
+  20% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) scale(1);
+  }
+  80% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-15px) scale(0.95);
+  }
+}
+
+/* ── SLIDING TAB INDICATOR ──────────────────────────────── */
+@media (max-width: 980px) {
+  .mob-tab-indicator {
+    position: absolute;
+    top: 0;
+    width: 30px;
+    height: 2.5px;
+    background: linear-gradient(90deg, #f59e0b, #fbbf24);
+    border-radius: 0 0 3px 3px;
+    box-shadow: 0 0 12px rgba(251, 191, 36, 0.7);
+    transition: left 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    opacity: 0;
+    z-index: 10;
+    pointer-events: none;
+  }
+}
+
+/* ── TOUCH PARTICLE TRAIL ───────────────────────────────── */
+.mob-touch-particle {
+  position: fixed;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(245, 158, 11, 0.5);
+  pointer-events: none;
+  z-index: 9997;
+  transform: translate(-50%, -50%);
+  animation: particleFade 0.5s ease forwards;
+}
+@keyframes particleFade {
+  from {
+    opacity: 0.6;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(2.5);
+  }
+}
+
+/* ── LONG-PRESS GLOW EFFECT ─────────────────────────────── */
+@media (max-width: 980px) {
+  .mob-long-pressed {
+    animation: longPressGlow 0.6s ease !important;
+  }
+  @keyframes longPressGlow {
+    0% {
+      box-shadow: 0 0 0 rgba(245, 158, 11, 0);
+    }
+    40% {
+      box-shadow:
+        0 0 20px rgba(245, 158, 11, 0.4),
+        inset 0 0 15px rgba(245, 158, 11, 0.1);
+    }
+    100% {
+      box-shadow: 0 0 0 rgba(245, 158, 11, 0);
+    }
+  }
+}
+
+/* ── LANDSCAPE MODE OPTIMIZATIONS ───────────────────────── */
+@media (max-width: 980px) and (orientation: landscape) {
+  body.mob-landscape .mobile-top-bar {
+    height: 40px !important;
+  }
+  body.mob-landscape .mob-bottom-nav {
+    height: 48px !important;
+  }
+  body.mob-landscape .mbn-tab span {
+    display: none;
+  }
+  body.mob-landscape .mbn-tab i {
+    font-size: 1.15rem;
+  }
+  body.mob-landscape .view-container {
+    padding-bottom: calc(100px + env(safe-area-inset-bottom, 0px)) !important;
+  }
+  body.mob-landscape .control-bar {
+    bottom: calc(48px + env(safe-area-inset-bottom, 0px)) !important;
+    padding: 5px 10px !important;
+  }
+  body.mob-landscape .mob-fab-container {
+    bottom: calc(100px + env(safe-area-inset-bottom, 0px));
+  }
+  body.mob-landscape .mob-fab-btn {
+    width: 44px;
+    height: 44px;
+    font-size: 1rem;
+  }
+  body.mob-landscape .mobile-stats-panel .msp-inner {
+    max-height: 30vh !important;
+  }
+}
+
+/* ── KEYBOARD OPEN STATE ────────────────────────────────── */
+body.mob-keyboard-open .mob-bottom-nav {
+  transform: translateY(100%);
+  transition: transform 0.2s ease;
+}
+body.mob-keyboard-open .control-bar {
+  bottom: 8px !important;
+}
+body.mob-keyboard-open .mob-fab-container {
+  display: none !important;
+}
+
+/* ── MOBILE TOAST POSITIONING ───────────────────────────── */
+@media (max-width: 980px) {
+  .mob-toast-position {
+    bottom: calc(136px + env(safe-area-inset-bottom, 0px)) !important;
+    top: auto !important;
+    right: 10px !important;
+    left: 10px !important;
+    max-width: none !important;
+  }
+  .mob-toast-position .toast-notification {
+    font-size: 0.78rem;
+    padding: 8px 14px;
+    border-radius: 10px;
+    margin-bottom: 4px;
+  }
+}
+
+/* ── ENHANCED LOOT POPUP ON MOBILE ──────────────────────── */
+@media (max-width: 980px) {
+  .loot-popup {
+    padding: 20px 28px;
+    min-width: 200px;
+    max-width: 80vw;
+    border-radius: 16px;
+  }
+  .loot-icon {
+    font-size: 2.2rem;
+  }
+  .loot-amount {
+    font-size: 1.4rem;
+  }
+  .loot-name {
+    font-size: 0.9rem;
+  }
+  .loot-label {
+    font-size: 0.66rem;
+    letter-spacing: 2px;
+  }
+
+  /* Legendary drops get extra impact on mobile */
+  .loot-legendary {
+    animation:
+      lootPop 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards,
+      lootLegendaryPulse 0.4s ease 0.3s 2,
+      lootFade 0.3s ease 1s forwards;
+  }
+  @keyframes lootLegendaryPulse {
+    0%,
+    100% {
+      transform: translate(-50%, -50%) scale(1);
+    }
+    50% {
+      transform: translate(-50%, -50%) scale(1.05);
+    }
+  }
+}
+
+/* ── BETTER MOBILE CARDS ────────────────────────────────── */
+@media (max-width: 980px) {
+  /* Cards should feel more tappable */
+  .casino-game-card,
+  .hustle-card,
+  .biz-card,
+  .asset-card,
+  .job-card,
+  .skill-card {
+    transition:
+      transform 0.12s ease,
+      box-shadow 0.12s ease;
+  }
+  .casino-game-card:active,
+  .hustle-card:active,
+  .biz-card:active,
+  .asset-card:active,
+  .job-card:active,
+  .skill-card:active {
+    transform: scale(0.97);
+    box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.2);
+  }
+}
+
+/* ── SCROLL MOMENTUM & OVERSCROLL ───────────────────────── */
+@media (max-width: 980px) {
+  .view-container {
+    overscroll-behavior-y: contain;
+    scroll-behavior: smooth;
+  }
+
+  /* Smoother scrolling for all scrollable areas */
+  .vr-legacy-shop,
+  .vr-challenges,
+  .vr-life-feed,
+  .msp-inner {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+  }
+}
+
+/* ── IMPROVED MOBILE MODAL ──────────────────────────────── */
+@media (max-width: 980px) {
+  .modal-content {
+    animation: modalSlideUp 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+  }
+  @keyframes modalSlideUp {
+    from {
+      transform: translateY(30px);
+      opacity: 0.8;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+  /* Pull indicator bar */
+  .modal-content .modal-header::before {
+    content: "";
+    display: block;
+    width: 36px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
+    margin: 0 auto 10px;
+  }
+  .modal-content #modal-desc {
+    max-height: 55vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  #modal-actions {
+    padding: 12px 0 calc(12px + env(safe-area-inset-bottom, 0px)) !important;
+    gap: 8px !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  #modal-actions .btn {
+    width: 100% !important;
+    min-height: 48px !important;
+    font-size: 0.9rem !important;
+    border-radius: 12px !important;
+  }
+}
+
+/* ── MOBILE-FIRST MICRO-INTERACTIONS ────────────────────── */
+@media (max-width: 980px) {
+  /* Smoother bottom nav transitions */
+  .mob-bottom-nav {
+    transition: transform 0.25s ease;
+  }
+
+  /* Better stat bar animations */
+  .msp-fill {
+    transition: width 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  /* Control bar buttons glow on touch */
+  .next-month-btn:active {
+    box-shadow: 0 0 20px rgba(245, 158, 11, 0.5) !important;
+  }
+
+  /* Speed buttons pulse */
+  .speed-btn.active {
+    animation: speedActive 2s ease infinite;
+  }
+  @keyframes speedActive {
+    0%,
+    100% {
+      box-shadow: 0 0 0 rgba(245, 158, 11, 0);
+    }
+    50% {
+      box-shadow: 0 0 14px rgba(245, 158, 11, 0.3);
+    }
+  }
+
+  /* Page title enters with flair */
+  .view-container.active .section-title,
+  .view-container.active .panel-title {
+    animation: mobileTitleIn 0.35s ease;
+  }
+  @keyframes mobileTitleIn {
+    from {
+      opacity: 0;
+      transform: translateY(-6px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+/* ── VERY SMALL PHONES ──────────────────────────────────── */
+@media (max-width: 380px) {
+  .mob-fab-btn {
+    width: 46px;
+    height: 46px;
+    font-size: 1rem;
+  }
+  .mob-fab-item {
+    padding: 8px 12px;
+    font-size: 0.72rem;
+  }
+  .mob-quick-action {
+    font-size: 0.75rem;
+    padding: 6px 14px;
+  }
+  .loot-popup {
+    padding: 16px 20px;
+    min-width: 160px;
+  }
+  .loot-icon {
+    font-size: 1.8rem;
+  }
+  .loot-amount {
+    font-size: 1.2rem;
+  }
+}
+
+/* ── SCROLLBAR HIDE ON MOBILE ───────────────────────────── */
+@media (max-width: 980px) {
+  .view-container::-webkit-scrollbar {
+    display: none;
+  }
+  .view-container {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+}
+
+/* ── SAFE AREA PADDING FOR NOTCHED PHONES ───────────────── */
+@supports (padding: env(safe-area-inset-bottom)) {
+  @media (max-width: 980px) {
+    .mob-bottom-nav {
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+    .mob-fab-container {
+      bottom: calc(130px + env(safe-area-inset-bottom, 0px));
+    }
+  }
+}

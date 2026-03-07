@@ -1,0 +1,891 @@
+/* ============================================================
+   VIRAL & ADDICTION SYSTEMS — Greedigo
+   Daily Rewards · Legacy · Challenges · Life Feed · Golden Hour
+   ============================================================ */
+
+/* ── DAILY REWARD POPUP ─────────────────────────────────── */
+.vr-daily-popup {
+  text-align: center;
+}
+.vr-daily-streak {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.vr-daily-flame {
+  font-size: 1.6rem;
+  animation: vr-flame-pulse 0.8s ease infinite alternate;
+}
+@keyframes vr-flame-pulse {
+  from {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+  to {
+    transform: scale(1.15);
+    filter: brightness(1.3);
+  }
+}
+.vr-daily-streak-num {
+  font-size: 1.4rem;
+  font-weight: 900;
+  background: linear-gradient(135deg, #f59e0b, #ef4444);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.vr-daily-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+  margin-bottom: 14px;
+}
+.vr-day {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 8px 4px;
+  text-align: center;
+  transition: all 0.2s;
+  position: relative;
+}
+.vr-day-claimed {
+  background: rgba(16, 185, 129, 0.15);
+  border-color: rgba(16, 185, 129, 0.4);
+}
+.vr-day-today {
+  background: rgba(245, 158, 11, 0.2);
+  border-color: #f59e0b;
+  box-shadow: 0 0 12px rgba(245, 158, 11, 0.3);
+  animation: vr-day-glow 1.5s ease infinite alternate;
+}
+@keyframes vr-day-glow {
+  from {
+    box-shadow: 0 0 8px rgba(245, 158, 11, 0.2);
+  }
+  to {
+    box-shadow: 0 0 20px rgba(245, 158, 11, 0.5);
+  }
+}
+.vr-day-num {
+  font-size: 0.55rem;
+  font-weight: 700;
+  color: var(--text-muted, #6e7f9e);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+.vr-day-icon {
+  font-size: 1.3rem;
+  margin: 4px 0;
+}
+.vr-day-label {
+  font-size: 0.55rem;
+  font-weight: 600;
+  color: var(--text-main, #edf2ff);
+  line-height: 1.2;
+}
+.vr-day-check {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 16px;
+  height: 16px;
+  background: #10b981;
+  border-radius: 50%;
+  font-size: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 900;
+}
+.vr-daily-bonus {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #fbbf24;
+  padding: 8px 12px;
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  border-radius: 8px;
+  animation: vr-flame-pulse 1s ease infinite alternate;
+}
+
+/* ── LEGACY SHOP ────────────────────────────────────────── */
+.vr-legacy-shop {
+  max-height: 60vh;
+  overflow-y: auto;
+}
+.vr-legacy-header {
+  text-align: center;
+  margin-bottom: 16px;
+  padding: 14px;
+  background: linear-gradient(
+    135deg,
+    rgba(139, 92, 246, 0.15),
+    rgba(245, 158, 11, 0.1)
+  );
+  border-radius: 12px;
+  border: 1px solid rgba(139, 92, 246, 0.25);
+}
+.vr-legacy-points {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+.vr-lp-icon {
+  font-size: 1.5rem;
+  animation: vr-spin-slow 3s linear infinite;
+}
+@keyframes vr-spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+.vr-lp-num {
+  font-size: 2rem;
+  font-weight: 900;
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.vr-lp-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted, #6e7f9e);
+}
+.vr-legacy-lives {
+  font-size: 0.72rem;
+  color: var(--text-muted, #6e7f9e);
+}
+.vr-legacy-perks {
+  display: grid;
+  gap: 8px;
+}
+.vr-perk {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  transition: all 0.2s;
+}
+.vr-perk:hover {
+  border-color: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.06);
+}
+.vr-perk-owned {
+  border-color: rgba(16, 185, 129, 0.3);
+  background: rgba(16, 185, 129, 0.08);
+}
+.vr-perk-available {
+  border-color: rgba(245, 158, 11, 0.3);
+}
+.vr-perk-icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+.vr-perk-info {
+  flex: 1;
+  min-width: 0;
+}
+.vr-perk-name {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-main, #edf2ff);
+}
+.vr-perk-desc {
+  font-size: 0.7rem;
+  color: var(--text-muted, #6e7f9e);
+  line-height: 1.3;
+}
+.vr-perk-cost {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #fbbf24;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.vr-perk-buy {
+  padding: 5px 14px;
+  border: 1px solid #f59e0b;
+  background: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+.vr-perk-buy:hover:not(:disabled) {
+  background: rgba(245, 158, 11, 0.3);
+  transform: scale(1.05);
+}
+.vr-perk-locked {
+  opacity: 0.4;
+  cursor: not-allowed;
+  border-color: rgba(255, 255, 255, 0.1);
+  color: var(--text-dim, #3e4e70);
+}
+
+/* Past Lives Gallery */
+.vr-past-lives-title {
+  font-size: 0.85rem;
+  font-weight: 800;
+  margin: 16px 0 8px;
+  color: var(--text-main, #edf2ff);
+}
+.vr-past-lives {
+  display: grid;
+  gap: 4px;
+}
+.vr-past-life {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 6px;
+  font-size: 0.72rem;
+}
+.vr-pl-name {
+  font-weight: 700;
+  color: var(--text-main, #edf2ff);
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.vr-pl-age {
+  color: var(--text-muted, #6e7f9e);
+  white-space: nowrap;
+}
+.vr-pl-nw {
+  font-weight: 700;
+  color: #10b981;
+  white-space: nowrap;
+}
+.vr-pl-pts {
+  color: #fbbf24;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* ── CHALLENGE RUNS ─────────────────────────────────────── */
+.vr-challenges {
+  max-height: 55vh;
+  overflow-y: auto;
+}
+.vr-ch-info {
+  font-size: 0.8rem;
+  color: var(--text-muted, #6e7f9e);
+  margin-bottom: 12px;
+  text-align: center;
+}
+.vr-ch {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  margin-bottom: 8px;
+  transition: all 0.2s;
+}
+.vr-ch:hover {
+  border-color: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.06);
+}
+.vr-ch-done {
+  border-color: rgba(16, 185, 129, 0.3);
+  background: rgba(16, 185, 129, 0.06);
+}
+.vr-ch-active {
+  border-color: rgba(239, 68, 68, 0.4);
+  background: rgba(239, 68, 68, 0.08);
+  box-shadow: 0 0 12px rgba(239, 68, 68, 0.15);
+}
+.vr-ch-icon {
+  font-size: 1.8rem;
+  flex-shrink: 0;
+}
+.vr-ch-body {
+  flex: 1;
+  min-width: 0;
+}
+.vr-ch-name {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: var(--text-main, #edf2ff);
+}
+.vr-ch-desc {
+  font-size: 0.72rem;
+  color: var(--text-muted, #6e7f9e);
+  line-height: 1.3;
+  margin-top: 2px;
+}
+.vr-ch-reward {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #fbbf24;
+  margin-top: 4px;
+}
+.vr-ch-start {
+  padding: 8px 18px;
+  border: 1px solid #3b82f6;
+  background: rgba(59, 130, 246, 0.15);
+  color: #60a5fa;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+.vr-ch-start:hover {
+  background: rgba(59, 130, 246, 0.3);
+  transform: scale(1.05);
+}
+
+/* ── CASH FLOAT ANIMATION ───────────────────────────────── */
+.vr-cash-float {
+  position: fixed;
+  z-index: 9999;
+  font-size: 1.1rem;
+  font-weight: 900;
+  font-family: var(--font-mono, monospace);
+  pointer-events: none;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+  animation: vr-float-up 2s cubic-bezier(0.2, 0.8, 0.3, 1) forwards;
+  transform: translateX(-50%);
+}
+.vr-cash-gain {
+  color: #10b981;
+  text-shadow: 0 0 12px rgba(16, 185, 129, 0.6);
+}
+.vr-cash-loss {
+  color: #ef4444;
+  text-shadow: 0 0 12px rgba(239, 68, 68, 0.6);
+}
+@keyframes vr-float-up {
+  0% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) scale(0.8);
+  }
+  20% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(-10px) scale(1.1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-60px) scale(0.9);
+  }
+}
+
+/* ── GOLDEN HOUR ────────────────────────────────────────── */
+body.vr-golden-hour {
+  animation: vr-golden-pulse 2s ease infinite;
+}
+body.vr-golden-hour::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 500;
+  border: 3px solid rgba(245, 158, 11, 0.4);
+  border-radius: 0;
+  animation: vr-golden-border 1.5s ease infinite alternate;
+}
+@keyframes vr-golden-pulse {
+  0%,
+  100% {
+    filter: brightness(1) saturate(1);
+  }
+  50% {
+    filter: brightness(1.05) saturate(1.1);
+  }
+}
+@keyframes vr-golden-border {
+  from {
+    border-color: rgba(245, 158, 11, 0.2);
+    box-shadow: inset 0 0 40px rgba(245, 158, 11, 0.05);
+  }
+  to {
+    border-color: rgba(245, 158, 11, 0.5);
+    box-shadow: inset 0 0 80px rgba(245, 158, 11, 0.1);
+  }
+}
+
+/* ── LIFE FEED ──────────────────────────────────────────── */
+.vr-feed-widget {
+  margin-top: 8px;
+}
+.vr-widget-title {
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: var(--text-muted, #6e7f9e);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.vr-widget-title i {
+  color: var(--accent-amber, #fbbf24);
+}
+.vr-life-feed {
+  max-height: 200px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+}
+.vr-life-feed::-webkit-scrollbar {
+  width: 3px;
+}
+.vr-life-feed::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 2px;
+}
+.vr-feed-entry {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.68rem;
+  line-height: 1.35;
+  margin-bottom: 3px;
+  background: rgba(255, 255, 255, 0.02);
+  border-left: 2px solid transparent;
+  animation: vr-feed-in 0.3s ease;
+}
+@keyframes vr-feed-in {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+.vr-feed-age {
+  font-weight: 700;
+  font-family: var(--font-mono, monospace);
+  color: var(--text-dim, #3e4e70);
+  font-size: 0.6rem;
+  white-space: nowrap;
+  flex-shrink: 0;
+  min-width: 40px;
+}
+.vr-feed-text {
+  color: var(--text-muted, #6e7f9e);
+  flex: 1;
+  min-width: 0;
+}
+.vr-feed-success {
+  border-left-color: #10b981;
+}
+.vr-feed-success .vr-feed-text {
+  color: #34d399;
+}
+.vr-feed-error {
+  border-left-color: #ef4444;
+}
+.vr-feed-error .vr-feed-text {
+  color: #f87171;
+}
+.vr-feed-info {
+  border-left-color: #3b82f6;
+}
+.vr-feed-info .vr-feed-text {
+  color: #60a5fa;
+}
+.vr-feed-epic {
+  border-left-color: #f59e0b;
+  background: rgba(245, 158, 11, 0.05);
+}
+.vr-feed-epic .vr-feed-text {
+  color: #fbbf24;
+  font-weight: 600;
+}
+
+/* ── SIDEBAR WIDGETS ────────────────────────────────────── */
+.vr-sidebar-widget {
+  padding: 10px 14px;
+  margin-bottom: 6px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+}
+.vr-streak-widget {
+  background: linear-gradient(
+    135deg,
+    rgba(245, 158, 11, 0.1),
+    rgba(239, 68, 68, 0.05)
+  );
+  border-color: rgba(245, 158, 11, 0.2);
+}
+.vr-streak-display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.vr-streak-flame {
+  font-size: 1.1rem;
+}
+.vr-streak-text {
+  font-size: 0.8rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #f59e0b, #ef4444);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Challenge Indicator Widget */
+.vr-ch-pick-btn {
+  width: 100%;
+  padding: 8px 12px;
+  background: rgba(139, 92, 246, 0.12);
+  border: 1px solid rgba(139, 92, 246, 0.25);
+  color: #c084fc;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.vr-ch-pick-btn:hover {
+  background: rgba(139, 92, 246, 0.2);
+  border-color: rgba(139, 92, 246, 0.4);
+  transform: scale(1.02);
+}
+.vr-ch-active-widget {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.vr-ch-active-icon {
+  font-size: 1.3rem;
+}
+.vr-ch-active-info {
+  flex: 1;
+  min-width: 0;
+}
+.vr-ch-active-name {
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: #f87171;
+}
+.vr-ch-active-desc {
+  font-size: 0.62rem;
+  color: var(--text-muted, #6e7f9e);
+  line-height: 1.2;
+}
+
+/* ── SHARE & HEADER BUTTONS ─────────────────────────────── */
+.vr-share-row {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+.vr-share-btn,
+.vr-legacy-btn,
+.vr-challenge-btn {
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  border: 1px solid;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.15s;
+}
+.vr-share-btn {
+  background: rgba(59, 130, 246, 0.15);
+  border-color: rgba(59, 130, 246, 0.3);
+  color: #60a5fa;
+}
+.vr-share-btn:hover {
+  background: rgba(59, 130, 246, 0.25);
+  transform: translateY(-2px);
+}
+.vr-legacy-btn {
+  background: rgba(245, 158, 11, 0.15);
+  border-color: rgba(245, 158, 11, 0.3);
+  color: #fbbf24;
+}
+.vr-legacy-btn:hover {
+  background: rgba(245, 158, 11, 0.25);
+  transform: translateY(-2px);
+}
+.vr-challenge-btn {
+  background: rgba(139, 92, 246, 0.15);
+  border-color: rgba(139, 92, 246, 0.3);
+  color: #c084fc;
+}
+.vr-challenge-btn:hover {
+  background: rgba(139, 92, 246, 0.25);
+  transform: translateY(-2px);
+}
+
+.vr-header-btn {
+  background: none;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  padding: 4px 10px;
+  color: var(--text-muted, #6e7f9e);
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  position: relative;
+}
+.vr-header-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.25);
+  color: var(--text-main, #edf2ff);
+  transform: scale(1.05);
+}
+.vr-header-badge {
+  font-size: 0.65rem;
+  font-weight: 800;
+  font-family: var(--font-mono, monospace);
+  color: #fbbf24;
+  background: rgba(245, 158, 11, 0.15);
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+
+/* ── MOMENTUM STREAK INDICATOR ──────────────────────────── */
+@keyframes vr-streak-fire {
+  0%,
+  100% {
+    text-shadow: 0 0 8px rgba(245, 158, 11, 0.4);
+  }
+  50% {
+    text-shadow:
+      0 0 16px rgba(245, 158, 11, 0.8),
+      0 0 32px rgba(239, 68, 68, 0.3);
+  }
+}
+
+/* ── RESPONSIVE ─────────────────────────────────────────── */
+@media (max-width: 980px) {
+  /* Hide header buttons from the control bar on phones —
+     Legacy Shop & Challenges are already accessible from
+     the ending panel share row and the FAB menu */
+  .vr-header-btn {
+    display: none !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .vr-daily-days {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  .vr-share-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .vr-share-btn,
+  .vr-legacy-btn,
+  .vr-challenge-btn {
+    justify-content: center;
+    font-size: 0.75rem;
+    padding: 8px 14px;
+  }
+  .vr-perk {
+    flex-wrap: wrap;
+  }
+  .vr-cash-float {
+    font-size: 0.9rem;
+  }
+  .vr-ch {
+    flex-wrap: wrap;
+  }
+  .vr-legacy-shop {
+    max-height: 50vh;
+  }
+  .vr-challenges {
+    max-height: 45vh;
+  }
+  .vr-ch-icon {
+    font-size: 1.4rem;
+  }
+  .vr-perk-icon {
+    font-size: 1.2rem;
+  }
+  .vr-life-feed {
+    max-height: 150px;
+  }
+  .vr-header-btn {
+    font-size: 0.75rem;
+    padding: 3px 7px;
+  }
+}
+
+@media (max-width: 600px) {
+  .vr-daily-days {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 4px;
+  }
+  .vr-day {
+    padding: 6px 3px;
+    border-radius: 8px;
+  }
+  .vr-day-icon {
+    font-size: 1rem;
+  }
+  .vr-day-label {
+    font-size: 0.5rem;
+  }
+  .vr-day-num {
+    font-size: 0.5rem;
+  }
+  .vr-daily-streak-num {
+    font-size: 1.1rem;
+  }
+  .vr-legacy-header {
+    padding: 10px;
+  }
+  .vr-lp-num {
+    font-size: 1.5rem;
+  }
+  .vr-perk {
+    padding: 8px 10px;
+    gap: 8px;
+  }
+  .vr-perk-name {
+    font-size: 0.78rem;
+  }
+  .vr-perk-desc {
+    font-size: 0.65rem;
+  }
+  .vr-ch {
+    padding: 10px;
+    gap: 8px;
+  }
+  .vr-ch-name {
+    font-size: 0.82rem;
+  }
+  .vr-feed-entry {
+    font-size: 0.62rem;
+    padding: 3px 6px;
+  }
+  .vr-sidebar-widget {
+    padding: 8px 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .vr-daily-days {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 3px;
+  }
+  .vr-day {
+    padding: 5px 2px;
+  }
+  .vr-day-icon {
+    font-size: 0.9rem;
+    margin: 2px 0;
+  }
+  .vr-day-check {
+    width: 12px;
+    height: 12px;
+    font-size: 0.4rem;
+    top: -3px;
+    right: -3px;
+  }
+  .vr-daily-bonus {
+    font-size: 0.75rem;
+    padding: 6px 10px;
+  }
+  .vr-share-btn,
+  .vr-legacy-btn,
+  .vr-challenge-btn {
+    font-size: 0.7rem;
+    padding: 7px 10px;
+    gap: 5px;
+  }
+  .vr-cash-float {
+    font-size: 0.8rem;
+  }
+  .vr-ch-icon {
+    font-size: 1.2rem;
+  }
+  .vr-ch-start {
+    padding: 6px 12px;
+    font-size: 0.72rem;
+  }
+  .vr-perk-buy {
+    padding: 4px 10px;
+    font-size: 0.7rem;
+  }
+  .vr-life-feed {
+    max-height: 120px;
+  }
+  .vr-header-btn {
+    font-size: 0.7rem;
+    padding: 2px 5px;
+    gap: 3px;
+  }
+  .vr-header-badge {
+    font-size: 0.55rem;
+    padding: 0 3px;
+  }
+  .vr-legacy-shop {
+    max-height: 45vh;
+  }
+  .vr-challenges {
+    max-height: 40vh;
+  }
+}
+
+@media (max-width: 380px) {
+  .vr-daily-days {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+  }
+  .vr-day-label {
+    display: none;
+  }
+  .vr-daily-streak-num {
+    font-size: 1rem;
+  }
+  .vr-lp-num {
+    font-size: 1.2rem;
+  }
+  .vr-ch-body {
+    min-width: 0;
+  }
+  .vr-ch-desc {
+    font-size: 0.65rem;
+  }
+  .vr-perk-desc {
+    font-size: 0.6rem;
+  }
+}
